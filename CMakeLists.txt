@@ -79,20 +79,21 @@ target_link_libraries(SNemoRawDataObj PUBLIC Bayeux::Bayeux Boost::date_time)
 
 # Now the Boost.serialization dictionary
 # Not compilable yet due to mygsl tabulated function interface change
-#add_library(SNemoDataObj_boost_dict SHARED snfee/boost_dict.cc)
-#target_link_libraries(SNemoDataObj_bdict PRIVATE SNemoDataObj)
+add_library(SNemoRawDataObj_bdict SHARED snfee/boost_dict.cc)
+target_link_libraries(SNemoRawDataObj_bdict PRIVATE SNemoRawDataObj)
 
 # Now the Root dictionary
 #include(${ROOT_DIR}/modules/RootNewMacros.cmake)
 # need at least one inc dir
 #include_directories(${PROJECT_SOURCE_DIR})
 #include_directories(${Boost_INCLUDE_DIRS})
-#include_directories(${Boost_INCLUDE_DIRS}/bayeux)
-#root_generate_dictionary(SNemoDataObj_rdict
+#root_generate_dictionary(SNemoRawDataObj_dict
   # Don't add headers explicitly or their buildtime paths end up in the dict
   # Use #include in the linkdef to bring in what's needed.
   #  MODULE SNemoRawDataObj
-  #  LINKDEF ${PROJECT_SOURCE_DIR}/snfee/root_dict_linkdef.h
-  #  OPTIONS "-noIncludePaths"
-  #  )
-#
+  # LINKDEF ${PROJECT_SOURCE_DIR}/snfee/root_dict_linkdef.h
+  #OPTIONS "-noIncludePaths"
+  #)
+#add_library(SNemoRawDataObj_rdictlib SHARED SNemoRawDataObj_dict.cxx)
+#target_link_libraries(SNemoRawDataObj_rdictlib PUBLIC SNemoRawDataObj)
+

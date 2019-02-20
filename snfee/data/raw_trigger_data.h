@@ -1,5 +1,5 @@
 //! \file  snfee/data/raw_trigger_data.h
-//! \brief Description of the SuperNEMO raw trigger data 
+//! \brief Description of the SuperNEMO raw trigger data
 //
 // Copyright (c) 2018 by François Mauger <mauger@lpccaen.in2p3.fr>
 //
@@ -44,10 +44,10 @@ namespace snfee {
       , public datatools::i_serializable
     {
     public:
-   
-      /// Default constructor   
+
+      /// Default constructor
       raw_trigger_data();
-    
+
       /// Destructor
       virtual ~raw_trigger_data();
 
@@ -66,8 +66,8 @@ namespace snfee {
       /// myCaloData.print_tree(std::clog, poptions);
       /// \endcode
       virtual void print_tree(std::ostream & out_ = std::clog,
-                              const boost::property_tree::ptree & options_ = empty_options()) const;
- 
+                              const boost::property_tree::ptree & options_ = empty_options()) const override;
+
       //! Reset the record
       void invalidate();
 
@@ -91,31 +91,31 @@ namespace snfee {
 
       //! Check if the trigger record is set
       bool has_trig() const;
-      
+
       //! Set the trigger record
       void set_trig(const const_trigger_record_ptr &);
-      
+
       //! Return the handle for the trigger record
-      const const_trigger_record_ptr & get_trig() const;   
-      
+      const const_trigger_record_ptr & get_trig() const;
+
       //! Return the trigger record
-      const trigger_record & get_trig_cref() const;   
+      const trigger_record & get_trig_cref() const;
 
       //! Append a new calo hit record
       void append_calo_hit(const const_calo_hit_record_ptr &);
-      
+
       //! Return the collection of calorimeter hit records
-      const std::vector<const_calo_hit_record_ptr> & get_calo_hits() const;  
+      const std::vector<const_calo_hit_record_ptr> & get_calo_hits() const;
 
       //! Append a new tracker hit record
       void append_tracker_hit(const const_tracker_hit_record_ptr &);
 
       //! Return the collection of tracker hit records
-      const std::vector<const_tracker_hit_record_ptr> & get_tracker_hits() const; 
+      const std::vector<const_tracker_hit_record_ptr> & get_tracker_hits() const;
 
       //! Print
       friend std::ostream & operator<<(std::ostream & out_, const raw_trigger_data & rtd_);
-      
+
     private:
 
       int32_t                                   _run_id_     = INVALID_RUN_ID;     ///< Run ID
@@ -123,11 +123,11 @@ namespace snfee {
       const_trigger_record_ptr                  _trig_;         ///< Handle for the trigger record
       std::vector<const_calo_hit_record_ptr>    _calo_hits_;    ///< Collection of handles for calorimeter hit records
       std::vector<const_tracker_hit_record_ptr> _tracker_hits_; ///< Collection of handles for tracker hit records
-   
+
       DATATOOLS_SERIALIZATION_DECLARATION()
 
     };
-    
+
   } // namespace data
 } // namespace snfee
 

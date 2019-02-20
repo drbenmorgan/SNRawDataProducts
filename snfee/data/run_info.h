@@ -4,7 +4,7 @@
 
 #ifndef SNFEE_DATA_RUN_INFO_H
 #define SNFEE_DATA_RUN_INFO_H
- 
+
 // Standard Library:
 #include <string>
 
@@ -45,21 +45,21 @@ namespace snfee {
       /// Check if the run start time is set
       bool has_run_start_time() const;
 
-      /// Set the run start time 
+      /// Set the run start time
       void set_run_start_time(const boost::posix_time::ptime &);
-      
-      /// Return the run start time 
+
+      /// Return the run start time
       const boost::posix_time::ptime & get_run_start_time() const;
 
       /// Check if the run stop time is set
       bool has_run_stop_time() const;
 
-      /// Set the run stop time 
+      /// Set the run stop time
       void set_run_stop_time(const boost::posix_time::ptime &);
-      
-      /// Return the run stop time 
+
+      /// Return the run stop time
       const boost::posix_time::ptime & get_run_stop_time() const;
-      
+
       /// Check if the run category is set
       bool has_run_category() const;
 
@@ -68,7 +68,7 @@ namespace snfee {
 
       /// Set the run category
       void set_run_category(const std::string &);
-      
+
       /// Check if the run sub-category is set
       bool has_run_subcategory() const;
 
@@ -86,8 +86,8 @@ namespace snfee {
 
       /// Smart print
       virtual void print_tree(std::ostream & out_ = std::clog,
-                              const boost::property_tree::ptree & options_ = empty_options()) const;
-      
+                              const boost::property_tree::ptree & options_ = empty_options()) const override;
+
     private:
 
       int32_t                  _run_id_ = INVALID_RUN_ID; ///< Unique run ID (mandatory)
@@ -95,9 +95,9 @@ namespace snfee {
       boost::posix_time::ptime _run_stop_time_;           ///< Stop run time (optional)
       std::string _run_category_;    ///< Run category (optional)
       std::string _run_subcategory_; ///< Run subcategory (optional)
-     
+
       DATATOOLS_SERIALIZATION_DECLARATION()
-      
+
     };
 
   } // namespace data
