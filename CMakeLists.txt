@@ -46,6 +46,30 @@ add_library(SNemoRawDataObj SHARED
   snfee/model/utils.h
   snfee/utils.cc
   snfee/utils.h
+
+  snfee/io/calo_hit_parser.cc
+  snfee/io/calo_hit_parser.h
+  snfee/io/multifile_data_reader.cc
+  snfee/io/multifile_data_reader.h
+  snfee/io/multifile_data_writer.cc
+  snfee/io/multifile_data_writer.h
+  snfee/io/raw_hit_reader.cc
+  snfee/io/raw_hit_reader.h
+  snfee/io/raw_record_parser.cc
+  snfee/io/raw_record_parser.h
+  snfee/io/raw_run_header.cc
+  snfee/io/raw_run_header.h
+  snfee/io/rhd_record.cc
+  snfee/io/rhd_record.h
+  snfee/io/rhd_sorter.cc
+  snfee/io/rhd_sorter.h
+  # # Better handled later (Create dicts for types, plus we need ROOT)
+  #snfee/io/rtd2root_converter.cc
+  #snfee/io/rtd2root_converter.h
+  snfee/io/rtd_record.cc
+  snfee/io/rtd_record.h
+  snfee/io/tracker_hit_parser.cc
+  snfee/io/tracker_hit_parser.h
   )
 
 target_include_directories(SNemoRawDataObj PUBLIC
@@ -56,7 +80,7 @@ target_link_libraries(SNemoRawDataObj PUBLIC Bayeux::Bayeux Boost::date_time)
 # Now the Boost.serialization dictionary
 # Not compilable yet due to mygsl tabulated function interface change
 #add_library(SNemoDataObj_boost_dict SHARED snfee/boost_dict.cc)
-#target_link_libraries(SNemoDataObj_boost_dict PRIVATE SNemoDataObj)
+#target_link_libraries(SNemoDataObj_bdict PRIVATE SNemoDataObj)
 
 # Now the Root dictionary
 #include(${ROOT_DIR}/modules/RootNewMacros.cmake)
