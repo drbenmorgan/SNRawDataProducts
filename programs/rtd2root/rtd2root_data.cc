@@ -1,5 +1,5 @@
 // This project:
-#include <snfee/data/rtd2root_data.h>
+#include "rtd2root_data.h"
 
 
 // Third party:
@@ -15,7 +15,7 @@ namespace snfee {
       trigger_id = INVALID_TRIGGER_ID;
       has_trig   = false;
       nb_calo_hits    = 0;
-      nb_tracker_hits = 0; 
+      nb_tracker_hits = 0;
       return;
     }
 
@@ -24,7 +24,7 @@ namespace snfee {
                                        rtd2root_data & out_)
     {
       out_.clear();
-      
+
       out_.run_id     = in_.get_run_id();
       out_.trigger_id = in_.get_trigger_id();
 
@@ -38,7 +38,7 @@ namespace snfee {
       int calo_count = 0;
       for (const auto & hchit : in_.get_calo_hits()) {
         const calo_hit_record & chit = *hchit;
-        
+
         out_.calo_tdc[calo_count]       = chit.get_tdc();
         out_.calo_crate_num[calo_count] = chit.get_crate_num();
         out_.calo_board_num[calo_count] = chit.get_board_num();
@@ -49,7 +49,7 @@ namespace snfee {
         out_.calo_has_waveforms[calo_count]              = chit.has_waveforms();
         out_.calo_waveform_start_sample[calo_count]      = chit.get_waveform_start_sample();
         out_.calo_waveform_number_of_samples[calo_count] = chit.get_waveform_number_of_samples();
-        
+
         out_.calo_ch0_lt[calo_count]           = chit.get_channel_data(0).is_lt();
         out_.calo_ch0_ht[calo_count]           = chit.get_channel_data(0).is_ht();
         out_.calo_ch0_underflow[calo_count]    = chit.get_channel_data(0).is_underflow();
@@ -60,7 +60,7 @@ namespace snfee {
         out_.calo_ch0_charge[calo_count]       = chit.get_channel_data(0).get_charge();
         out_.calo_ch0_rising_cell[calo_count]  = chit.get_channel_data(0).get_rising_cell();
         out_.calo_ch0_falling_cell[calo_count] = chit.get_channel_data(0).get_falling_cell();
-       
+
         out_.calo_ch1_lt[calo_count]           = chit.get_channel_data(1).is_lt();
         out_.calo_ch1_ht[calo_count]           = chit.get_channel_data(1).is_ht();
         out_.calo_ch1_underflow[calo_count]    = chit.get_channel_data(1).is_underflow();
@@ -77,10 +77,10 @@ namespace snfee {
           out_.calo_ch0_waveform[calo_count][isample] = waveforms.get_adc(isample, 0);
           out_.calo_ch1_waveform[calo_count][isample] = waveforms.get_adc(isample, 1);
         }
-         
+
         calo_count++;
-      } 
-      
+      }
+
       // Tracker hit records:
       out_.nb_tracker_hits = in_.get_tracker_hits().size();
       int tracker_count = 0;
@@ -94,10 +94,10 @@ namespace snfee {
         out_.tracker_channel_category[tracker_count] = (int16_t) thit.get_channel_category();
         out_.tracker_timestamp_category[tracker_count] = (int16_t) thit.get_timestamp_category();
         out_.tracker_timestamp[tracker_count] = thit.get_timestamp();
-        
+
         tracker_count++;
-      } 
-      
+      }
+
       return;
     }
 

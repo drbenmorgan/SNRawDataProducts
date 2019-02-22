@@ -16,7 +16,7 @@
 
 // This project:
 #include <snfee/utils.h>
-#include <snfee/io/rtd2root_converter.h>
+#include "rtd2root_converter.h"
 
 struct app_params_type
 {

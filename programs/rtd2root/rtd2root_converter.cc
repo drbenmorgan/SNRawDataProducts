@@ -1,7 +1,8 @@
 // snfee/io/rtd2root_converter.cc
 
 // Ourselves:
-#include <snfee/io/rtd2root_converter.h>
+#include "rtd2root_converter.h"
+#include "rtd2root_data.h"
 
 // Third party:
 // - Boost:
@@ -16,8 +17,6 @@
 // This project
 #include <snfee/io/multifile_data_reader.h>
 #include <snfee/data/raw_trigger_data.h>
-#include <snfee/data/rtd2root_data.h>
-//#include <snfee/data/rtd_selection.h>
 
 namespace snfee {
   namespace io {
@@ -190,9 +189,6 @@ namespace snfee {
       DT_THROW_IF(!is_initialized(), std::logic_error,
                   "Converter is not initialized!");
 
-      // Calorimeter raw hit record selector:
-      //snfee::data::calo_selection caloSel(_config_.calo_sel_config);
-
       // Working RTD object:
       snfee::data::raw_trigger_data rtd;
 
@@ -213,12 +209,6 @@ namespace snfee {
           }
           _pimpl_->nb_processed_counter++;
           bool export_rtd = true;
-          //if (caloSel.is_activated()) {
-            // Apply calorimeter selection on the RTD object:
-            //if (export_rtd and ! caloSel(rtd)) {
-            //  export_rtd = false;
-            //}
-          // }
           if (export_rtd) {
             // ROOT export:
             snfee::data::rtd2root_data::export_to_root(rtd, _pimpl_->rtd2Root);

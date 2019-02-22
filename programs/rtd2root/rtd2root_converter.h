@@ -19,7 +19,6 @@
 
 // This project
 #include <snfee/io/multifile_data_reader.h>
-//#include <snfee/data/rtd_selection.h>
 
 namespace snfee {
   namespace io {
@@ -37,8 +36,6 @@ namespace snfee {
         std::vector<std::string> input_rtd_filenames; ///< Sequence of RTD input filenames
         std::string output_root_filename;     ///< Output Root filename
         std::size_t max_total_records = 0;    ///< Max number of converted RTD records
-        /// Calorimeter hit record selection:
-        //snfee::data::calo_selection::config_type calo_sel_config;
       };
 
       //! Default constructor

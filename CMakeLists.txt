@@ -40,8 +40,6 @@ add_library(SNemoRawDataObj SHARED
   snfee/data/has_trigger_id_interface.h
   snfee/data/raw_trigger_data.cc
   snfee/data/raw_trigger_data.h
-  snfee/data/rtd2root_data.cc
-  snfee/data/rtd2root_data.h
   snfee/data/run_info-serial.h
   snfee/data/run_info.cc
   snfee/data/run_info.h
@@ -74,8 +72,6 @@ add_library(SNemoRawDataObj SHARED
   snfee/io/rhd_record.h
   snfee/io/rhd_sorter.cc
   snfee/io/rhd_sorter.h
-  snfee/io/rtd2root_converter.cc
-  snfee/io/rtd2root_converter.h
   snfee/io/rtd_record.cc
   snfee/io/rtd_record.h
   snfee/io/tracker_hit_parser.cc
