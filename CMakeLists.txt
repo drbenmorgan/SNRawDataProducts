@@ -10,7 +10,22 @@ find_package(Boost REQUIRED date_time)
 # Need ROOT for dictionary generation
 find_package(ROOT 6.12 REQUIRED)
 
-# The library
+# - Library build
+# Add the Boost/Root dictionaries into the library for now
+include(${ROOT_DIR}/modules/RootNewMacros.cmake)
+# need at least one inc dir
+include_directories(${PROJECT_SOURCE_DIR})
+include_directories(${Boost_INCLUDE_DIRS})
+include_directories(${Bayeux_INCLUDE_DIRS})
+root_generate_dictionary(SNemoRawDataObj_dict
+  # Don't add headers explicitly or their buildtime paths end up in the dict
+  # Use #include in the linkdef to bring in what's needed.
+  MODULE SNemoRawDataObj
+  LINKDEF ${PROJECT_SOURCE_DIR}/snfee/root_dict_linkdef.h
+  OPTIONS "-noIncludePaths")
+
+
+# The library itself
 add_library(SNemoRawDataObj SHARED
   snfee/data/calo_channel_traits.cc
   snfee/data/calo_channel_traits.h
@@ -63,37 +78,27 @@ add_library(SNemoRawDataObj SHARED
   snfee/io/rhd_record.h
   snfee/io/rhd_sorter.cc
   snfee/io/rhd_sorter.h
-  # # Better handled later (Create dicts for types, plus we need ROOT)
-  #snfee/io/rtd2root_converter.cc
-  #snfee/io/rtd2root_converter.h
+  snfee/io/rtd2root_converter.cc
+  snfee/io/rtd2root_converter.h
   snfee/io/rtd_record.cc
   snfee/io/rtd_record.h
   snfee/io/tracker_hit_parser.cc
   snfee/io/tracker_hit_parser.h
+
+  snfee/rtdb/builder.cc
+  snfee/rtdb/builder.h
+  snfee/rtdb/builder_config.cc
+  snfee/rtdb/builder_config.h
+
+  snfee/boost_dict.cc
+  ${CMAKE_CURRENT_BINARY_DIR}/SNemoRawDataObj_dict.cxx
   )
 
 target_include_directories(SNemoRawDataObj PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
   )
-target_link_libraries(SNemoRawDataObj PUBLIC Bayeux::Bayeux Boost::date_time)
+target_link_libraries(SNemoRawDataObj PUBLIC Bayeux::Bayeux Boost::date_time ROOT::RIO)
 
-# Now the Boost.serialization dictionary
-# Not compilable yet due to mygsl tabulated function interface change
-add_library(SNemoRawDataObj_bdict SHARED snfee/boost_dict.cc)
-target_link_libraries(SNemoRawDataObj_bdict PRIVATE SNemoRawDataObj)
-
-# Now the Root dictionary
-#include(${ROOT_DIR}/modules/RootNewMacros.cmake)
-# need at least one inc dir
-#include_directories(${PROJECT_SOURCE_DIR})
-#include_directories(${Boost_INCLUDE_DIRS})
-#root_generate_dictionary(SNemoRawDataObj_dict
-  # Don't add headers explicitly or their buildtime paths end up in the dict
-  # Use #include in the linkdef to bring in what's needed.
-  #  MODULE SNemoRawDataObj
-  # LINKDEF ${PROJECT_SOURCE_DIR}/snfee/root_dict_linkdef.h
-  #OPTIONS "-noIncludePaths"
-  #)
-#add_library(SNemoRawDataObj_rdictlib SHARED SNemoRawDataObj_dict.cxx)
-#target_link_libraries(SNemoRawDataObj_rdictlib PUBLIC SNemoRawDataObj)
+# Programs
+add_subdirectory(programs)
 
