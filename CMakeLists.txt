@@ -69,8 +69,6 @@ add_library(SNemoRawDataObj SHARED
   ${CMAKE_CURRENT_BINARY_DIR}/SNemoRawDataObj_dict.cxx
   )
 
-
-
 target_include_directories(SNemoRawDataObj PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
   )
@@ -78,4 +76,7 @@ target_link_libraries(SNemoRawDataObj PUBLIC Bayeux::Bayeux Boost::date_time ROO
 
 # Programs
 add_subdirectory(programs)
+
+# Examples
+add_subdirectory(examples)
 

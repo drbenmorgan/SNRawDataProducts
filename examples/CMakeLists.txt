@@ -1,0 +1,2 @@
+add_executable(rtd2asroot rtd2asroot.cxx)
+target_link_libraries(rtd2asroot PRIVATE SNemoRawDataObj)
