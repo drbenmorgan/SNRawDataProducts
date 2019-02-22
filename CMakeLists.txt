@@ -37,15 +37,11 @@ add_library(SNemoRawDataObj SHARED
   snfee/data/calo_waveform_data.h
   snfee/data/channel_id.cc
   snfee/data/channel_id.h
-  snfee/data/channel_id_selection.cc
-  snfee/data/channel_id_selection.h
   snfee/data/has_trigger_id_interface.h
   snfee/data/raw_trigger_data.cc
   snfee/data/raw_trigger_data.h
   snfee/data/rtd2root_data.cc
   snfee/data/rtd2root_data.h
-  snfee/data/rtd_selection.cc
-  snfee/data/rtd_selection.h
   snfee/data/run_info-serial.h
   snfee/data/run_info.cc
   snfee/data/run_info.h
@@ -93,6 +89,15 @@ add_library(SNemoRawDataObj SHARED
   snfee/boost_dict.cc
   ${CMAKE_CURRENT_BINARY_DIR}/SNemoRawDataObj_dict.cxx
   )
+
+# "Elsewhere" sources
+# - Things that are strictly part of raw data (e.g. algorithms, presentation)
+#  snfee/data/channel_id_selection.cc
+#  snfee/data/channel_id_selection.h
+#  snfee/data/rtd_selection.cc
+#  snfee/data/rtd_selection.h
+
+
 
 target_include_directories(SNemoRawDataObj PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>

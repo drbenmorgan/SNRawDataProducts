@@ -29,7 +29,7 @@ int main(int argc_, char ** argv_)
   int error_code = EXIT_SUCCESS;
   try {
     app_params_type app_params;
-    
+
     // Parse options:
     namespace po = boost::program_options;
     po::options_description opts("Allowed options");
@@ -60,27 +60,27 @@ int main(int argc_, char ** argv_)
        po::value<std::size_t>(&app_params.converter_cfg.max_total_records)
        ->value_name("number")->default_value(0),
        "set the maximum number of RTD records to be converted (default: 0, unused")
-      
-      ("calo-select-crate,C",
-       po::value<int16_t>(&app_params.converter_cfg.calo_sel_config.crate_num)
-       ->value_name("id"),
-       "set a specific crate number (0-2) for calorimeter hit record selection")
 
-      ("calo-select-board,B",
-       po::value<int16_t>(&app_params.converter_cfg.calo_sel_config.board_num)
-       ->value_name("id"),
-       "set a specific board number (0-9,11-20) for calorimeter hit record selection")
+//      ("calo-select-crate,C",
+//       po::value<int16_t>(&app_params.converter_cfg.calo_sel_config.crate_num)
+//       ->value_name("id"),
+//       "set a specific crate number (0-2) for calorimeter hit record selection")
+//
+//      ("calo-select-board,B",
+//       po::value<int16_t>(&app_params.converter_cfg.calo_sel_config.board_num)
+//       ->value_name("id"),
+//       "set a specific board number (0-9,11-20) for calorimeter hit record selection")
+//
+//      ("calo-select-chip,H",
+//       po::value<int16_t>(&app_params.converter_cfg.calo_sel_config.chip_num)
+//       ->value_name("id"),
+//       "set a specific chip number (0-7) for calorimeter hit record selection")
+//
+//      ("calo-select-reverse,V",
+//       po::value<bool>(&app_params.converter_cfg.calo_sel_config.reverse)
+//       ->zero_tokens()->default_value(false),
+//       "reverse the calorimeter hit selection")
 
-      ("calo-select-chip,H",
-       po::value<int16_t>(&app_params.converter_cfg.calo_sel_config.chip_num)
-       ->value_name("id"),
-       "set a specific chip number (0-7) for calorimeter hit record selection")
-
-      ("calo-select-reverse,V",
-       po::value<bool>(&app_params.converter_cfg.calo_sel_config.reverse)
-       ->zero_tokens()->default_value(false),
-       "reverse the calorimeter hit selection")
-      
     ; // end of options description
 
     // Describe command line arguments :
@@ -96,7 +96,7 @@ int main(int argc_, char ** argv_)
                 << "Convert raw trigger data file (RTD) to a Root file"
                 << std::endl << std::endl;
       std::cout << "Usage : " << std::endl << std::endl;
-      std::cout << "  snfee-rtd2root [OPTIONS]" << std::endl << std::endl;  
+      std::cout << "  snfee-rtd2root [OPTIONS]" << std::endl << std::endl;
       std::cout << opts << std::endl;
       std::cout << "Example : " << std::endl << std::endl;
       std::cout << "  snfee-rtd2root \\\n";
@@ -104,11 +104,11 @@ int main(int argc_, char ** argv_)
       std::cout << "    --input-file \"snemo_run-8_rtd_part-1.data.gz\" \\\n";
       std::cout << "    --input-file \"snemo_run-8_rtd_part-2.data.gz\" \\\n";
       std::cout << "    --output-file \"snemo_run-8_rtd.root\"";
-      std::cout << std::endl << std::endl;  
+      std::cout << std::endl << std::endl;
       std::cout << "  snfee-rtd2root \\\n";
       std::cout << "    --input-list \"snemo_run-8_rtd.lis\" \\\n";
       std::cout << "    --output-file \"snemo_run-8_rtd.root\"";
-      std::cout << std::endl << std::endl;  
+      std::cout << std::endl << std::endl;
       return (-1);
     }
 
@@ -140,7 +140,7 @@ int main(int argc_, char ** argv_)
     rtd2rootConverter.initialize();
     rtd2rootConverter.run();
     rtd2rootConverter.terminate();
-    
+
   } catch (std::exception & x) {
     std::cerr << "error: " << x.what() << std::endl;
     error_code = EXIT_FAILURE;

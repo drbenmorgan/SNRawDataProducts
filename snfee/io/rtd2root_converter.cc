@@ -17,7 +17,7 @@
 #include <snfee/io/multifile_data_reader.h>
 #include <snfee/data/raw_trigger_data.h>
 #include <snfee/data/rtd2root_data.h>
-#include <snfee/data/rtd_selection.h>
+//#include <snfee/data/rtd_selection.h>
 
 namespace snfee {
   namespace io {
@@ -31,7 +31,7 @@ namespace snfee {
       std::size_t nb_processed_counter = 0;
       std::size_t nb_saved_counter = 0;
     };
-    
+
     rtd2root_converter::rtd2root_converter()
     {
       _pimpl_.reset(new pimpl_type);
@@ -60,9 +60,9 @@ namespace snfee {
 
     bool rtd2root_converter::is_initialized() const
     {
-      return _initialized_;  
+      return _initialized_;
     }
-    
+
     void rtd2root_converter::initialize()
     {
       DT_THROW_IF(is_initialized(), std::logic_error,
@@ -104,7 +104,7 @@ namespace snfee {
 
       // Root tree:
       TTree * tree = _pimpl_->rtree;
-      
+
       /*
         URL: https://root.cern.ch/root/html/tutorials/tree/tree3.C.html
         ROOT currently supported types:
@@ -121,14 +121,14 @@ namespace snfee {
         l : a 64 bit unsigned integer (ULong64_t)
         O : a boolean (Bool_t)
       */
-      
+
       // General:
       tree->Branch("run_id",     &_pimpl_->rtd2Root.run_id,     "run_id/I");
       tree->Branch("trigger_id", &_pimpl_->rtd2Root.trigger_id, "trigger_id/I");
-      
+
       // Trig record:
       tree->Branch("has_trig",   &_pimpl_->rtd2Root.has_trig,   "has_trig/O");
-      
+
       // Calo hit records:
       tree->Branch("nb_calo_hits",         &_pimpl_->rtd2Root.nb_calo_hits,    "nb_calo_hits/i");
       tree->Branch("calo_tdc",              _pimpl_->rtd2Root.calo_tdc,        "calo_tdc[nb_calo_hits]/S");
@@ -152,7 +152,7 @@ namespace snfee {
       tree->Branch("calo_ch0_charge",       _pimpl_->rtd2Root.calo_ch0_charge,       "calo_ch0_charge[nb_calo_hits]/I");
       tree->Branch("calo_ch0_rising_cell",  _pimpl_->rtd2Root.calo_ch0_rising_cell,  "calo_ch0_rising_cell[nb_calo_hits]/I");
       tree->Branch("calo_ch0_falling_cell", _pimpl_->rtd2Root.calo_ch0_falling_cell, "calo_ch0_rising_falling[nb_calo_hits]/I");
-      
+
       tree->Branch("calo_ch1_lt",           _pimpl_->rtd2Root.calo_ch1_lt,           "calo_ch1_lt[nb_calo_hits]/O");
       tree->Branch("calo_ch1_ht",           _pimpl_->rtd2Root.calo_ch1_ht,           "calo_ch1_ht[nb_calo_hits]/O");
       tree->Branch("calo_ch1_underflow",    _pimpl_->rtd2Root.calo_ch1_underflow,    "calo_ch1_underflow[nb_calo_hits]/O");
@@ -170,7 +170,7 @@ namespace snfee {
       tree->Branch("calo_ch1_waveform",
                    _pimpl_->rtd2Root.calo_ch1_waveform,
                    "calo_ch1_waveform[nb_calo_hits][1024]/S");
-      
+
       // Tracker hit records:
       tree->Branch("nb_tracker_hits",           &_pimpl_->rtd2Root.nb_tracker_hits,            "nb_tracker_hits/i");
       tree->Branch("tracker_crate_num",          _pimpl_->rtd2Root.tracker_crate_num,          "tracker_crate_num[nb_tracker_hits]/S");
@@ -180,7 +180,7 @@ namespace snfee {
       tree->Branch("tracker_channel_category",   _pimpl_->rtd2Root.tracker_channel_category,   "tracker_channel_category[nb_tracker_hits]/S");
       tree->Branch("tracker_timestamp_category", _pimpl_->rtd2Root.tracker_timestamp_category, "tracker_timestamp_category[nb_tracker_hits]/S");
       tree->Branch("tracker_timestamp",          _pimpl_->rtd2Root.tracker_timestamp,          "tracker_timestamp[nb_tracker_hits]/l");
-      
+
       _initialized_ = true;
       return;
     }
@@ -191,7 +191,7 @@ namespace snfee {
                   "Converter is not initialized!");
 
       // Calorimeter raw hit record selector:
-      snfee::data::calo_selection caloSel(_config_.calo_sel_config);
+      //snfee::data::calo_selection caloSel(_config_.calo_sel_config);
 
       // Working RTD object:
       snfee::data::raw_trigger_data rtd;
@@ -213,12 +213,12 @@ namespace snfee {
           }
           _pimpl_->nb_processed_counter++;
           bool export_rtd = true;
-          if (caloSel.is_activated()) {
+          //if (caloSel.is_activated()) {
             // Apply calorimeter selection on the RTD object:
-            if (export_rtd and ! caloSel(rtd)) {
-              export_rtd = false; 
-            }
-          }          
+            //if (export_rtd and ! caloSel(rtd)) {
+            //  export_rtd = false;
+            //}
+          // }
           if (export_rtd) {
             // ROOT export:
             snfee::data::rtd2root_data::export_to_root(rtd, _pimpl_->rtd2Root);
@@ -237,7 +237,7 @@ namespace snfee {
       }
       return;
     }
-      
+
     void rtd2root_converter::terminate()
     {
       DT_THROW_IF(!is_initialized(), std::logic_error,
@@ -248,6 +248,6 @@ namespace snfee {
       _pimpl_->reader.reset();
       return;
     }
-  
+
   } // namespace io
 } // namespace snfee

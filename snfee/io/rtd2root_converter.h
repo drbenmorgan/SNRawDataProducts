@@ -19,7 +19,7 @@
 
 // This project
 #include <snfee/io/multifile_data_reader.h>
-#include <snfee/data/rtd_selection.h>
+//#include <snfee/data/rtd_selection.h>
 
 namespace snfee {
   namespace io {
@@ -29,7 +29,7 @@ namespace snfee {
       : private boost::noncopyable
     {
     public:
-      
+
       /// \brief Configuration data:
       struct config_type
       {
@@ -38,9 +38,9 @@ namespace snfee {
         std::string output_root_filename;     ///< Output Root filename
         std::size_t max_total_records = 0;    ///< Max number of converted RTD records
         /// Calorimeter hit record selection:
-        snfee::data::calo_selection::config_type calo_sel_config;
+        //snfee::data::calo_selection::config_type calo_sel_config;
       };
-      
+
       //! Default constructor
       rtd2root_converter();
 
@@ -49,10 +49,10 @@ namespace snfee {
 
       //! Set the logging priority
       void set_logging(const datatools::logger::priority);
-      
+
       //! Set the configuration
       void set_config(const config_type &);
-      
+
       //! Check if the converter is initialized
       bool is_initialized() const;
 
@@ -61,23 +61,23 @@ namespace snfee {
 
       //! Run the converter
       void run();
-      
+
       //! Reset the converter
       void terminate();
-      
+
     private:
 
       // Management:
       bool _initialized_ = false;
       datatools::logger::priority _logging_ = datatools::logger::PRIO_FATAL;
-      
+
       // Configuration:
       config_type _config_;  ///< Configuration
 
       // Working data:
       struct pimpl_type;
       std::unique_ptr<pimpl_type> _pimpl_; ///< Private working data
-    
+
     };
 
   } // namespace io
