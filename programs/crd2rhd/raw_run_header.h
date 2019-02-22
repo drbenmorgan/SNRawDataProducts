@@ -30,14 +30,14 @@ namespace snfee {
 
       /// Set the software version
       void set_software_version(const std::string & sw_version_);
- 
+
       /// Make a raw run header
       void make(const std::string & sw_version_,
                 const double unix_time_,
                 const std::string & date_,
                 const std::string & time_,
                 const std::string & data_type_);
-      
+
       /// Reset
       void reset();
 

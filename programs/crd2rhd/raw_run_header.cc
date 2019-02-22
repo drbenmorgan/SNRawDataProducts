@@ -1,7 +1,7 @@
 // snfee/io/raw_run_header.cc
 
 // Ourselves:
-#include <snfee/io/raw_run_header.h>
+#include "raw_run_header.h"
 
 // Standard library:
 #include <iostream>
@@ -43,7 +43,7 @@ namespace snfee {
     {
       std::string ver = sw_version_;
       if (ver.length() > 0 and (ver[0] == 'v' or ver[0] == 'V')) {
-        ver = ver.substr(1); 
+        ver = ver.substr(1);
       }
       datatools::version_id ver_id;
       DT_THROW_IF(!ver_id.from_string(ver), std::logic_error,
@@ -89,7 +89,7 @@ namespace snfee {
     {
       base_print_options popts;
       popts.configure_from(options_);
-    
+
       if (popts.title.length()) {
         out_ << popts.indent << popts.title << std::endl;
       }

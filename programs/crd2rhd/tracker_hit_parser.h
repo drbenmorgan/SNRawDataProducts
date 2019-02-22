@@ -73,13 +73,13 @@ namespace snfee {
                              hit_data_type & hit_data_);
 
     private:
-    
+
       // Management:
       datatools::logger::priority _logging_ = datatools::logger::PRIO_FATAL;
 
       // Configuration:
       config_type         _config_;
-      
+
       // Working:
       format_version_type _format_ = FORMAT_INVALID;
 

@@ -22,8 +22,9 @@
 #include <snfee/data/trigger_record.h>
 #include <snfee/data/calo_hit_record.h>
 #include <snfee/data/tracker_hit_record.h>
-#include <snfee/io/raw_hit_reader.h>
 #include <snfee/io/multifile_data_writer.h>
+
+#include "raw_hit_reader.h"
 
 // \brief Application configuration parameters
 struct app_params_type

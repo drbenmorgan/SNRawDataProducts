@@ -1,7 +1,7 @@
 // snfee/io/raw_record_parser.cc
 
 // Ourselves:
-#include <snfee/io/raw_record_parser.h>
+#include "raw_record_parser.h"
 
 // Third party:
 // - Boost:
@@ -28,7 +28,7 @@ namespace snfee {
       _record_type_ = RECORD_UNDEF;
       return;
     }
-    
+
     datatools::logger::priority raw_record_parser::get_logging() const
     {
       return _logging_;
@@ -39,12 +39,12 @@ namespace snfee {
       _logging_ = l_;
       return;
     }
-  
+
     const raw_record_parser::config_type & raw_record_parser::get_config() const
     {
       return _config_;
     }
-    
+
     void raw_record_parser::set_config(const config_type & cfg_)
     {
       _config_ = cfg_;
@@ -65,7 +65,7 @@ namespace snfee {
           _calo_hit_parser_->print(std::clog, "[debug] ");
         }
       }
- 
+
       if (_config_.with_tracker) {
         tracker_hit_parser::config_type trackerCfg;
         // trackerCfg.module_num = _config_.module_num;
@@ -79,7 +79,7 @@ namespace snfee {
       }
       return;
     }
-    
+
     raw_record_parser::record_type raw_record_parser::parse(std::istream & in_,
                                                             snfee::data::calo_hit_record & calo_hit_,
                                                             snfee::data::tracker_hit_record & tracker_hit_)
@@ -130,7 +130,7 @@ namespace snfee {
           DT_THROW_IF(!success, std::logic_error, "Failed to parse a tracker hit!");
           ret = _record_type_;
           DT_LOG_DEBUG(_logging_, "Parsed a tracker hit record");
-        } 
+        }
         in_ >> std::ws;
         // success = true;
       } catch (std::exception & error) {

@@ -1,4 +1,4 @@
-#include <snfee/io/raw_hit_reader.h>
+#include "raw_hit_reader.h"
 
 // Standard library:
 #include <cstdlib>
@@ -94,7 +94,7 @@ namespace snfee {
 
     void raw_hit_reader::initialize()
     {
-      DT_THROW_IF(_initialized_, std::logic_error, "Reader is already initialized!");      
+      DT_THROW_IF(_initialized_, std::logic_error, "Reader is already initialized!");
       _init_input_file_();
       _init_header_();
       _init_parser_();
@@ -178,10 +178,10 @@ namespace snfee {
       parser_config.with_tracker = _config_.with_tracker;
       parser_config.with_calo_waveforms = _config_.with_calo_waveforms;
       _record_parser_.reset(new raw_record_parser(parser_config, _logging_));
-      
+
       return;
     }
-    
+
     void raw_hit_reader::_reset_parser_()
     {
       if (_record_parser_) {
@@ -203,7 +203,7 @@ namespace snfee {
       std::string date;
       std::string time;
       // std::string data_type;
-    
+
       if (index_ == 0) {
         std::string data_type;
         res = qi::phrase_parse(str_iter,
@@ -258,7 +258,7 @@ namespace snfee {
         DT_LOG_DEBUG(_logging_, "data_type = " << data_type);
         _header_->data_type = data_type;
       }
-     
+
       DT_LOG_TRACE_EXITING(_logging_);
       return;
     }

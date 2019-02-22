@@ -16,8 +16,8 @@
 #include <bayeux/datatools/logger.h>
 
 // This project:
-#include <snfee/io/tracker_hit_parser.h>
-#include <snfee/io/calo_hit_parser.h>
+#include "tracker_hit_parser.h"
+#include "calo_hit_parser.h"
 
 namespace snfee {
   namespace io {
@@ -45,7 +45,7 @@ namespace snfee {
         bool with_tracker = true;
         bool with_calo_waveforms = true;
       };
-      
+
       //! Constructor
       raw_record_parser(const config_type & cfg_,
                         const datatools::logger::priority logging_ = datatools::logger::PRIO_FATAL);
@@ -69,7 +69,7 @@ namespace snfee {
                               const int index);
 
     public:
-    
+
       // Management:
       datatools::logger::priority _logging_ = datatools::logger::PRIO_FATAL;
 

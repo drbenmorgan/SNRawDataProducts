@@ -56,26 +56,16 @@ add_library(SNemoRawDataObj SHARED
   snfee/utils.cc
   snfee/utils.h
 
-  snfee/io/calo_hit_parser.cc
-  snfee/io/calo_hit_parser.h
   snfee/io/multifile_data_reader.cc
   snfee/io/multifile_data_reader.h
   snfee/io/multifile_data_writer.cc
   snfee/io/multifile_data_writer.h
-  snfee/io/raw_hit_reader.cc
-  snfee/io/raw_hit_reader.h
-  snfee/io/raw_record_parser.cc
-  snfee/io/raw_record_parser.h
-  snfee/io/raw_run_header.cc
-  snfee/io/raw_run_header.h
   snfee/io/rhd_record.cc
   snfee/io/rhd_record.h
   snfee/io/rhd_sorter.cc
   snfee/io/rhd_sorter.h
   snfee/io/rtd_record.cc
   snfee/io/rtd_record.h
-  snfee/io/tracker_hit_parser.cc
-  snfee/io/tracker_hit_parser.h
 
   snfee/rtdb/builder.cc
   snfee/rtdb/builder.h

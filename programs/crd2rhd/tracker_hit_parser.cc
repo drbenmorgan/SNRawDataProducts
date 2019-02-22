@@ -1,6 +1,6 @@
 // snfee/io/tracker_hit_parser.cc
 // Ourselves:
-#include <snfee/io/tracker_hit_parser.h>
+#include "tracker_hit_parser.h"
 
 // Third party:
 // - Boost:
@@ -37,12 +37,12 @@ namespace snfee {
       _logging_ = l_;
       return;
     }
-    
+
     const tracker_hit_parser::config_type & tracker_hit_parser::get_config() const
     {
       return _config_;
     }
-   
+
     void tracker_hit_parser::set_config(const config_type & cfg_)
     {
       _config_ = cfg_;
@@ -84,7 +84,7 @@ namespace snfee {
         in_ >> std::ws;
 
         // Populate the tracker hit record:
-        
+
         // int16_t   module_num  = _config_.module_num;
         int16_t   crate_num   = _config_.crate_num;
         int16_t   board_num   = hit_data.slot_id;
@@ -153,7 +153,7 @@ namespace snfee {
 
       std::string::const_iterator str_iter = data_line.begin();
       std::string::const_iterator end_iter = data_line.end();
- 
+
       if (_format_ == FORMAT_FROM_2_4) {
         res = qi::phrase_parse(str_iter,
                                end_iter,

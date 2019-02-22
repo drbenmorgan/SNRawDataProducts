@@ -1,7 +1,7 @@
 // snfee/io/calo_hit_parser.cc
 
 // Ourselves:
-#include <snfee/io/calo_hit_parser.h>
+#include "calo_hit_parser.h"
 
 // Standard library:
 // #include <limits>
@@ -54,7 +54,7 @@ namespace snfee {
       out_ << indent_ << "falling_offset  = " << falling_offset << std::endl;
       out_ << indent_ << "falling_ns      = " << falling_ns << std::endl;
       return;
-    } 
+    }
 
     void calo_hit_parser::print(std::ostream & out_, const std::string & indent_) const
     {
@@ -85,12 +85,12 @@ namespace snfee {
       _logging_ = l_;
       return;
     }
-    
+
     const calo_hit_parser::config_type & calo_hit_parser::get_config() const
     {
       return _config_;
     }
-    
+
     void calo_hit_parser::set_config(const config_type & cfg_)
     {
       _config_ = cfg_;
@@ -122,7 +122,7 @@ namespace snfee {
         // Loop on both channels:
         for (int ichannel = 0;
              ichannel < snfee::model::feb_constants::SAMLONG_NUMBER_OF_CHANNELS;
-             ichannel++) {      
+             ichannel++) {
           // Header line(s):
           for (std::size_t ihline = 0; ihline < NB_CALO_HEADER_LINES; ihline++) {
             std::string hline;
@@ -227,7 +227,7 @@ namespace snfee {
         if (fcr >= 1024) {
           DT_LOG_WARNING(_logging_, "FCR=[" << fcr << "] is out of range.");
           fcr = fcr % 1024;
-        } 
+        }
         bool      has_waveforms = _config_.with_waveforms;
         DT_LOG_DEBUG(_logging_, "has_waveforms = " << std::boolalpha << has_waveforms);
         uint16_t  waveform_start_sample = snfee::data::calo_hit_record::INVALID_WAVEFORM_START_SAMPLE;
@@ -282,8 +282,8 @@ namespace snfee {
           int16_t peak      = headers[ichannel].raw_peak;
           int16_t peak_cell = headers[ichannel].peak_cell;
           int16_t charge    = headers[ichannel].raw_charge;
-          int32_t rising_cell  = headers[ichannel].rising_cell * 256 + headers[ichannel].rising_offset; 
-          int32_t falling_cell = headers[ichannel].falling_cell * 256 + headers[ichannel].falling_offset; 
+          int32_t rising_cell  = headers[ichannel].rising_cell * 256 + headers[ichannel].rising_offset;
+          int32_t falling_cell = headers[ichannel].falling_cell * 256 + headers[ichannel].falling_offset;
           hit_.make_channel(ichannel,
                             lt,
                             ht,
@@ -319,7 +319,7 @@ namespace snfee {
       DT_LOG_TRACE_EXITING(_logging_);
       return success;
     }
-    
+
     void calo_hit_parser::_parse_header_(const std::string & header_line_,
                                          const int index_,
                                          header_type & header_)
@@ -335,7 +335,7 @@ namespace snfee {
       DT_LOG_TRACE_EXITING(_logging_);
       return;
     }
-    
+
     void calo_hit_parser::_parse_header_from_2_4_(const std::string & header_line_,
                                                   const int index_,
                                                   header_type & header_)
@@ -384,11 +384,11 @@ namespace snfee {
                     std::logic_error,
                     "Cannot parse file header line #" << index_ << "; failed at '" << *str_iter << "'!");
       }
-     
+
       DT_LOG_TRACE_EXITING(_logging_);
       return;
     }
-      
+
     /// Header parsing
     void calo_hit_parser::_parse_header_from_2_3_(const std::string & header_line_,
                                                   const int index_,
@@ -437,7 +437,7 @@ namespace snfee {
                     std::logic_error,
                     "Cannot parse file header line #" << index_ << "; failed at '" << *str_iter << "'!");
       }
-     
+
       DT_LOG_TRACE_EXITING(_logging_);
       return;
     }
@@ -490,7 +490,7 @@ namespace snfee {
       DT_LOG_TRACE_EXITING(_logging_);
       return;
     }
-    
+
     void calo_hit_parser::_parse_waveform_(const std::string & data_line_,
                                            const uint16_t channel_index_,
                                            snfee::data::calo_hit_record::waveforms_record & waveforms_)
@@ -520,14 +520,14 @@ namespace snfee {
       for (int i = 0; i < 10 /*channel_waveform_data.size()*/; i++) {
         DT_LOG_DEBUG(_logging_, "Channel waveform sample[" << i << "] = " << channel_waveform_data[i]);
       }
- 
+
       // Populate the waveform for this channel:
       if (waveforms_.get_samples().size() == 0) {
         waveforms_.reset(channel_waveform_data.size());
       } else {
         DT_THROW_IF(waveforms_.get_samples().size() != channel_waveform_data.size(),
                     std::logic_error,
-                    "Waveforms number of samples does not match the parsed waveform data for channel [" << channel_index_ << "!"); 
+                    "Waveforms number of samples does not match the parsed waveform data for channel [" << channel_index_ << "!");
       }
       for (uint16_t icell = 0; icell < channel_waveform_data.size(); icell++) {
         waveforms_.set_adc(icell, channel_index_, channel_waveform_data[icell]);

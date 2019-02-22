@@ -40,7 +40,7 @@ namespace snfee {
         datatools::version_id firmware_version;
         bool with_waveforms = true;
       };
-      
+
       //! Number of header lines
       static const std::size_t NB_CALO_HEADER_LINES = 1;
 
@@ -58,7 +58,7 @@ namespace snfee {
       const config_type & get_config() const;
 
       void set_config(const config_type &);
-    
+
       //! Parse
       bool parse(std::istream & in_, snfee::data::calo_hit_record & hit_);
 
@@ -77,7 +77,7 @@ namespace snfee {
 
         int32_t   raw_baseline  = std::numeric_limits<int32_t>::max();
         double    baseline_volt = std::numeric_limits<double>::quiet_NaN(); ///< Software computed (not raw data)
-        
+
         int16_t   raw_peak      = std::numeric_limits<int16_t>::max();
         uint16_t  peak_cell     = std::numeric_limits<uint16_t>::max();
         double    peak_volt     = std::numeric_limits<double>::quiet_NaN(); ///< Software computed (not raw data)
@@ -99,25 +99,25 @@ namespace snfee {
         double    unix_time      = std::numeric_limits<double>::quiet_NaN(); ///< Software computed (not raw data)
 
         void print(std::ostream & out_, const std::string & indent_ = "") const;
-        
+
       };
- 
+
       /// Print
       void print(std::ostream & out_, const std::string & indent_ = "") const;
-   
+
     private:
-      
+
       /// Header parsing
       void _parse_header_(const std::string & header_line_,
                           const int index_,
                           header_type & header_);
-      
-      
+
+
       /// Header parsing
       void _parse_header_from_2_4_(const std::string & header_line_,
                                    const int index_,
                                    header_type & header_);
-      
+
       /// Header parsing
       void _parse_header_from_2_3_(const std::string & header_line_,
                                    const int index_,
@@ -134,18 +134,18 @@ namespace snfee {
                             snfee::data::calo_hit_record::waveforms_record & waveforms_);
 
     private:
-    
+
       // Management:
       datatools::logger::priority _logging_ = datatools::logger::PRIO_FATAL;
 
       // Configuration:
       config_type         _config_;
-      
+
       // Working:
       format_version_type _format_ = FORMAT_INVALID;
       // status_type _status_;
       header_type _current_header_;
-      
+
     };
 
   } // namespace io

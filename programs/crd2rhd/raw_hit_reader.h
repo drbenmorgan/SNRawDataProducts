@@ -18,8 +18,8 @@
 #include <bayeux/datatools/logger.h>
 
 // This project:
-#include <snfee/io/raw_run_header.h>
-#include <snfee/io/raw_record_parser.h>
+#include "raw_run_header.h"
+#include "raw_record_parser.h"
 
 namespace snfee {
   namespace io {
@@ -40,7 +40,7 @@ namespace snfee {
         bool with_tracker = true;
         bool with_calo_waveforms = true;
       };
-  
+
       //! Default constructor
       raw_hit_reader();
 
@@ -55,7 +55,7 @@ namespace snfee {
 
       //! Set the config
       void set_config(const config_type &);
-      
+
       //! Chek if a next hit is available
       bool has_next_hit() const;
 
@@ -65,7 +65,7 @@ namespace snfee {
                     snfee::data::tracker_hit_record & tracker_hit_);
 
       bool has_run_header() const;
-      
+
       //! Load the run header
       void load_run_header(raw_run_header & header_);
 
@@ -105,7 +105,7 @@ namespace snfee {
       // Management:
       bool                           _initialized_ = false;
       datatools::logger::priority    _logging_ = datatools::logger::PRIO_FATAL;
-      
+
       // Working:
       std::unique_ptr<std::ifstream>     _fin_;           //!< Handle to the input file stream
       std::unique_ptr<raw_run_header>    _header_;        //!< Handle to the input file header
