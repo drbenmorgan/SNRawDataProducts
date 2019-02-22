@@ -1,5 +1,5 @@
 // This project:
-#include <snfee/io/rtd_record.h>
+#include "rtd_record.h"
 
 namespace snfee {
   namespace io {
@@ -8,7 +8,7 @@ namespace snfee {
     {
       return;
     }
- 
+
     void rtd_record::make_record(const int32_t run_id_, const int32_t trigger_id_)
     {
       _trigger_id_ = trigger_id_;
@@ -17,22 +17,22 @@ namespace snfee {
       _rtd_->set_trigger_id(_trigger_id_);
       return;
     }
-      
+
     void rtd_record::reset()
     {
       _trigger_id_ = snfee::data::INVALID_TRIGGER_ID;
       _rtd_.reset();
       return;
     }
-      
+
     bool rtd_record::has_record() const
     {
       return _rtd_.get() != nullptr;
     }
-      
+
     int32_t rtd_record::get_trigger_id() const
     {
-      return _trigger_id_; 
+      return _trigger_id_;
     }
 
     snfee::data::raw_trigger_data & rtd_record::grab_rtd()
@@ -69,7 +69,7 @@ namespace snfee {
       }
       return;
     }
-      
+
     void rtd_record::print(std::ostream & out_) const
     {
       std::ostringstream obuffer;
@@ -108,7 +108,7 @@ namespace snfee {
       out << '}';
       out_ << out.str();
       return out_;
-    } 
+    }
 
   } // namespace io
 } // namespace snfee

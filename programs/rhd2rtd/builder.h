@@ -1,5 +1,5 @@
 //! \file  snfee/rtdb/builder.h
-//! \brief Raw trigger data (RTD) builder from the SuperNEMO raw hit data records (RHD) 
+//! \brief Raw trigger data (RTD) builder from the SuperNEMO raw hit data records (RHD)
 //
 // Copyright (c) 2018 by François Mauger <mauger@lpccaen.in2p3.fr>
 //
@@ -34,7 +34,8 @@
 #include <snfee/data/raw_trigger_data.h>
 #include <snfee/data/has_trigger_id_interface.h>
 #include <snfee/model/utils.h>
-#include <snfee/rtdb/builder_config.h>
+
+#include "builder_config.h"
 
 namespace snfee {
   namespace rtdb {
@@ -45,7 +46,7 @@ namespace snfee {
     {
 
     public:
- 
+
       /// Constructor
       builder();
 
@@ -54,13 +55,13 @@ namespace snfee {
 
       /// Return the logging priority threshold
       datatools::logger::priority get_logging() const;
-      
+
       /// Set the logging priority threshold
       void set_logging(const datatools::logger::priority);
 
       /// Set the configuration
       void set_config(const builder_config &);
-      
+
       /// Return the configuration
       const builder_config & get_config() const;
 
@@ -72,16 +73,16 @@ namespace snfee {
 
       /// Run the builder
       void run();
-      
+
       /// Terminate the builder
       void terminate();
- 
+
       /// Check is the builder is stopped
       bool is_stopped() const;
 
       /// Stop request
       void stop();
-      
+
       /// Smart print
       ///
       /// Usage:
@@ -98,14 +99,14 @@ namespace snfee {
 
       /// \brief Worker category
       enum worker_category_type {
-        WORKER_UNDEF        = 0, 
-        WORKER_INPUT_RHD    = 1, 
+        WORKER_UNDEF        = 0,
+        WORKER_INPUT_RHD    = 1,
         WORKER_OUTPUT_RTD   = 2
       };
-      
+
       /// \brief Worker results (statistics)
       struct worker_results_type
-      { 
+      {
         worker_category_type           category = WORKER_UNDEF;
         snfee::model::crate_model_type crate_model = snfee::model::CRATE_UNDEF;
         std::size_t                    processed_records_counter1 = 0;
@@ -114,7 +115,7 @@ namespace snfee {
 
       /// Return the results of the run
       const std::vector<worker_results_type> & get_results() const;
-      
+
     private:
 
       void _at_run_();
@@ -124,7 +125,7 @@ namespace snfee {
       void _at_terminate_();
 
     public:
-      
+
       struct pimpl_type; ///!< Private implementation type
 
     private:
@@ -133,18 +134,18 @@ namespace snfee {
       bool _initialized_ = false;
       datatools::logger::priority _logging_ = datatools::logger::PRIO_FATAL;
       bool _stop_request_ = false;
-      
+
       // Configuration
       builder_config _config_;
 
       // Results:
       std::vector<worker_results_type> _results_;
-      
+
       // Working data:
       std::unique_ptr<pimpl_type> _pimpl_;
-      
+
     };
-    
+
   } // namespace rtdb
 } // namespace snfee
 

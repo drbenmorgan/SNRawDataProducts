@@ -21,28 +21,28 @@ namespace snfee {
     class rhd_record
     {
     public:
-      
+
       /// Constructor
       rhd_record();
 
       /// Constructor from a trigger record
       rhd_record(const std::shared_ptr<snfee::data::trigger_record> & trig_rec_);
- 
+
       /// Constructor from a calo hit record
       rhd_record(const std::shared_ptr<snfee::data::calo_hit_record> & calo_hit_rec_);
- 
+
       /// Constructor from a tracker hit record
       rhd_record(const std::shared_ptr<snfee::data::tracker_hit_record> & tracker_hit_rec_);
-               
+
       /// Make this record a trigger record
       void make_trig();
-      
+
       /// Make this record a calo hit record
       void make_calo_hit();
 
       /// Make this record a tracker hit record
       void make_tracker_hit();
-          
+
       /// Check if this record is a trigger record
       bool is_trig() const;
 
@@ -63,10 +63,10 @@ namespace snfee {
 
       /// Return the embedded trigger record
       const std::shared_ptr<snfee::data::trigger_record> & get_trig_rec() const;
- 
+
       /// Return the embedded calo hit record
       const std::shared_ptr<snfee::data::tracker_hit_record> & get_tracker_hit_rec() const;
- 
+
       /// Return the embedded tracker hit record
       const std::shared_ptr<snfee::data::calo_hit_record> & get_calo_hit_rec() const;
 
@@ -75,20 +75,20 @@ namespace snfee {
 
       /// Print
       friend std::ostream & operator<<(std::ostream & out_, const rhd_record & rec_);
-      
+
     private:
-      
+
       std::shared_ptr<snfee::data::trigger_record>     _trig_rec_;        ///< Embedded trigger record
       std::shared_ptr<snfee::data::calo_hit_record>    _calo_hit_rec_;    ///< Embedded calo hit record
       std::shared_ptr<snfee::data::tracker_hit_record> _tracker_hit_rec_; ///< Embedded tracker hit record
-       
+
     };
 
     struct rhd_record_less
     {
       bool operator()(const rhd_record & rec1_, const rhd_record & rec2_);
     };
-    
+
   } // namespace io
 } // namespace snfee
 

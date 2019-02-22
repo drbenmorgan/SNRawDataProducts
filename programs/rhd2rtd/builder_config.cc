@@ -1,5 +1,5 @@
 // Ourselves:
-#include <snfee/rtdb/builder_config.h>
+#include "builder_config.h"
 
 // Standard Library:
 #include <sstream>
@@ -28,13 +28,13 @@ namespace snfee {
     {
       return;
     }
- 
+
     void builder_config::set_run_id(const int32_t rid_)
     {
       run_id = rid_;
       return;
     }
-    
+
     int32_t builder_config::get_run_id() const
     {
       return run_id;
@@ -114,7 +114,7 @@ namespace snfee {
     {
       return input_configs;
     }
- 
+
     // virtual
     void builder_config::print_tree(std::ostream & out_,
                                     const boost::property_tree::ptree & options_) const
@@ -144,19 +144,19 @@ namespace snfee {
           tagss << skip_tag;
         }
         outs << "Input config #" << i << " : " << std::endl;
-        
+
         outs << popts.indent << skip_tag << tagss.str() << tag
              << "Label : '" << ic.label << "'" << std::endl;
-       
+
         outs << popts.indent << skip_tag << tagss.str() << tag
              << "Crate model : '" << snfee::model::crate_model_label(ic.crate_model) << "'" << std::endl;
-      
+
         outs << popts.indent << skip_tag << tagss.str() << tag
              << "Crate ID : " << ic.crate_id << std::endl;
-       
+
         outs << popts.indent << skip_tag << tagss.str() << tag
              << "Listname : '" << ic.listname << "'" << std::endl;
-        
+
         outs << popts.indent << skip_tag << tagss.str() << tag
              << "Filenames : " << ic.filenames.size() << std::endl;
 
@@ -170,10 +170,10 @@ namespace snfee {
           outs << "Filename #" << ifilename << " : '" << ic.filenames[ifilename] << "'";
           outs << std::endl;
         }
-        
+
         outs << popts.indent << skip_tag << tagss.str() << last_tag
              << "Format : '" << format_label(ic.format) << "'" << std::endl;
-    
+
       }
 
       outs << popts.indent << tag
@@ -195,7 +195,7 @@ namespace snfee {
         outs << "Filename #" << ifilename << " : '" << output_config.filenames[ifilename] << "'";
         outs << std::endl;
       }
- 
+
       outs << popts.indent << skip_tag << tag
            << "Max records/file : " << output_config.max_records_per_file << std::endl;
 
@@ -259,13 +259,13 @@ namespace snfee {
                   "Missing RTD output files!");
       return;
     }
-    
+
     void builder_config::load(const std::string & rtdb_config_filename_,
                               builder_config & cfg_)
     {
       // Clear the config:
       cfg_.reset();
-      
+
       std::string filename = rtdb_config_filename_;
       datatools::fetch_path_with_env(filename);
       datatools::properties rtdb_config;
@@ -277,7 +277,7 @@ namespace snfee {
         run_id = rtdb_config.fetch_integer("run_id");
         cfg_.set_run_id(run_id);
       }
- 
+
       // Force complete output RTD:
       bool force_complete_rtd = false;
       if (rtdb_config.has_key("force_complete_rtd")) {
@@ -315,13 +315,13 @@ namespace snfee {
           std::string key = prefix + ".listname";
           if (rtdb_config.has_key(key)) {
             icfg.listname = rtdb_config.fetch_string(key);
-          }       
+          }
         }
         {
           std::string key = prefix + ".filenames";
           if (rtdb_config.has_key(key)) {
             rtdb_config.fetch(key, icfg.filenames);
-          }       
+          }
         }
         cfg_.input_configs.push_back(icfg);
       }
@@ -339,25 +339,25 @@ namespace snfee {
           std::string key = "rtd.output.filenames";
           if (rtdb_config.has_key(key)) {
             rtdb_config.fetch(key, ocfg.filenames);
-          }       
+          }
         }
         {
           std::string key = "rtd.output.max_records_per_file";
           if (rtdb_config.has_key(key)) {
             ocfg.max_records_per_file = rtdb_config.fetch_positive_integer(key);
-          }        
+          }
         }
         {
           std::string key = "rtd.output.max_total_records";
           if (rtdb_config.has_key(key)) {
             ocfg.max_total_records = rtdb_config.fetch_positive_integer(key);
-          }        
+          }
         }
         {
           std::string key = "rtd.output.terminate_on_overrun";
           if (rtdb_config.has_key(key)) {
             ocfg.terminate_on_overrun = rtdb_config.fetch_boolean(key);
-          }        
+          }
         }
         cfg_.output_config = ocfg;
       }
@@ -366,12 +366,12 @@ namespace snfee {
       if (rtdb_config.has_key("calo_rhd_buffer_capacity")) {
         cfg_.calo_rhd_buffer_capacity = rtdb_config.fetch_positive_integer("calo_rhd_buffer_capacity");
       }
- 
+
       // Buffer capacity:
       if (rtdb_config.has_key("tracker_rhd_buffer_capacity")) {
         cfg_.tracker_rhd_buffer_capacity = rtdb_config.fetch_positive_integer("tracker_rhd_buffer_capacity");
       }
-     
+
       return;
     }
 
@@ -387,13 +387,13 @@ namespace snfee {
       }
       out_ <<
         "# -*- mode: conf-unix; -*-                                 \n\n";
-      
+
       out_ <<
         "###########################################################\n"
         "#@config Configuration file for the snfee-rhd2rtd merger   \n"
         "###########################################################\n\n";
-      
-      out_ << 
+
+      out_ <<
         "#@description Run unique ID (mandatory)                    \n"
         "run_id : integer = " << run_id << "                        \n"
         "                                                           \n"
@@ -428,7 +428,7 @@ namespace snfee {
            crate_model  = snfee::model::subdetector_label(snfee::model::SUBDETECTOR_TRACKER);
            crate_prefix = "tracker";
         }
-        out_ << 
+        out_ <<
           "                                                           \n"
           "#@description Crate model associated to the '" << crate_label << "' input (mandatory) \n"
           "rhd.inputs." << crate_label << ".crate_model : string = \"" << crate_model << "\" \n"
@@ -462,7 +462,7 @@ namespace snfee {
         "###########################################################\n";
       out_ <<
         "#@description Explicit list of RTD output files (mandatory)     \n"
-        "# This list must contains enough file to store all RTD records  \n" 
+        "# This list must contains enough file to store all RTD records  \n"
         "rtd.output.filenames : string[3] as path = \\                   \n"
         "  \"snemo_run-" << run_id << "_rtd_part-0.data.gz\" \\          \n"
         "  \"snemo_run-" << run_id << "_rtd_part-1.data.gz\" \\          \n"
@@ -488,7 +488,7 @@ namespace snfee {
        ;
        return;
     }
- 
+
     /// Print documentation
     // static
     void builder_config::print_documentation(std::ostream & out_)
@@ -559,7 +559,7 @@ namespace snfee {
         "     \"snemo_run-104_rhd_tracker-0_part-6.data.gz\"                \n"
         "                                                                   \n"
         "   #@description Explicit list of RTD output files (mandatory)     \n"
-        "   # This list must contains enough file to store all RTD records  \n" 
+        "   # This list must contains enough file to store all RTD records  \n"
         "   rtd.output.filenames : string[3] as path = \\                   \n"
         "     \"snemo_run-104_rtd_part-0.data.gz\" \\                       \n"
         "     \"snemo_run-104_rtd_part-1.data.gz\" \\                       \n"
@@ -581,6 +581,6 @@ namespace snfee {
         ;
        return;
     }
-    
+
   } // namespace rtdb
 } // namespace snfee

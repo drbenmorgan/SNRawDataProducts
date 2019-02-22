@@ -1,5 +1,5 @@
 // This project:
-#include <snfee/io/rhd_record.h>
+#include "rhd_record.h"
 
 namespace snfee {
   namespace io {
@@ -20,49 +20,49 @@ namespace snfee {
       _calo_hit_rec_ = calo_hit_rec_;
       return;
     }
- 
+
     rhd_record::rhd_record(const std::shared_ptr<snfee::data::tracker_hit_record> & tracker_hit_rec_)
     {
       _tracker_hit_rec_ = tracker_hit_rec_;
       return;
     }
-     
+
     void rhd_record::make_trig()
     {
       reset();
       _trig_rec_ = std::make_shared<snfee::data::trigger_record>();
       return;
     }
-    
+
     void rhd_record::make_calo_hit()
     {
       reset();
       _calo_hit_rec_ = std::make_shared<snfee::data::calo_hit_record>();
       return;
     }
-      
+
     void rhd_record::make_tracker_hit()
     {
       reset();
       _tracker_hit_rec_ = std::make_shared<snfee::data::tracker_hit_record>();
       return;
     }
-      
+
     bool rhd_record::is_calo_hit() const
     {
       return _calo_hit_rec_.get() != nullptr;
     }
-      
+
     bool rhd_record::is_tracker_hit() const
     {
       return _tracker_hit_rec_.get() != nullptr;
     }
-      
+
     bool rhd_record::is_trig() const
     {
       return _trig_rec_.get() != nullptr;
     }
-      
+
     bool rhd_record::empty() const
     {
       if (_calo_hit_rec_) return false;
@@ -70,7 +70,7 @@ namespace snfee {
       if (_trig_rec_) return false;
       return true;
     }
-      
+
     void rhd_record::reset()
     {
       _calo_hit_rec_.reset();
@@ -78,7 +78,7 @@ namespace snfee {
       _trig_rec_.reset();
       return;
     }
-      
+
     int32_t rhd_record::get_trigger_id() const
     {
       int32_t tid = snfee::data::INVALID_TRIGGER_ID;
@@ -91,7 +91,7 @@ namespace snfee {
       }
       return tid;
     }
- 
+
     const std::shared_ptr<snfee::data::trigger_record> & rhd_record::get_trig_rec() const
     {
       return _trig_rec_;
@@ -101,12 +101,12 @@ namespace snfee {
     {
       return _tracker_hit_rec_;
     }
- 
+
     const std::shared_ptr<snfee::data::calo_hit_record> & rhd_record::get_calo_hit_rec() const
     {
       return _calo_hit_rec_;
     }
-      
+
     void rhd_record::print(std::ostream & out_) const
     {
       std::ostringstream out;
@@ -160,6 +160,6 @@ namespace snfee {
       }
       return false;
     }
-   
+
   } // namespace io
 } // namespace snfee

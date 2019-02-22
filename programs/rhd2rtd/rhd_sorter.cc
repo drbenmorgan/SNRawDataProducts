@@ -1,5 +1,5 @@
 // This project:
-#include <snfee/io/rhd_sorter.h>
+#include "rhd_sorter.h"
 
 // Standard Library:
 #include <deque>
@@ -10,7 +10,7 @@
 
 namespace snfee {
   namespace io {
-    
+
     struct trigger_id_buffer
     {
       trigger_id_buffer(const int32_t trigger_id_)
@@ -18,7 +18,7 @@ namespace snfee {
       {
         return;
       }
-      
+
       int32_t trigger_id = snfee::data::INVALID_TRIGGER_ID;
       std::deque<rhd_record> queue;
     };
@@ -26,9 +26,9 @@ namespace snfee {
     struct rhd_sorter::pimpl_type
     {
       pimpl_type(rhd_sorter &);
-      
+
       rhd_sorter & master;
-      
+
     };
 
     rhd_sorter::pimpl_type::pimpl_type(rhd_sorter & master_)
@@ -66,7 +66,7 @@ namespace snfee {
       DT_THROW_IF(trigid == snfee::data::INVALID_TRIGGER_ID,
                   std::logic_error,
                   "Invalid RHD record!");
-      
+
       return;
     }
 

@@ -10,6 +10,10 @@ find_package(Boost REQUIRED date_time)
 # Need ROOT for dictionary generation
 find_package(ROOT 6.12 REQUIRED)
 
+# Need threads for the rhd2rtd program
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
 # - Library build
 # Add the Boost/Root dictionaries into the library for now
 include(${ROOT_DIR}/modules/RootNewMacros.cmake)
@@ -60,28 +64,10 @@ add_library(SNemoRawDataObj SHARED
   snfee/io/multifile_data_reader.h
   snfee/io/multifile_data_writer.cc
   snfee/io/multifile_data_writer.h
-  snfee/io/rhd_record.cc
-  snfee/io/rhd_record.h
-  snfee/io/rhd_sorter.cc
-  snfee/io/rhd_sorter.h
-  snfee/io/rtd_record.cc
-  snfee/io/rtd_record.h
-
-  snfee/rtdb/builder.cc
-  snfee/rtdb/builder.h
-  snfee/rtdb/builder_config.cc
-  snfee/rtdb/builder_config.h
 
   snfee/boost_dict.cc
   ${CMAKE_CURRENT_BINARY_DIR}/SNemoRawDataObj_dict.cxx
   )
-
-# "Elsewhere" sources
-# - Things that are strictly part of raw data (e.g. algorithms, presentation)
-#  snfee/data/channel_id_selection.cc
-#  snfee/data/channel_id_selection.h
-#  snfee/data/rtd_selection.cc
-#  snfee/data/rtd_selection.h
 
 
 

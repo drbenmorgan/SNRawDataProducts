@@ -1,5 +1,5 @@
 //! \file  snfee/rtdb/builder_config.h
-//! \brief Builder configiguration 
+//! \brief Builder configiguration
 //
 // Copyright (c) 2018 by François Mauger <mauger@lpccaen.in2p3.fr>
 //
@@ -43,7 +43,7 @@ namespace snfee {
 
       static const uint32_t DEFAULT_CALO_RHD_BUFFER_CAPACITY    = 100;
       static const uint32_t DEFAULT_TRACKER_RHD_BUFFER_CAPACITY = 500;
-     
+
       /// \brief Input format
       enum format_type {
         FORMAT_UNDEF        = 0,
@@ -62,7 +62,7 @@ namespace snfee {
         std::vector<std::string>       filenames;      ///< Explicit list of input RHD files
         format_type                    format;         ///< Format description (unused)
       };
-      
+
       /// \brief Output configuration description
       struct output_config_type
       {
@@ -79,13 +79,13 @@ namespace snfee {
 
       /// Destructor
       virtual ~builder_config();
- 
+
       /// Set the run ID
       void set_run_id(const int32_t rid_);
 
-      /// Return the run ID     
+      /// Return the run ID
       int32_t get_run_id() const;
-      
+
       /// Check if complete RTD is forced
       bool is_force_complete_rtd() const;
 
@@ -94,14 +94,14 @@ namespace snfee {
 
       /// Check if the output config
       bool has_output_config() const;
-      
+
       /// Set the output config
       void set_output_config(const std::string & label_,
                              const std::vector<std::string> & filepaths_,
                              const std::size_t max_records_per_file_,
                              const std::size_t max_total_records_,
                              const format_type format_ = FORMAT_UNDEF);
-      
+
       /// Return the output config
       const output_config_type & get_output_config() const;
 
@@ -111,14 +111,14 @@ namespace snfee {
                             const int32_t crate_id_,
                             const std::vector<std::string> & filepaths_,
                             const format_type format_ = FORMAT_UNDEF);
-      
+
       /// Add an input configuration
       void add_input_config(const std::string & label_,
                             const snfee::model::crate_model_type crate_model_,
                             const int32_t crate_id_,
                             const std::string & listpath_,
                             const format_type format_ = FORMAT_UNDEF);
-    
+
       /// Return the collection of input configurations
       const std::vector<input_config_type> & get_input_configs() const;
 
@@ -152,7 +152,7 @@ namespace snfee {
 
       /// Print documentation
       static void print_documentation(std::ostream & out);
-      
+
     public:
 
       int32_t                        run_id = snfee::data::INVALID_RUN_ID; ///< Run identifier
@@ -163,9 +163,9 @@ namespace snfee {
       uint32_t tracker_rhd_buffer_capacity = DEFAULT_TRACKER_RHD_BUFFER_CAPACITY; ///< Input RHD buffer capacity for tracker hits
       bool     accept_unsorted_records = false;
       std::size_t unsorted_records_min_popping_safety_depth = 3;
-      
+
     };
-    
+
   } // namespace rtdb
 } // namespace snfee
 

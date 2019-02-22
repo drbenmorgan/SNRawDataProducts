@@ -11,7 +11,7 @@
 #include <bayeux/datatools/logger.h>
 
 // This project:
-#include <snfee/io/rhd_record.h>
+#include "rhd_record.h"
 
 namespace snfee {
   namespace io {
@@ -23,10 +23,10 @@ namespace snfee {
 
       //! Constructor
       rhd_sorter();
- 
+
       //! Destructor
       virtual ~rhd_sorter();
- 
+
       //! Return logging priority
       datatools::logger::priority get_logging() const;
 
@@ -38,15 +38,15 @@ namespace snfee {
 
       // //! Pop the next RHD record
       // const snfee::io::rhd_record & pop_next_record();
-                       
+
     private:
-    
+
       // Management:
       datatools::logger::priority _logging_ = datatools::logger::PRIO_FATAL;
 
       struct pimpl_type;
       std::unique_ptr<pimpl_type> _pimpl_;
-      
+
     };
 
   } // namespace io
