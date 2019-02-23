@@ -10,8 +10,9 @@ C/C++ Raw Data Structures and I/O for SuperNEMO
     - Dependency on `SNCabling` in `snfee/data/channel_id.h` commented out.
       This code just does a copy conversion, and should be handled via a free
       function, or simpler object like a `std::tuple`.
-  - Code obviously relating to *analysis* or *presentation* is moved to
+  - Code obviously relating to *analysis*, *presentation* is moved to
     `elsewhere` directory.
+    - Similarly anything that appears unrelated to raw data structures
   - Code obviously relating to specific I/O conversions like CRD2RHD or
     RHD2RTD is moved into directories for these applications.
     - See `programs/{crd2rhd,rhd2rtd,rtd2root}`

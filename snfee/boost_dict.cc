@@ -56,18 +56,6 @@ BOOST_CLASS_EXPORT_IMPLEMENT(snfee::data::run_info)
 #include <snfee/data/channel_id-serial.h>
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::channel_id)
 
-#include <snfee/data/calo_waveform_data-serial.h>
-DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::calo_waveform)
-DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::calo_waveform_baseline)
-DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::calo_waveform_peak)
-DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::calo_waveform_cfd)
-DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::calo_waveform_charge)
-DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::calo_waveform_firmware_data)
-DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::calo_waveform_info)
-
-#include <snfee/data/calo_channel_traits-serial.h>
-DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::calo_channel_traits)
-
 namespace snfee {
 
 }  // end of namespace snfee

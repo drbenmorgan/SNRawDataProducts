@@ -31,14 +31,8 @@ root_generate_dictionary(SNemoRawDataObj_dict
 
 # The library itself
 add_library(SNemoRawDataObj SHARED
-  snfee/data/calo_channel_traits.cc
-  snfee/data/calo_channel_traits.h
   snfee/data/calo_hit_record.cc
   snfee/data/calo_hit_record.h
-  snfee/data/calo_signal_model.cc
-  snfee/data/calo_signal_model.h
-  snfee/data/calo_waveform_data.cc
-  snfee/data/calo_waveform_data.h
   snfee/data/channel_id.cc
   snfee/data/channel_id.h
   snfee/data/has_trigger_id_interface.h
