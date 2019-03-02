@@ -2,7 +2,20 @@ cmake_minimum_required(VERSION 3.3)
 project(SNemoRawDataObj VERSION 0.1.0)
 
 # Direct Dependencies
-find_package(Bayeux 3.4.1 REQUIRED)
+find_package(Bayeux 3.3.0 REQUIRED)
+# A hack until
+# - root_generate_dictionary support usage requirements/genexs
+# - Bayeux sets a variable for its include path
+if(NOT Bayeux_INCLUDE_DIRS)
+  # NB assumes a normal install
+  find_path(Bayeux_INCLUDE_DIRS bayeux/bayeux.h
+    PATHS "${Bayeux_DIR}/../../../"
+    PATH_SUFFIXES include
+    NO_DEFAULT_PATH)
+endif()
+if(Bayeux_INCLUDE_DIRS)
+    list(APPEND Bayeux_INCLUDE_DIRS "${Bayeux_INCLUDE_DIRS}/bayeux")
+endif()
 
 # Bayeux will refind Boost, but we need an extra component
 find_package(Boost REQUIRED date_time)
@@ -17,7 +30,7 @@ find_package(Threads REQUIRED)
 # - Library build
 # Add the Boost/Root dictionaries into the library for now
 include(${ROOT_DIR}/modules/RootNewMacros.cmake)
-# need at least one inc dir
+# Need incdirs until root_generate_dictionary support usage requirements/genexs
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${Bayeux_INCLUDE_DIRS})
@@ -28,9 +41,9 @@ root_generate_dictionary(SNemoRawDataObj_dict
   LINKDEF ${PROJECT_SOURCE_DIR}/snfee/root_dict_linkdef.h
   OPTIONS "-noIncludePaths")
 
-
 # The library itself
 add_library(SNemoRawDataObj SHARED
+  # Data Model
   snfee/data/calo_hit_record.cc
   snfee/data/calo_hit_record.h
   snfee/data/channel_id.cc
@@ -53,12 +66,12 @@ add_library(SNemoRawDataObj SHARED
   snfee/model/utils.h
   snfee/utils.cc
   snfee/utils.h
-
+  # Boost.Serialization File Reader/Writers
   snfee/io/multifile_data_reader.cc
   snfee/io/multifile_data_reader.h
   snfee/io/multifile_data_writer.cc
   snfee/io/multifile_data_writer.h
-
+  # Boost.Serialization, Root dictionaries
   snfee/boost_dict.cc
   ${CMAKE_CURRENT_BINARY_DIR}/SNemoRawDataObj_dict.cxx
   )
