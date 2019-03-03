@@ -11,4 +11,6 @@ add_executable(rhd2rtd rhd2rtd.cxx
   builder_config.h
   )
 target_link_libraries(rhd2rtd PRIVATE SNemoRawDataObj Threads::Threads)
+_snrtd_install_rpath(rhd2rtd)
 
+install(TARGETS rhd2rtd EXPORT SNemoRawDataObjTargets DESTINATION ${CMAKE_INSTALL_BINDIR})

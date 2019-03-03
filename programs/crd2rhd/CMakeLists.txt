@@ -11,5 +11,6 @@ add_executable(crd2rhd crd2rhd.cxx
   tracker_hit_parser.h
   )
 target_link_libraries(crd2rhd PUBLIC SNemoRawDataObj)
+_snrtd_install_rpath(crd2rhd)
 
-
+install(TARGETS crd2rhd EXPORT SNemoRawDataObjTargets DESTINATION ${CMAKE_INSTALL_BINDIR})

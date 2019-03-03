@@ -1,6 +1,17 @@
 cmake_minimum_required(VERSION 3.3)
 project(SNemoRawDataObj VERSION 0.1.0)
 
+# Settings and Modules
+set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
+set(CMAKE_LINK_DEPENDS_NO_SHARED ON)
+set(CMAKE_INSTALL_MESSAGE LAZY)
+
+include(GNUInstallDirs)
+file(RELATIVE_PATH CMAKE_INSTALL_BINDIR_TO_LIBDIR
+  "${CMAKE_INSTALL_FULL_BINDIR}"
+  "${CMAKE_INSTALL_FULL_LIBDIR}"
+  )
+
 # Direct Dependencies
 find_package(Bayeux 3.3.0 REQUIRED)
 # A hack until
@@ -78,6 +89,7 @@ add_library(SNemoRawDataObj SHARED
 
 target_include_directories(SNemoRawDataObj PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
 target_link_libraries(SNemoRawDataObj PUBLIC Bayeux::Bayeux Boost::date_time ROOT::RIO)
 
@@ -86,4 +98,52 @@ add_subdirectory(programs)
 
 # Examples
 add_subdirectory(examples)
+
+# Installation
+# - Interface
+install(TARGETS SNemoRawDataObj
+  EXPORT SNemoRawDataObjTargets
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  )
+
+# PCM/rootmap, little awkward because of deriving name:
+#  - <libname>.ext
+#    - <libname>.rootmap
+#    - <libname>_rdict.pcm
+# - For now, we *know* that prefix is "lib" so use directly
+set(ROOTMAP_FILE "${CMAKE_CURRENT_BINARY_DIR}/libSNemoRawDataObj.rootmap")
+set(PCM_FILE "${CMAKE_CURRENT_BINARY_DIR}/libSNemoRawDataObj_rdict.pcm")
+install(FILES ${ROOTMAP_FILE} ${PCM_FILE}
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  )
+
+install(DIRECTORY snfee
+  DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+  FILES_MATCHING PATTERN "*.h"
+  PATTERN "elsewhere" EXCLUDE
+  PATTERN "*-serial.h" EXCLUDE
+  PATTERN "root_dict_linkdef.h" EXCLUDE
+  )
+
+# - Support files
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  SNemoRawDataObjConfigVersion.cmake
+  COMPATIBILITY SameMajorVersion
+  )
+configure_package_config_file(${PROJECT_NAME}Config.cmake.in
+                              ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+  INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+  PATH_VARS CMAKE_INSTALL_INCLUDEDIR
+  )
+
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+              ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+  )
+install(EXPORT SNemoRawDataObjTargets
+  NAMESPACE SNemoRawDataObj::
+  DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+  )
 
