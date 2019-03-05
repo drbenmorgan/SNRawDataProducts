@@ -5,13 +5,16 @@
 
 #include <iostream>
 
+#include "snfee/data/raw_trigger_data.h"
+#include "snfee/io/multifile_data_reader.h"
 
-// Input is 1 RTD file to convert
+// Input is 1-N RTD file to convert
 // Output is 1 root file
 
 int main(int argc, char *argv[])
 {
-  std::string inputFile{};
+  // - Command Line
+  snfee::io::multifile_data_reader::config_type inputConfig;
   std::string outputFile{};
 
   namespace po = boost::program_options;
@@ -19,9 +22,10 @@ int main(int argc, char *argv[])
   opts.add_options()
     ("help,h", "produce help message")
     ("input-file,i",
-      po::value<std::string>(&inputFile)
+      po::value<std::vector<std::string>>(&inputConfig.filenames)
       ->value_name("<PATH>")
-      ->required(),
+      ->required()
+      ->multitoken(),
       "path to RTD input file")
     ("output-file,o",
       po::value<std::string>(&outputFile)
@@ -46,23 +50,27 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE;
   }
 
-  std::cout << inputFile << ", " << outputFile << "\n";
+  // - Processing
+  // Input
+  snfee::data::raw_trigger_data rtdRaw;
+  snfee::io::multifile_data_reader reader{inputConfig};
 
-  // Open input file, expect rtd format, so
-  // use snfee::io::multifile_data_reader
-  // pseudo setup is:
-  //
-  // snfee::data::raw_trigger_data rtdAsBoost;
-  //
-  // while(reader->has_record_tag()) {
-  //   if(reader->record_tag_is(snfee::data::raw_trigger_data::SERIAL_TAG)) {
-  //     reader->load(rtdAsBoost)
-  //
-  //     ... do stuff with rtdAsBoost ...
-  //
-  //   }
-  // }
-  //
+  // Output
+  // Create TFile, TTree, branches?
+
+  // Test handful of records only
+  size_t counter{0};
+  size_t maxRecords{5};
+
+  while(reader.has_record_tag() && reader.record_tag_is(snfee::data::raw_trigger_data::SERIAL_TAG) && counter < 5) {
+    reader.load(rtdRaw);
+    rtdRaw.tree_dump();
+
+    // Reserialize?
+    // Convert to non-shared-ptr form Fill tree?
+    counter++;
+  }
+
 
   return 0;
 }
