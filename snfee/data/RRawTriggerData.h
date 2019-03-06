@@ -27,6 +27,7 @@
 
 // Third Party Libraries:
 #include <bayeux/datatools/i_tree_dump.h>
+#include <bayeux/datatools/i_serializable.h>
 
 // This project:
 #include <snfee/utils.h>
@@ -43,7 +44,7 @@ namespace snfee {
 
 
     /// \brief Offline form of the SuperNEMO raw trigger data (RTD)
-    class RRawTriggerData : public datatools::i_tree_dumpable
+    class RRawTriggerData : public datatools::i_tree_dumpable, public datatools::i_serializable
     {
     public:
      RRawTriggerData() = default;
@@ -95,15 +96,15 @@ namespace snfee {
       TriggerRecord                  trigger;  ///< The trigger record
       CaloRecordCollection       caloRecords;  ///< Collection of calorimeter hit records
       TrackerRecordCollection trackerRecords; ///< Collection tracker hit records
+
+      DATATOOLS_SERIALIZATION_DECLARATION()
     };
 
   } // namespace data
 } // namespace snfee
 
-#endif // SNFEE_DATA_CALO_HIT_RECORD_H
+#include <boost/serialization/export.hpp>
+BOOST_CLASS_EXPORT_KEY2(snfee::data::RRawTriggerData, "snfee::data::RRawTriggerData")
 
-// Local Variables: --
-// mode: c++ --
-// c-file-style: "gnu" --
-// tab-width: 2 --
-// End: --
+#endif
+

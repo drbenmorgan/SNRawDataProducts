@@ -56,6 +56,10 @@ BOOST_CLASS_EXPORT_IMPLEMENT(snfee::data::run_info)
 #include <snfee/data/channel_id-serial.h>
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::channel_id)
 
+#include <snfee/data/RRawTriggerData-serial.h>
+DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::RRawTriggerData)
+BOOST_CLASS_EXPORT_IMPLEMENT(snfee::data::RRawTriggerData)
+
 namespace snfee {
 
 }  // end of namespace snfee
