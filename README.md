@@ -122,20 +122,25 @@ ways:
    root [4] t->Print()
    ... long list of branches, their types, and stats
    ```
+   
+   You can also use `TBrowser` to open and explore the file interactively.
 
    The "RawTriggerData" has a single master branch that stores `RRawTriggerData`
    instances in fully split mode. That means you can direct access the data
    you are interested in interactively, or through the [standard ROOT TTree/TBranch
    mechanisms](https://root.cern.ch/root/htmldoc/guides/users-guide/ROOTUsersGuide.html#trees)
    and the new [RDataFrame system](https://root.cern.ch/doc/master/group__tutorial__dataframe.html).
-   For example, to read all RTD data in a ROOT script:
+   For example, to read all RTD data in a ROOT script (NB: You must add
+   the source directory to `ROOT_INCLUDE_PATH`):
 
    ```c++
+   #include "snfee/data/RRawTriggerData.h"
+   
    void exampleRTDRead(const char* rtdFilename)
    {
      TFile rtdFile{rtdFilename};
      TTree* rtdTree = (TTree*)rtdFile.Get("RawTriggerData");
-     auto rtdData = new snemo::RRawTriggerData{};
+     auto rtdData = new snfee::data::RRawTriggerData{};
      rtdTree->SetBranchAddress("RTD",&rtdData);
 
      Long64_t nRTD = rtdTree->GetEntries();
@@ -145,11 +150,11 @@ ways:
        // Do what you need with rtdData instance
      }
    }
-   ```
+   ``` 
 
    *One thing to note here is that in contrast to BRIO files, we **can**
    store all the Data Model classes without any need for `Boost.Serialization`.
-   This should allow updates to "Falaise" to use native ROOT I/O for
+   This could allow "Falaise" to use native ROOT I/O for
    improved usability and performance.*
 
 
@@ -167,14 +172,14 @@ ways:
      using raw_trigger_data = snfee::data::raw_trigger_data;
      using RRawTriggerData = snfee::data::RRawTriggerData;
 
-     multifile_data_reader::config_type cfg{"somertdfile.data.gz"};
+     multifile_data_reader::config_type cfg{{"somertdfile.data.gz"}};
      multifile_data_reader rtdReader{cfg};
 
     raw_trigger_data onlineRTD{};
 
      while(rtdReader.has_record_tag() && rtdReader.record_tag_is(raw_trigger_data::SERIAL_TAG)) {
-       rtdReader.load(onlin);
-       RRawTriggerData offlineRTD = snfee::data::rtdOnlineToOffline(rtdRaw);
+       rtdReader.load(onlineRTD);
+       RRawTriggerData offlineRTD = snfee::data::rtdOnlineToOffline(onlineRTD);
 
        // Do what you need with offlineRTD instance...
      }
