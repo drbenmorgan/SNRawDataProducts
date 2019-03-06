@@ -70,6 +70,8 @@ add_library(SNemoRawDataObj SHARED
   snfee/data/trigger_record.cc
   snfee/data/trigger_record.h
   snfee/data/utils.h
+  snfee/data/RRawTriggerData.cc
+  snfee/data/RRawTriggerData.h
   snfee/geometry.h
   snfee/model/feb_constants.cc
   snfee/model/feb_constants.h
