@@ -113,7 +113,8 @@ ways:
    Note that there are two namecycles here due to the large amount of data
    and ROOT's bookkeeping to prevent data loss. No excess data is stored, and use of the
    `RawTriggerData` TTree is transparent:
-
+   
+   ```console
    root [2] TTree* t = (TTree*)f.Get("RawTriggerData")
    (TTree *) 0x377ff80
    root [3] t->GetEntries()
@@ -146,7 +147,7 @@ ways:
    }
    ```
 
-   *One thing to note here is that in contrast to BRIO files, we **can***
+   *One thing to note here is that in contrast to BRIO files, we **can**
    store all the Data Model classes without any need for `Boost.Serialization`.
    This should allow updates to "Falaise" to use native ROOT I/O for
    improved usability and performance.*
@@ -154,7 +155,7 @@ ways:
 
 3. In custom C++ programs:
 
-   ```
+   ```C++
    #include <snfee/io/multifile_data_reader.h>
    #include <snfee/data/rtdReformater.h>
    #include <snfee/data/raw_trigger_data.h>
