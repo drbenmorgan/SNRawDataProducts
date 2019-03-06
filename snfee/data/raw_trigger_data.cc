@@ -25,7 +25,7 @@ namespace snfee {
     {
       return;
     }
-  
+
     bool raw_trigger_data::is_complete() const
     {
       if (!has_run_id()) {
@@ -82,7 +82,7 @@ namespace snfee {
       _run_id_ = rid_;
       return;
     }
- 
+
     bool raw_trigger_data::has_trigger_id() const
     {
       return _trigger_id_ != INVALID_TRIGGER_ID;
@@ -98,7 +98,7 @@ namespace snfee {
       _trigger_id_ = tid_;
       return;
     }
-  
+
     // virtual
     void raw_trigger_data::print_tree(std::ostream & out_,
                                       const boost::property_tree::ptree & options_) const
@@ -108,14 +108,14 @@ namespace snfee {
 
       if (popts.title.length()) {
         out_ << popts.indent << popts.title << std::endl;
-      
+
       out_ << popts.indent << tag
            << "Run ID : " << _run_id_ << std::endl;
       }
-      
+
       out_ << popts.indent << tag
            << "Trigger ID : " << _trigger_id_ << std::endl;
-       
+
       out_ << popts.indent << tag
            << "Trigger record : ";
       if (!_trig_) {
@@ -132,7 +132,7 @@ namespace snfee {
         trig_opts.put("indent", indent2.str());
         _trig_->print_tree(out_, trig_opts);
       }
-     
+
       out_ << popts.indent << tag
            << "Calorimeter hit records : " << _calo_hits_.size() << std::endl;
       for (std::size_t i = 0; i < _calo_hits_.size(); i++) {
@@ -152,7 +152,7 @@ namespace snfee {
         chit_opts.put("indent", indent2.str());
         chit.print_tree(out_, chit_opts);
       }
-      
+
       out_ << popts.indent << tag
            << "Tracker hit records     : " << _tracker_hits_.size() << std::endl;
       for (std::size_t i = 0; i < _tracker_hits_.size(); i++) {
@@ -172,10 +172,10 @@ namespace snfee {
         thit_opts.put("indent", indent2.str());
         thit.print_tree(out_, thit_opts);
       }
- 
+
       out_ << popts.indent << inherit_tag(popts.inherit)
            << "Complete : " << std::boolalpha << is_complete() << std::endl;
-                                                                    
+
       return;
     }
 
@@ -227,9 +227,9 @@ namespace snfee {
       _tracker_hits_.push_back(thrp_);
       return;
     }
-   
+
     const std::vector<const_tracker_hit_record_ptr> &
-    raw_trigger_data::get_tracker_hits() const 
+    raw_trigger_data::get_tracker_hits() const
     {
       return _tracker_hits_;
     }
