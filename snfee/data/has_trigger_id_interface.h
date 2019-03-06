@@ -1,5 +1,5 @@
 //! \file  snfee/data/has_trigger_id_interface.h
-//! \brief Interface with garanteed trigger ID getter 
+//! \brief Interface with garanteed trigger ID getter
 //
 // Copyright (c) 2018 by François Mauger <mauger@lpccaen.in2p3.fr>
 //
@@ -23,14 +23,14 @@
 
 namespace snfee {
   namespace data {
-    
+
     class has_trigger_id_interface
     {
     public:
 
-      //! Return the trigger ID 
+      //! Return the trigger ID
       virtual int32_t get_trigger_id() const = 0;
-      
+
     };
 
   } // namespace data

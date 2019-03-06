@@ -7,6 +7,7 @@
 
 #include "snfee/data/raw_trigger_data.h"
 #include "snfee/data/RRawTriggerData.h"
+#include "snfee/data/rtdReformater.h"
 #include "snfee/io/multifile_data_reader.h"
 
 #include <bayeux/datatools/things.h>
@@ -14,36 +15,6 @@
 
 // Input is 1-N RTD file to convert
 // Output is 1 brio file
-
-//! Convert "raw raw" data to standard value type form
-snfee::data::RRawTriggerData
-convertRTD(const snfee::data::raw_trigger_data& rawRTD)
-{
-  int32_t runID {rawRTD.get_run_id()};
-  int32_t triggerID {rawRTD.get_trigger_id()};
-
-  snfee::data::TriggerRecord triggerRec{};
-  if (rawRTD.has_trig()) {
-    triggerRec = *(rawRTD.get_trig());
-  }
-
-  const auto& inputCaloRec = rawRTD.get_calo_hits();
-  snfee::data::CaloRecordCollection outputCaloRec{};
-
-  for(const auto& crec : inputCaloRec) {
-    outputCaloRec.push_back(*crec);
-  }
-
-  const auto& inputTrackerRec = rawRTD.get_tracker_hits();
-  snfee::data::TrackerRecordCollection outputTrackerRec;
-
-  for(const auto& crec : inputTrackerRec) {
-    outputTrackerRec.push_back(*crec);
-  }
-
-  return snfee::data::RRawTriggerData {runID, triggerID, triggerRec, outputCaloRec, outputTrackerRec};
-}
-
 
 int main(int argc, char *argv[])
 {
@@ -107,7 +78,7 @@ int main(int argc, char *argv[])
 
     workItem.clear();
     auto& rtdBrio = workItem.add<snfee::data::RRawTriggerData>("RTD");
-    rtdBrio = convertRTD(rtdRaw);
+    rtdBrio = snfee::data::rtdOnlineToOffline(rtdRaw);
     writer.store(workItem, erStore);
 
     if (! (counter % 1000)) std::clog << "Processed record: " << counter << "\n";
