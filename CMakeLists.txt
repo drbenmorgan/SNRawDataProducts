@@ -98,6 +98,9 @@ target_include_directories(SNemoRawDataObj PUBLIC
   )
 target_link_libraries(SNemoRawDataObj PUBLIC Bayeux::Bayeux Boost::date_time ROOT::RIO)
 
+# Configure build time ROOT setup script
+configure_file("setupSNemoRawDataObj.C.in" "setupSNemoRawDataObj.C" @ONLY)
+
 # Programs
 add_subdirectory(programs)
 
