@@ -1,4 +1,4 @@
-# SNemoRawDataObj
+# SNRawDataProducts
 Prototype C/C++ Raw Data Model with Boost/Brio/ROOT I/O for SuperNEMO
 Commissioning and Production.
 
@@ -31,8 +31,8 @@ To get the code and build the library and applications:
 ``` console
 $ brew snemo-shell
 ...
-snemo-shell> git clone https://github.com/drbenmorgan/SNemoRawDataObj.git
-snemo-shell> cd SNemoRawDataObj
+snemo-shell> git clone https://github.com/drbenmorgan/SNRawDataProducts.git
+snemo-shell> cd SNRawDataProducts
 snemo-shell> mkdir build && cd build
 snemo-shell> cmake ..
 ...
@@ -40,7 +40,7 @@ snemo-shell> make
 ...
 ```
 
-If you encounter errors at the `cmake` or `make` steps, [raise an Issue](https://github.com/drbenmorgan/SNemoRawDataObj.git/issues/new).
+If you encounter errors at the `cmake` or `make` steps, [raise an Issue](https://github.com/drbenmorgan/SNRawDataProducts.git/issues/new).
 On a successful build, you will have the following library and applications in the
 directory where you ran `cmake/make`:
 
