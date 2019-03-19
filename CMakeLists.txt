@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.3)
-project(SNemoRawDataObj VERSION 0.1.0)
+project(SNRawDataProducts VERSION 0.1.0)
 
 # Settings and Modules
 set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
@@ -46,15 +46,15 @@ include(${ROOT_DIR}/modules/RootNewMacros.cmake)
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${Bayeux_INCLUDE_DIRS})
-root_generate_dictionary(SNemoRawDataObj_dict
+root_generate_dictionary(SNRawDataProducts_dict
   # Don't add headers explicitly or their buildtime paths end up in the dict
   # Use #include in the linkdef to bring in what's needed.
-  MODULE SNemoRawDataObj
+  MODULE SNRawDataProducts
   LINKDEF ${PROJECT_SOURCE_DIR}/snfee/root_dict_linkdef.h
   OPTIONS "-noIncludePaths")
 
 # The library itself
-add_library(SNemoRawDataObj SHARED
+add_library(SNRawDataProducts SHARED
   # Data Model
   snfee/data/calo_hit_record.cc
   snfee/data/calo_hit_record.h
@@ -89,17 +89,17 @@ add_library(SNemoRawDataObj SHARED
   snfee/io/multifile_data_writer.h
   # Boost.Serialization, Root dictionaries
   snfee/boost_dict.cc
-  ${CMAKE_CURRENT_BINARY_DIR}/SNemoRawDataObj_dict.cxx
+  ${CMAKE_CURRENT_BINARY_DIR}/SNRawDataProducts_dict.cxx
   )
 
-target_include_directories(SNemoRawDataObj PUBLIC
+target_include_directories(SNRawDataProducts PUBLIC
   $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
   $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
-target_link_libraries(SNemoRawDataObj PUBLIC Bayeux::Bayeux Boost::date_time ROOT::RIO)
+target_link_libraries(SNRawDataProducts PUBLIC Bayeux::Bayeux Boost::date_time ROOT::RIO)
 
 # Configure build time ROOT setup script
-configure_file("setupSNemoRawDataObj.C.in" "setupSNemoRawDataObj.C" @ONLY)
+configure_file("setupSNRawDataProducts.C.in" "setupSNRawDataProducts.C" @ONLY)
 
 # Programs
 add_subdirectory(programs)
@@ -109,8 +109,8 @@ add_subdirectory(examples)
 
 # Installation
 # - Interface
-install(TARGETS SNemoRawDataObj
-  EXPORT SNemoRawDataObjTargets
+install(TARGETS SNRawDataProducts
+  EXPORT SNRawDataProductsTargets
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
@@ -120,8 +120,8 @@ install(TARGETS SNemoRawDataObj
 #    - <libname>.rootmap
 #    - <libname>_rdict.pcm
 # - For now, we *know* that prefix is "lib" so use directly
-set(ROOTMAP_FILE "${CMAKE_CURRENT_BINARY_DIR}/libSNemoRawDataObj.rootmap")
-set(PCM_FILE "${CMAKE_CURRENT_BINARY_DIR}/libSNemoRawDataObj_rdict.pcm")
+set(ROOTMAP_FILE "${CMAKE_CURRENT_BINARY_DIR}/libSNRawDataProducts.rootmap")
+set(PCM_FILE "${CMAKE_CURRENT_BINARY_DIR}/libSNRawDataProducts_rdict.pcm")
 install(FILES ${ROOTMAP_FILE} ${PCM_FILE}
   DESTINATION ${CMAKE_INSTALL_LIBDIR}
   )
@@ -137,7 +137,7 @@ install(DIRECTORY snfee
 # - Support files
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
-  SNemoRawDataObjConfigVersion.cmake
+  ${PROJECT_NAME}ConfigVersion.cmake
   COMPATIBILITY SameMajorVersion
   )
 configure_package_config_file(${PROJECT_NAME}Config.cmake.in
@@ -150,8 +150,8 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
               ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
   )
-install(EXPORT SNemoRawDataObjTargets
-  NAMESPACE SNemoRawDataObj::
+install(EXPORT ${PROJECT_NAME}Targets
+  NAMESPACE ${PROJECT_NAME}::
   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
   )
 

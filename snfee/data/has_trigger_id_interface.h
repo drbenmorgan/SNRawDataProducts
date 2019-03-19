@@ -27,6 +27,12 @@ namespace snfee {
     class has_trigger_id_interface
     {
     public:
+      // Require virtual destructor for inheritance
+      // TODO: Do we need the rule of five for the others?
+      // TODO: Not even clear if this interface would be better dealt with via
+      //       Concepts/templates (requirement is purely that there's a
+      //       get_trigger_id MF that return int32_t.
+      virtual ~has_trigger_id_interface() = default;
 
       //! Return the trigger ID
       virtual int32_t get_trigger_id() const = 0;
