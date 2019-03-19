@@ -392,9 +392,3 @@ BOOST_CLASS_EXPORT_KEY2(snfee::data::calo_hit_record,
                         "snfee::data::calo_hit_record")
 
 #endif // SNFEE_DATA_CALO_HIT_RECORD_H
-
-// Local Variables: --
-// mode: c++ --
-// c-file-style: "gnu" --
-// tab-width: 2 --
-// End: --

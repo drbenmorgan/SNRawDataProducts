@@ -180,9 +180,3 @@ BOOST_CLASS_EXPORT_KEY2(snfee::data::tracker_hit_record,
                         "snfee::data::tracker_hit_record")
 
 #endif // SNFEE_DATA_TRACKER_HIT_RECORD_H
-
-// Local Variables: --
-// mode: c++ --
-// c-file-style: "gnu" --
-// tab-width: 2 --
-// End: --

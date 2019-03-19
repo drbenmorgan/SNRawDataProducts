@@ -78,9 +78,3 @@ namespace snfee {
 } // namespace snfee
 
 #endif // SNFEE_IO_RTD2ROOT_CONVERTER_H
-
-// Local Variables: --
-// Mode: c++ --
-// c-file-style: "gnu" --
-// tab-width: 2 --
-// End: --

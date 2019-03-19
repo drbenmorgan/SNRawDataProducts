@@ -107,9 +107,3 @@ namespace snfee {
 } // namespace snfee
 
 #endif // SNFEE_DATA_CHANNEL_ID_H
-
-// Local Variables: --
-// Mode: c++ --
-// c-file-style: "gnu" --
-// tab-width: 2 --
-// End: --

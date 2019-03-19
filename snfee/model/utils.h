@@ -170,9 +170,3 @@ namespace snfee {
 } // namespace snfee
 
 #endif // SNFEE_MODEL_UTILS_H
-
-// Local Variables: --
-// mode: c++ --
-// c-file-style: "gnu" --
-// tab-width: 2 --
-// End: --

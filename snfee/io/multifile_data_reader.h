@@ -83,9 +83,3 @@ namespace snfee {
 } // namespace snfee
 
 #endif // SNFEE_IO_MULTIFILE_DATA_READER_H
-
-// Local Variables: --
-// Mode: c++ --
-// c-file-style: "gnu" --
-// tab-width: 2 --
-// End: --

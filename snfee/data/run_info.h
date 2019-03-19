@@ -103,9 +103,3 @@ namespace snfee {
 BOOST_CLASS_EXPORT_KEY2(snfee::data::run_info, "snfee::data::run_info")
 
 #endif // SNFEE_DATA_RUN_INFO_H
-
-// Local Variables: --
-// Mode: c++ --
-// c-file-style: "gnu" --
-// tab-width: 2 --
-// End: --

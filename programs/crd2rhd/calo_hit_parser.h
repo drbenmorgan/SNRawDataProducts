@@ -160,9 +160,3 @@ namespace snfee {
 } // namespace snfee
 
 #endif // SNFEE_IO_CALO_HIT_PARSER_H
-
-// Local Variables: --
-// Mode: c++ --
-// c-file-style: "gnu" --
-// tab-width: 2 --
-// End: --

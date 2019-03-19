@@ -41,9 +41,3 @@ namespace snfee {
 } // namespace snfee
 
 #endif // SNFEE_DATA_HAS_TRIGGER_ID_INTERFACE_H
-
-// Local Variables: --
-// mode: c++ --
-// c-file-style: "gnu" --
-// tab-width: 2 --
-// End: --

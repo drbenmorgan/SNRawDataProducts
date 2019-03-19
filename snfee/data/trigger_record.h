@@ -126,9 +126,3 @@ BOOST_CLASS_EXPORT_KEY2(snfee::data::trigger_record,
                         "snfee::data::trigger_record")
 
 #endif // SNFEE_DATA_TRIGGER_RECORD_H
-
-// Local Variables: --
-// mode: c++ --
-// c-file-style: "gnu" --
-// tab-width: 2 --
-// End: --

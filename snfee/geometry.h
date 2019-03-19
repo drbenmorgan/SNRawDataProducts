@@ -21,9 +21,6 @@
 #ifndef SNFEE_GEOMETRY_H
 #define SNFEE_GEOMETRY_H
 
-// Third Party Libraries:
-// #include <bayeux/datatools/clhep_units.h>
-
 namespace snfee {
 
   struct geometry {
@@ -56,9 +53,3 @@ namespace snfee {
 } // namespace snfee
 
 #endif // SNFEE_GEOMETRY_H
-
-// Local Variables: --
-// mode: c++ --
-// c-file-style: "gnu" --
-// tab-width: 2 --
-// End: --

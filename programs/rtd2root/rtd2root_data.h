@@ -100,9 +100,3 @@ namespace snfee {
 } // namespace snfee
 
 #endif // SNFEE_DATA_RTD2ROOT_DATA_H
-
-// Local Variables: --
-// mode: c++ --
-// c-file-style: "gnu" --
-// tab-width: 2 --
-// End: --
