@@ -22,18 +22,18 @@
 #define SNFEE_RRAW_TRIGGER_DATA_H
 
 // Standard Library:
-#include <vector>
 #include <iostream>
+#include <vector>
 
 // Third Party Libraries:
-#include <bayeux/datatools/i_tree_dump.h>
 #include <bayeux/datatools/i_serializable.h>
+#include <bayeux/datatools/i_tree_dump.h>
 
 // This project:
-#include <snfee/utils.h>
-#include <snfee/data/trigger_record.h>
 #include <snfee/data/calo_hit_record.h>
 #include <snfee/data/tracker_hit_record.h>
+#include <snfee/data/trigger_record.h>
+#include <snfee/utils.h>
 
 namespace snfee {
   namespace data {
@@ -42,15 +42,22 @@ namespace snfee {
     typedef std::vector<calo_hit_record> CaloRecordCollection;
     typedef std::vector<tracker_hit_record> TrackerRecordCollection;
 
-
     /// \brief Offline form of the SuperNEMO raw trigger data (RTD)
-    class RRawTriggerData : public datatools::i_tree_dumpable, public datatools::i_serializable
-    {
+    class RRawTriggerData : public datatools::i_tree_dumpable,
+                            public datatools::i_serializable {
     public:
-     RRawTriggerData() = default;
-     RRawTriggerData(int32_t run, int32_t trigger, const TriggerRecord& tr, const CaloRecordCollection& crc, const TrackerRecordCollection& trc) :
-         runID{run}, triggerID{trigger}, trigger{tr}, caloRecords{crc}, trackerRecords{trc} {}
-
+      RRawTriggerData() = default;
+      RRawTriggerData(int32_t run,
+                      int32_t trigger,
+                      const TriggerRecord& tr,
+                      const CaloRecordCollection& crc,
+                      const TrackerRecordCollection& trc)
+        : runID{run}
+        , triggerID{trigger}
+        , trigger{tr}
+        , caloRecords{crc}
+        , trackerRecords{trc}
+      {}
 
       /// Check if the record is complete
       bool isComplete() const;
@@ -87,15 +94,18 @@ namespace snfee {
       /// poptions.put("indent", ">>> ");
       /// myCaloData.print_tree(std::clog, poptions);
       /// \endcode
-      virtual void print_tree(std::ostream & out_ = std::clog,
-                              const boost::property_tree::ptree & options_ = empty_options()) const override;
+      virtual void print_tree(std::ostream& out_ = std::clog,
+                              const boost::property_tree::ptree& options_ =
+                                empty_options()) const override;
 
     private:
-      int32_t runID     = INVALID_RUN_ID;     ///< Run ID
+      int32_t runID = INVALID_RUN_ID;         ///< Run ID
       int32_t triggerID = INVALID_TRIGGER_ID; ///< Trigger ID
-      TriggerRecord                  trigger;  ///< The trigger record
-      CaloRecordCollection       caloRecords;  ///< Collection of calorimeter hit records
-      TrackerRecordCollection trackerRecords; ///< Collection tracker hit records
+      TriggerRecord trigger;                  ///< The trigger record
+      CaloRecordCollection
+        caloRecords; ///< Collection of calorimeter hit records
+      TrackerRecordCollection
+        trackerRecords; ///< Collection tracker hit records
 
       DATATOOLS_SERIALIZATION_DECLARATION()
     };
@@ -104,7 +114,7 @@ namespace snfee {
 } // namespace snfee
 
 #include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT_KEY2(snfee::data::RRawTriggerData, "snfee::data::RRawTriggerData")
+BOOST_CLASS_EXPORT_KEY2(snfee::data::RRawTriggerData,
+                        "snfee::data::RRawTriggerData")
 
 #endif
-

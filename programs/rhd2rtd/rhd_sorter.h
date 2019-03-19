@@ -17,10 +17,8 @@ namespace snfee {
   namespace io {
 
     //! \brief Sorter algorithm for raw hit records
-    class rhd_sorter
-    {
+    class rhd_sorter {
     public:
-
       //! Constructor
       rhd_sorter();
 
@@ -34,19 +32,17 @@ namespace snfee {
       void set_logging(const datatools::logger::priority);
 
       //! Push a new RHD record
-      void push_record(const snfee::io::rhd_record & rhd_rec_);
+      void push_record(const snfee::io::rhd_record& rhd_rec_);
 
       // //! Pop the next RHD record
       // const snfee::io::rhd_record & pop_next_record();
 
     private:
-
       // Management:
       datatools::logger::priority _logging_ = datatools::logger::PRIO_FATAL;
 
       struct pimpl_type;
       std::unique_ptr<pimpl_type> _pimpl_;
-
     };
 
   } // namespace io

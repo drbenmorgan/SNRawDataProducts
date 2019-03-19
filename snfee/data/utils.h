@@ -1,5 +1,5 @@
 //! \file  snfee/data/utils.h
-//! \brief Description of the SuperNEMO trigger raw record 
+//! \brief Description of the SuperNEMO trigger raw record
 //
 // Copyright (c) 2018 by François Mauger <mauger@lpccaen.in2p3.fr>
 //
@@ -24,9 +24,9 @@
 namespace snfee {
   namespace data {
 
-    static const int32_t INVALID_RUN_ID     = -1;
+    static const int32_t INVALID_RUN_ID = -1;
     static const int32_t INVALID_TRIGGER_ID = -1;
-    static const int32_t INVALID_EVENT_ID   = -1;
+    static const int32_t INVALID_EVENT_ID = -1;
 
   } // namespace data
 } // namespace snfee

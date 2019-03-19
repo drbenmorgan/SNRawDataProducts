@@ -22,38 +22,35 @@
 #define SNFEE_DATA_TRIGGER_RECORD_H
 
 // Standard Library:
-#include <vector>
 #include <memory>
+#include <vector>
 
 // Third Party Libraries:
-#include <bayeux/datatools/i_tree_dump.h>
 #include <bayeux/datatools/i_serializable.h>
+#include <bayeux/datatools/i_tree_dump.h>
 
 // This project:
-#include <snfee/geometry.h>
 #include <snfee/data/has_trigger_id_interface.h>
 #include <snfee/data/utils.h>
+#include <snfee/geometry.h>
 
 namespace snfee {
   namespace data {
 
     /// \brief SuperNEMO trigger board data record
-    class trigger_record
-      : public datatools::i_tree_dumpable
-      , public datatools::i_serializable
-      , public has_trigger_id_interface
-    {
+    class trigger_record : public datatools::i_tree_dumpable,
+                           public datatools::i_serializable,
+                           public has_trigger_id_interface {
     public:
-
       enum trigger_mode_type {
-        TRIGGER_MODE_INVALID      = 0,
-        TRIGGER_MODE_CALO_ONLY    = 1,
+        TRIGGER_MODE_INVALID = 0,
+        TRIGGER_MODE_CALO_ONLY = 1,
         TRIGGER_MODE_CALO_TRACKER_TIME_COINC = 2,
-        TRIGGER_MODE_CARACO       = 3,
+        TRIGGER_MODE_CARACO = 3,
         TRIGGER_MODE_OPEN_DELAYED = 4,
-        TRIGGER_MODE_APE          = 5,
-        TRIGGER_MODE_DAVE         = 6,
-        TRIGGER_MODE_SCREENING    = 7
+        TRIGGER_MODE_APE = 5,
+        TRIGGER_MODE_DAVE = 6,
+        TRIGGER_MODE_SCREENING = 7
       };
 
       static std::string trigger_mode_label(const trigger_mode_type);
@@ -78,8 +75,9 @@ namespace snfee {
       /// poptions.put("indent", ">>> ");
       /// myTrigRec.print_tree(std::clog, poptions);
       /// \endcode
-      virtual void print_tree(std::ostream & out_ = std::clog,
-                              const boost::property_tree::ptree & options_ = empty_options()) const override;
+      virtual void print_tree(std::ostream& out_ = std::clog,
+                              const boost::property_tree::ptree& options_ =
+                                empty_options()) const override;
 
       /// Set the trigger ID
       void set_trigger_id(const int32_t);
@@ -102,12 +100,12 @@ namespace snfee {
       void invalidate();
 
     private:
+      int32_t _trigger_id_ = INVALID_TRIGGER_ID;               //!< Trigger ID
+      trigger_mode_type _trigger_mode_ = TRIGGER_MODE_INVALID; //!< Trigger mode
+      uint32_t _l2_clocktick_1600ns_ = 0; //!< L2 trigger decision timestamp
 
-      int32_t           _trigger_id_          = INVALID_TRIGGER_ID;   //!< Trigger ID
-      trigger_mode_type _trigger_mode_        = TRIGGER_MODE_INVALID; //!< Trigger mode
-      uint32_t          _l2_clocktick_1600ns_ = 0;                    //!< L2 trigger decision timestamp
-
-      // bool            _cell_matrix_[geometry::NSIDES][geometry::TRACKER_NLAYERS][geometry::TRACKER_NROWS];
+      // bool
+      // _cell_matrix_[geometry::NSIDES][geometry::TRACKER_NLAYERS][geometry::TRACKER_NROWS];
       // uint32_t        _cell_matrix_clocktick_1600ns_ = 0;
       // bool            _l1_calo_decision_             = false;
       // uint32_t        _l1_calo_clocktick_25ns_       = 0;
@@ -115,7 +113,6 @@ namespace snfee {
       // uint32_t        _l1_tracker_clocktick_1600ns_  = 0;
 
       DATATOOLS_SERIALIZATION_DECLARATION()
-
     };
 
     typedef std::shared_ptr<trigger_record> trigger_record_ptr;
@@ -125,7 +122,8 @@ namespace snfee {
 } // namespace snfee
 
 #include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT_KEY2(snfee::data::trigger_record, "snfee::data::trigger_record")
+BOOST_CLASS_EXPORT_KEY2(snfee::data::trigger_record,
+                        "snfee::data::trigger_record")
 
 #endif // SNFEE_DATA_TRIGGER_RECORD_H
 

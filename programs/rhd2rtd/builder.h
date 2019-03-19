@@ -1,5 +1,6 @@
 //! \file  snfee/rtdb/builder.h
-//! \brief Raw trigger data (RTD) builder from the SuperNEMO raw hit data records (RHD)
+//! \brief Raw trigger data (RTD) builder from the SuperNEMO raw hit data
+//! records (RHD)
 //
 // Copyright (c) 2018 by François Mauger <mauger@lpccaen.in2p3.fr>
 //
@@ -22,17 +23,17 @@
 #define SNFEE_RTDB_BUILDER_H
 
 // Standard Library:
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 // Third Party Libraries:
 #include <bayeux/datatools/i_tree_dump.h>
 #include <bayeux/datatools/logger.h>
 
 // This project:
-#include <snfee/data/raw_trigger_data.h>
 #include <snfee/data/has_trigger_id_interface.h>
+#include <snfee/data/raw_trigger_data.h>
 #include <snfee/model/utils.h>
 
 #include "builder_config.h"
@@ -41,12 +42,9 @@ namespace snfee {
   namespace rtdb {
 
     /// \brief Raw trigger data (RTD) builder
-    class builder
-      : public datatools::i_tree_dumpable
-    {
+    class builder : public datatools::i_tree_dumpable {
 
     public:
-
       /// Constructor
       builder();
 
@@ -60,10 +58,10 @@ namespace snfee {
       void set_logging(const datatools::logger::priority);
 
       /// Set the configuration
-      void set_config(const builder_config &);
+      void set_config(const builder_config&);
 
       /// Return the configuration
-      const builder_config & get_config() const;
+      const builder_config& get_config() const;
 
       /// Check is the builder is initialized
       bool is_initialized() const;
@@ -94,30 +92,29 @@ namespace snfee {
       /// poptions.put("indent", ">>> ");
       /// rtdBuilder.print_tree(std::clog, poptions);
       /// \endcode
-      virtual void print_tree(std::ostream & out_ = std::clog,
-                              const boost::property_tree::ptree & options_ = empty_options()) const;
+      virtual void print_tree(
+        std::ostream& out_ = std::clog,
+        const boost::property_tree::ptree& options_ = empty_options()) const;
 
       /// \brief Worker category
       enum worker_category_type {
-        WORKER_UNDEF        = 0,
-        WORKER_INPUT_RHD    = 1,
-        WORKER_OUTPUT_RTD   = 2
+        WORKER_UNDEF = 0,
+        WORKER_INPUT_RHD = 1,
+        WORKER_OUTPUT_RTD = 2
       };
 
       /// \brief Worker results (statistics)
-      struct worker_results_type
-      {
-        worker_category_type           category = WORKER_UNDEF;
+      struct worker_results_type {
+        worker_category_type category = WORKER_UNDEF;
         snfee::model::crate_model_type crate_model = snfee::model::CRATE_UNDEF;
-        std::size_t                    processed_records_counter1 = 0;
-        std::size_t                    processed_records_counter2 = 0;
+        std::size_t processed_records_counter1 = 0;
+        std::size_t processed_records_counter2 = 0;
       };
 
       /// Return the results of the run
-      const std::vector<worker_results_type> & get_results() const;
+      const std::vector<worker_results_type>& get_results() const;
 
     private:
-
       void _at_run_();
 
       void _at_init_();
@@ -125,11 +122,9 @@ namespace snfee {
       void _at_terminate_();
 
     public:
-
       struct pimpl_type; ///!< Private implementation type
 
     private:
-
       // Management
       bool _initialized_ = false;
       datatools::logger::priority _logging_ = datatools::logger::PRIO_FATAL;
@@ -143,7 +138,6 @@ namespace snfee {
 
       // Working data:
       std::unique_ptr<pimpl_type> _pimpl_;
-
     };
 
   } // namespace rtdb

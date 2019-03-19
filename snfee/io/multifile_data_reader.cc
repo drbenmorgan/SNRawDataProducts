@@ -5,30 +5,25 @@
 
 // Third party:
 // - Bayeux:
-#include <bayeux/datatools/io_factory.h>
 #include <bayeux/datatools/exception.h>
+#include <bayeux/datatools/io_factory.h>
 #include <bayeux/datatools/utils.h>
 
 namespace snfee {
   namespace io {
 
     /// \brief Private implementation
-    struct multifile_data_reader::pimpl_type
-    {
-      pimpl_type(multifile_data_reader & master_)
-        : master(master_)
-      {
-        return;
-      }
-      multifile_data_reader & master;
+    struct multifile_data_reader::pimpl_type {
+      pimpl_type(multifile_data_reader& master_) : master(master_) { return; }
+      multifile_data_reader& master;
       std::unique_ptr<datatools::data_reader> reader;
-      int  _current_file_index_ = -1;
-      //std::string record_tag;
+      int _current_file_index_ = -1;
+      // std::string record_tag;
       void _next_reader_();
       void _destroy_reader_();
     };
 
-    multifile_data_reader::multifile_data_reader(const config_type & cfg_)
+    multifile_data_reader::multifile_data_reader(const config_type& cfg_)
       : _config_(cfg_)
     {
       _pimpl_.reset(new pimpl_type(*this));
@@ -49,7 +44,8 @@ namespace snfee {
       return;
     }
 
-    void multifile_data_reader::pimpl_type::_destroy_reader_()
+    void
+    multifile_data_reader::pimpl_type::_destroy_reader_()
     {
       if (reader) {
         reader.reset();
@@ -57,33 +53,36 @@ namespace snfee {
       return;
     }
 
-    void multifile_data_reader::pimpl_type::_next_reader_()
+    void
+    multifile_data_reader::pimpl_type::_next_reader_()
     {
       _destroy_reader_();
       _current_file_index_++;
-      DT_THROW_IF(_current_file_index_ == (int) master._config_.filenames.size(),
-                   std::logic_error,
+      DT_THROW_IF(_current_file_index_ == (int)master._config_.filenames.size(),
+                  std::logic_error,
                   "Multiple data reader has no more input file!");
       std::string in_filename = master._config_.filenames[_current_file_index_];
       datatools::fetch_path_with_env(in_filename);
-      reader.reset(new datatools::data_reader(in_filename, datatools::using_multi_archives));
+      reader.reset(new datatools::data_reader(in_filename,
+                                              datatools::using_multi_archives));
       DT_THROW_IF(!reader->is_initialized(),
                   std::logic_error,
                   "Multiple data reader is not initialized from '"
-                  << in_filename << "'!");
-      DT_THROW_IF(reader->is_error(),
-                  std::logic_error,
-                  "Multiple data reader error!");   
+                    << in_filename << "'!");
+      DT_THROW_IF(
+        reader->is_error(), std::logic_error, "Multiple data reader error!");
       return;
     }
 
-    void multifile_data_reader::terminate()
+    void
+    multifile_data_reader::terminate()
     {
       _terminated_ = true;
       return;
     }
 
-    bool multifile_data_reader::has_record_tag() const
+    bool
+    multifile_data_reader::has_record_tag() const
     {
       if (is_terminated()) {
         return false;
@@ -95,11 +94,13 @@ namespace snfee {
           // record_tag = _pimpl_->reader->get_record_tag();
           break;
         } else {
-          if ((_pimpl_->_current_file_index_ + 1) == (int) _config_.filenames.size()) {
+          if ((_pimpl_->_current_file_index_ + 1) ==
+              (int)_config_.filenames.size()) {
             // No more input file:
             break;
           } else {
-            multifile_data_reader * mutable_this = const_cast<multifile_data_reader *>(this);
+            multifile_data_reader* mutable_this =
+              const_cast<multifile_data_reader*>(this);
             mutable_this->_pimpl_->_next_reader_();
           }
         }
@@ -107,7 +108,8 @@ namespace snfee {
       return found_tag;
     }
 
-    bool multifile_data_reader::record_tag_is(const std::string & tag_) const
+    bool
+    multifile_data_reader::record_tag_is(const std::string& tag_) const
     {
       if (is_terminated()) {
         return false;
@@ -116,11 +118,12 @@ namespace snfee {
         return _pimpl_->reader->record_tag_is(tag_);
       }
       return false;
-      // multifile_data_reader * mutable_this = const_cast<multifile_data_reader *>(this);
-      // return mutable_this->_reader_().record_tag_is(tag_);
+      // multifile_data_reader * mutable_this = const_cast<multifile_data_reader
+      // *>(this); return mutable_this->_reader_().record_tag_is(tag_);
     }
 
-    std::string multifile_data_reader::get_record_tag() const
+    std::string
+    multifile_data_reader::get_record_tag() const
     {
       if (_pimpl_->reader) {
         return _pimpl_->reader->get_record_tag();
@@ -128,27 +131,32 @@ namespace snfee {
       return "";
     }
 
-    std::size_t multifile_data_reader::get_counter() const
+    std::size_t
+    multifile_data_reader::get_counter() const
     {
       return _counter_;
     }
 
-    bool multifile_data_reader::is_terminated() const
+    bool
+    multifile_data_reader::is_terminated() const
     {
-      if (_terminated_) return true;
+      if (_terminated_)
+        return true;
       if ((_pimpl_->_current_file_index_) >= (int)_config_.filenames.size()) {
         return true;
       }
       return false;
     }
 
-    datatools::data_reader & multifile_data_reader::_reader_()
+    datatools::data_reader&
+    multifile_data_reader::_reader_()
     {
       DT_THROW_IF(is_terminated(), std::logic_error, "No reader!");
       return *_pimpl_->reader;
     }
 
-    void multifile_data_reader::_at_load_()
+    void
+    multifile_data_reader::_at_load_()
     {
       _counter_++;
       return;

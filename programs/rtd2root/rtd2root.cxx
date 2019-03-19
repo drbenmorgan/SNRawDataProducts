@@ -1,35 +1,36 @@
 // Standard library:
 #include <cstdio>
-#include <iostream>
 #include <exception>
-#include <stdexcept>
+#include <iostream>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
 // Third party:
 // - Bayeux:
-#include <bayeux/datatools/logger.h>
 #include <bayeux/datatools/io_factory.h>
+#include <bayeux/datatools/logger.h>
 // - Boost:
 #include <boost/program_options.hpp>
 
 // This project:
-#include <snfee/utils.h>
 #include "rtd2root_converter.h"
+#include <snfee/utils.h>
 
-struct app_params_type
-{
+struct app_params_type {
   datatools::logger::priority logging = datatools::logger::PRIO_FATAL;
   snfee::io::rtd2root_converter::config_type converter_cfg;
 };
 
-int main(int argc_, char ** argv_)
+int
+main(int argc_, char** argv_)
 {
   int error_code = EXIT_SUCCESS;
   try {
     app_params_type app_params;
 
+    // clang-format off
     // Parse options:
     namespace po = boost::program_options;
     po::options_description opts("Allowed options");
@@ -82,14 +83,14 @@ int main(int argc_, char ** argv_)
 //       "reverse the calorimeter hit selection")
 
     ; // end of options description
+    // clang-format on
 
     // Describe command line arguments :
     po::variables_map vm;
-    po::store(po::command_line_parser(argc_, argv_)
-              .options(opts)
-              .run(), vm);
+    po::store(po::command_line_parser(argc_, argv_).options(opts).run(), vm);
     po::notify(vm);
 
+    // clang-format off
     // Use command line arguments :
     if (vm.count("help")) {
       std::cout << "snfee-rtd2root : "
@@ -111,20 +112,23 @@ int main(int argc_, char ** argv_)
       std::cout << std::endl << std::endl;
       return (-1);
     }
+    // clang-format on
 
     // Use command line arguments :
     if (vm.count("logging")) {
       std::string logging_repr = vm["logging"].as<std::string>();
-      // DT_LOG_DEBUG(datatools::logger::PRIO_DEBUG, "Logging repr. = '" << logging_repr << "'");
+      // DT_LOG_DEBUG(datatools::logger::PRIO_DEBUG, "Logging repr. = '" <<
+      // logging_repr << "'");
       app_params.logging = datatools::logger::get_priority(logging_repr);
       DT_THROW_IF(app_params.logging == datatools::logger::PRIO_UNDEFINED,
                   std::logic_error,
-                  "Invalid logging priority '" << vm["logging"].as<std::string>() << "'!");
+                  "Invalid logging priority '"
+                    << vm["logging"].as<std::string>() << "'!");
     }
 
     // Checks:
     DT_THROW_IF(app_params.converter_cfg.input_rtd_listname.empty() and
-                app_params.converter_cfg.input_rtd_filenames.size() == 0,
+                  app_params.converter_cfg.input_rtd_filenames.size() == 0,
                 std::logic_error,
                 "Missing input RTD filenames!");
     DT_THROW_IF(app_params.converter_cfg.output_root_filename.empty(),
@@ -140,11 +144,12 @@ int main(int argc_, char ** argv_)
     rtd2rootConverter.initialize();
     rtd2rootConverter.run();
     rtd2rootConverter.terminate();
-
-  } catch (std::exception & x) {
+  }
+  catch (std::exception& x) {
     std::cerr << "error: " << x.what() << std::endl;
     error_code = EXIT_FAILURE;
-  } catch (...) {
+  }
+  catch (...) {
     std::cerr << "error: "
               << "unexpected error!" << std::endl;
     error_code = EXIT_FAILURE;

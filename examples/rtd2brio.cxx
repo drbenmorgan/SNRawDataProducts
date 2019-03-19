@@ -5,23 +5,25 @@
 
 #include <iostream>
 
-#include "snfee/data/raw_trigger_data.h"
 #include "snfee/data/RRawTriggerData.h"
+#include "snfee/data/raw_trigger_data.h"
 #include "snfee/data/rtdReformater.h"
 #include "snfee/io/multifile_data_reader.h"
 
-#include <bayeux/datatools/things.h>
 #include <bayeux/brio/writer.h>
+#include <bayeux/datatools/things.h>
 
 // Input is 1-N RTD file to convert
 // Output is 1 brio file
 
-int main(int argc, char *argv[])
+int
+main(int argc, char* argv[])
 {
   // - Command Line
   snfee::io::multifile_data_reader::config_type inputConfig;
   std::string outputFile{};
 
+  // clang-format off
   namespace po = boost::program_options;
   po::options_description opts("Allowed options");
   opts.add_options()
@@ -54,6 +56,7 @@ int main(int argc, char *argv[])
     std::cerr << "error: " << e.what() << "\n";
     return EXIT_FAILURE;
   }
+  // clang-format on
 
   // - Processing
   // Input
@@ -63,8 +66,8 @@ int main(int argc, char *argv[])
   // Output
   // Create Brio writer
   // Only "ER" store, No Metadata ("GI") store for now...
-  brio::writer writer {outputFile};
-  std::string erStore {"ER"};
+  brio::writer writer{outputFile};
+  std::string erStore{"ER"};
   writer.add_store(erStore, datatools::things{}.get_serial_tag());
   writer.add_store("GI", datatools::properties{}.get_serial_tag());
   datatools::things workItem;
@@ -73,7 +76,8 @@ int main(int argc, char *argv[])
   size_t counter{0};
   size_t maxRecords{5};
 
-  while(reader.has_record_tag() && reader.record_tag_is(snfee::data::raw_trigger_data::SERIAL_TAG)) {
+  while (reader.has_record_tag() &&
+         reader.record_tag_is(snfee::data::raw_trigger_data::SERIAL_TAG)) {
     reader.load(rtdRaw);
 
     workItem.clear();
@@ -81,7 +85,8 @@ int main(int argc, char *argv[])
     rtdBrio = snfee::data::rtdOnlineToOffline(rtdRaw);
     writer.store(workItem, erStore);
 
-    if (! (counter % 1000)) std::clog << "Processed record: " << counter << "\n";
+    if (!(counter % 1000))
+      std::clog << "Processed record: " << counter << "\n";
     counter++;
   }
 

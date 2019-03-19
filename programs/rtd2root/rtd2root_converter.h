@@ -7,9 +7,9 @@
 #define SNFEE_IO_RTD2ROOT_CONVERTER_H
 
 // Standard library:
+#include <memory>
 #include <string>
 #include <vector>
-#include <memory>
 
 // Third party:
 // - Boost:
@@ -24,18 +24,17 @@ namespace snfee {
   namespace io {
 
     //! \brief RTD to Root converter
-    class rtd2root_converter
-      : private boost::noncopyable
-    {
+    class rtd2root_converter : private boost::noncopyable {
     public:
-
       /// \brief Configuration data:
-      struct config_type
-      {
-        std::string input_rtd_listname; ///< Name of a file with the sequence of RTD input filenames
-        std::vector<std::string> input_rtd_filenames; ///< Sequence of RTD input filenames
-        std::string output_root_filename;     ///< Output Root filename
-        std::size_t max_total_records = 0;    ///< Max number of converted RTD records
+      struct config_type {
+        std::string input_rtd_listname; ///< Name of a file with the sequence of
+                                        ///< RTD input filenames
+        std::vector<std::string>
+          input_rtd_filenames;            ///< Sequence of RTD input filenames
+        std::string output_root_filename; ///< Output Root filename
+        std::size_t max_total_records =
+          0; ///< Max number of converted RTD records
       };
 
       //! Default constructor
@@ -48,7 +47,7 @@ namespace snfee {
       void set_logging(const datatools::logger::priority);
 
       //! Set the configuration
-      void set_config(const config_type &);
+      void set_config(const config_type&);
 
       //! Check if the converter is initialized
       bool is_initialized() const;
@@ -63,18 +62,16 @@ namespace snfee {
       void terminate();
 
     private:
-
       // Management:
       bool _initialized_ = false;
       datatools::logger::priority _logging_ = datatools::logger::PRIO_FATAL;
 
       // Configuration:
-      config_type _config_;  ///< Configuration
+      config_type _config_; ///< Configuration
 
       // Working data:
       struct pimpl_type;
       std::unique_ptr<pimpl_type> _pimpl_; ///< Private working data
-
     };
 
   } // namespace io

@@ -33,6 +33,9 @@
 #pragma GCC diagnostic pop
 #endif
 
+// Macros, macros everywhere, so leave them be
+// clang-format off
+
 #include <snfee/data/calo_hit_record-serial.h>
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::calo_hit_record)
 BOOST_CLASS_EXPORT_IMPLEMENT(snfee::data::calo_hit_record)
@@ -60,10 +63,6 @@ DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::channel_id)
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::RRawTriggerData)
 BOOST_CLASS_EXPORT_IMPLEMENT(snfee::data::RRawTriggerData)
 
-namespace snfee {
-
-}  // end of namespace snfee
+namespace snfee {} // end of namespace snfee
 
 #endif // SNFEE_THE_SERIALIZABLE_H
-
-

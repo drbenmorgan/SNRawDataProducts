@@ -5,8 +5,8 @@
 
 #include <iostream>
 
-#include "snfee/data/raw_trigger_data.h"
 #include "snfee/data/RRawTriggerData.h"
+#include "snfee/data/raw_trigger_data.h"
 #include "snfee/data/rtdReformater.h"
 #include "snfee/io/multifile_data_reader.h"
 
@@ -15,12 +15,14 @@
 #include "TFile.h"
 #include "TTree.h"
 
-int main(int argc, char *argv[])
+int
+main(int argc, char* argv[])
 {
   // - Command Line
   snfee::io::multifile_data_reader::config_type inputConfig;
   std::string outputFile{};
 
+  // clang-format off
   namespace po = boost::program_options;
   po::options_description opts("Allowed options");
   opts.add_options()
@@ -53,6 +55,7 @@ int main(int argc, char *argv[])
     std::cerr << "error: " << e.what() << "\n";
     return EXIT_FAILURE;
   }
+  // clang-format on
 
   // - Processing
   // Input
@@ -61,22 +64,24 @@ int main(int argc, char *argv[])
 
   // Output
   // Create TFile, TTree, branches?
-  TFile writer {outputFile.c_str(), "RECREATE"};
-  TTree rtdTree {"RawTriggerData", "SuperNEMO Raw Trigger Data"};
+  TFile writer{outputFile.c_str(), "RECREATE"};
+  TTree rtdTree{"RawTriggerData", "SuperNEMO Raw Trigger Data"};
 
-  snfee::data::RRawTriggerData* workingRTD {nullptr};
+  snfee::data::RRawTriggerData* workingRTD{nullptr};
   rtdTree.Branch("RTD", &workingRTD);
 
   // Test handful of records only
   size_t counter{0};
   size_t maxRecords{5};
 
-  while(reader.has_record_tag() && reader.record_tag_is(snfee::data::raw_trigger_data::SERIAL_TAG)) {
+  while (reader.has_record_tag() &&
+         reader.record_tag_is(snfee::data::raw_trigger_data::SERIAL_TAG)) {
     reader.load(rtdRaw);
     *workingRTD = snfee::data::rtdOnlineToOffline(rtdRaw);
     rtdTree.Fill();
 
-    if (! (counter % 1000)) std::clog << "Processed record: " << counter << "\n";
+    if (!(counter % 1000))
+      std::clog << "Processed record: " << counter << "\n";
     counter++;
   }
 

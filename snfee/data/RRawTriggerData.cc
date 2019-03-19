@@ -6,16 +6,17 @@
 #include <bayeux/datatools/exception.h>
 
 // This project:
-#include <snfee/utils.h>
-#include <snfee/model/feb_constants.h>
 #include <snfee/data/utils.h>
+#include <snfee/model/feb_constants.h>
+#include <snfee/utils.h>
 
 namespace snfee {
   namespace data {
     DATATOOLS_SERIALIZATION_IMPLEMENTATION(RRawTriggerData,
                                            "snfee::data::RRawTriggerData")
 
-    bool RRawTriggerData::isComplete() const
+    bool
+    RRawTriggerData::isComplete() const
     {
       if (!hasRunID()) {
         return false;
@@ -29,12 +30,12 @@ namespace snfee {
       if (caloRecords.size() + trackerRecords.size() == 0) {
         return false;
       }
-      for (const auto & chit : caloRecords) {
+      for (const auto& chit : caloRecords) {
         if (!chit.is_complete()) {
           return false;
         }
       }
-      for (const auto & thit : trackerRecords) {
+      for (const auto& thit : trackerRecords) {
         if (!thit.is_complete()) {
           return false;
         }
@@ -42,32 +43,38 @@ namespace snfee {
       return true;
     }
 
-    bool RRawTriggerData::hasRunID() const
+    bool
+    RRawTriggerData::hasRunID() const
     {
       return runID != INVALID_RUN_ID;
     }
 
-    int32_t RRawTriggerData::getRunID() const
+    int32_t
+    RRawTriggerData::getRunID() const
     {
       return runID;
     }
 
-    bool RRawTriggerData::hasTriggerID() const
+    bool
+    RRawTriggerData::hasTriggerID() const
     {
       return triggerID != INVALID_TRIGGER_ID;
     }
 
-    int32_t RRawTriggerData::getTriggerID() const
+    int32_t
+    RRawTriggerData::getTriggerID() const
     {
       return triggerID;
     }
 
-    const TriggerRecord& RRawTriggerData::getTriggerRecord() const
+    const TriggerRecord&
+    RRawTriggerData::getTriggerRecord() const
     {
       return trigger;
     }
 
-    const CaloRecordCollection& RRawTriggerData::getCaloRecords() const
+    const CaloRecordCollection&
+    RRawTriggerData::getCaloRecords() const
     {
       return caloRecords;
     }
@@ -79,8 +86,10 @@ namespace snfee {
     }
 
     // virtual
-    void RRawTriggerData::print_tree(std::ostream & out_,
-                                      const boost::property_tree::ptree & options_) const
+    void
+    RRawTriggerData::print_tree(
+      std::ostream& out_,
+      const boost::property_tree::ptree& options_) const
     {
       base_print_options popts;
       popts.configure_from(options_);

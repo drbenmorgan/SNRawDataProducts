@@ -1,45 +1,46 @@
 // Standard library:
 #include <cstdio>
-#include <iostream>
 #include <exception>
-#include <stdexcept>
+#include <iostream>
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
 // Third party:
 // - Bayeux:
-#include <bayeux/datatools/logger.h>
 #include <bayeux/datatools/io_factory.h>
+#include <bayeux/datatools/logger.h>
 // - Boost:
 #include <boost/program_options.hpp>
 
 // This project:
-#include <snfee/utils.h>
 #include "builder.h"
+#include <snfee/utils.h>
 
-struct app_params_type
-{
+struct app_params_type {
   datatools::logger::priority logging = datatools::logger::PRIO_FATAL;
   std::string config_filename;
   std::string report_filename;
-  int32_t     run_id = snfee::data::INVALID_RUN_ID;
-  bool        force_complete_rtd = false;
+  int32_t run_id = snfee::data::INVALID_RUN_ID;
+  bool force_complete_rtd = false;
   std::size_t max_total_records = 0;
-  uint32_t    calo_rhd_buffer_capacity    = 0;
-  uint32_t    tracker_rhd_buffer_capacity = 0;
-  bool        accept_unsorted_rhd = false;
+  uint32_t calo_rhd_buffer_capacity = 0;
+  uint32_t tracker_rhd_buffer_capacity = 0;
+  bool accept_unsorted_rhd = false;
   std::size_t unsorted_records_min_popping_safety_depth = 3;
-  uint32_t    skel_run_id = 100;
-  uint32_t    skel_nb_crates = 2;
+  uint32_t skel_run_id = 100;
+  uint32_t skel_nb_crates = 2;
 };
 
-int main(int argc_, char ** argv_)
+int
+main(int argc_, char** argv_)
 {
   int error_code = EXIT_SUCCESS;
   try {
     app_params_type app_params;
 
+    // clang-format off
     // Parse options:
     namespace po = boost::program_options;
     po::options_description opts("Allowed options");
@@ -107,14 +108,14 @@ int main(int argc_, char ** argv_)
        "accept unsorted records from RHD input buffers (expert)")
 
     ; // end of options description
-
+    // clang-format on
+    //
     // Describe command line arguments :
     po::variables_map vm;
-    po::store(po::command_line_parser(argc_, argv_)
-              .options(opts)
-              .run(), vm);
+    po::store(po::command_line_parser(argc_, argv_).options(opts).run(), vm);
     po::notify(vm);
 
+    // clang-format off
     // Use command line arguments :
     if (vm.count("help")) {
       std::cout << "snfee-rhd2rtd : "
@@ -152,6 +153,7 @@ int main(int argc_, char ** argv_)
       std::cout << std::endl << std::endl;
       return (-1);
     }
+    // clang-format on
 
     // Use command line arguments :
     if (vm.count("help-config")) {
@@ -161,20 +163,19 @@ int main(int argc_, char ** argv_)
 
     // Use command line arguments :
     if (vm.count("skel-config")) {
-      snfee::rtdb::builder_config::print_skel_config(std::cout,
-                                                     app_params.skel_run_id,
-                                                     app_params.skel_nb_crates);
+      snfee::rtdb::builder_config::print_skel_config(
+        std::cout, app_params.skel_run_id, app_params.skel_nb_crates);
       return (-1);
     }
 
     // Use command line arguments :
     if (vm.count("logging")) {
       std::string logging_repr = vm["logging"].as<std::string>();
-      // DT_LOG_DEBUG(datatools::logger::PRIO_DEBUG, "Logging repr. = '" << logging_repr << "'");
       app_params.logging = datatools::logger::get_priority(logging_repr);
       DT_THROW_IF(app_params.logging == datatools::logger::PRIO_UNDEFINED,
                   std::logic_error,
-                  "Invalid logging priority '" << vm["logging"].as<std::string>() << "'!");
+                  "Invalid logging priority '"
+                    << vm["logging"].as<std::string>() << "'!");
     }
 
     // Checks:
@@ -187,8 +188,11 @@ int main(int argc_, char ** argv_)
     snfee::rtdb::builder_config::load(rtdBuilderCfgFilename, rtdBuilderCfg);
     if (app_params.run_id != snfee::data::INVALID_RUN_ID) {
       if (rtdBuilderCfg.run_id != snfee::data::INVALID_RUN_ID) {
-        DT_LOG_WARNING(app_params.logging, "Override run ID " << rtdBuilderCfg.run_id << " from the configuration file.");
-        DT_LOG_WARNING(app_params.logging, "Run ID is now : " << app_params.run_id);
+        DT_LOG_WARNING(app_params.logging,
+                       "Override run ID " << rtdBuilderCfg.run_id
+                                          << " from the configuration file.");
+        DT_LOG_WARNING(app_params.logging,
+                       "Run ID is now : " << app_params.run_id);
       }
       rtdBuilderCfg.run_id = app_params.run_id;
     }
@@ -203,31 +207,44 @@ int main(int argc_, char ** argv_)
 
     if (app_params.max_total_records != 0) {
       if (rtdBuilderCfg.output_config.max_total_records != 0) {
-        DT_LOG_WARNING(app_params.logging, "Override max number of RTD records "
-                       << rtdBuilderCfg.output_config.max_total_records << " from the configuration file.");
-        DT_LOG_WARNING(app_params.logging, "Max number of RTD records : " << app_params.max_total_records);
-     }
-      rtdBuilderCfg.output_config.max_total_records = app_params.max_total_records;
+        DT_LOG_WARNING(app_params.logging,
+                       "Override max number of RTD records "
+                         << rtdBuilderCfg.output_config.max_total_records
+                         << " from the configuration file.");
+        DT_LOG_WARNING(
+          app_params.logging,
+          "Max number of RTD records : " << app_params.max_total_records);
+      }
+      rtdBuilderCfg.output_config.max_total_records =
+        app_params.max_total_records;
     }
 
     if (app_params.calo_rhd_buffer_capacity != 0) {
       if (rtdBuilderCfg.calo_rhd_buffer_capacity != 0) {
-        DT_LOG_WARNING(app_params.logging, "Override calorimeter RHD input buffer capacity "
-                       << rtdBuilderCfg.calo_rhd_buffer_capacity << " from the configuration file.");
-        DT_LOG_WARNING(app_params.logging, "Calorimeter RHD input buffer capacity is now : "
-                       << app_params.calo_rhd_buffer_capacity);
+        DT_LOG_WARNING(app_params.logging,
+                       "Override calorimeter RHD input buffer capacity "
+                         << rtdBuilderCfg.calo_rhd_buffer_capacity
+                         << " from the configuration file.");
+        DT_LOG_WARNING(app_params.logging,
+                       "Calorimeter RHD input buffer capacity is now : "
+                         << app_params.calo_rhd_buffer_capacity);
       }
-      rtdBuilderCfg.calo_rhd_buffer_capacity = app_params.calo_rhd_buffer_capacity;
+      rtdBuilderCfg.calo_rhd_buffer_capacity =
+        app_params.calo_rhd_buffer_capacity;
     }
 
     if (app_params.tracker_rhd_buffer_capacity != 0) {
       if (rtdBuilderCfg.tracker_rhd_buffer_capacity != 0) {
-        DT_LOG_WARNING(app_params.logging, "Override tracker RHD input buffer capacity "
-                       << rtdBuilderCfg.tracker_rhd_buffer_capacity << " from the configuration file.");
-        DT_LOG_WARNING(app_params.logging, "Tracker RHD input buffer capacity is now : "
-                       << app_params.tracker_rhd_buffer_capacity);
+        DT_LOG_WARNING(app_params.logging,
+                       "Override tracker RHD input buffer capacity "
+                         << rtdBuilderCfg.tracker_rhd_buffer_capacity
+                         << " from the configuration file.");
+        DT_LOG_WARNING(app_params.logging,
+                       "Tracker RHD input buffer capacity is now : "
+                         << app_params.tracker_rhd_buffer_capacity);
       }
-      rtdBuilderCfg.tracker_rhd_buffer_capacity = app_params.tracker_rhd_buffer_capacity;
+      rtdBuilderCfg.tracker_rhd_buffer_capacity =
+        app_params.tracker_rhd_buffer_capacity;
     }
 
     // Check the configuration:
@@ -257,43 +274,50 @@ int main(int argc_, char ** argv_)
 
     {
       // Results:
-      std::ostream * rtdBuilderResultsOut = &std::cout;
+      std::ostream* rtdBuilderResultsOut = &std::cout;
       std::unique_ptr<std::ofstream> rtdBuilderResultsOutfile;
       if (!app_params.report_filename.empty()) {
         std::string rtdBuilderResultsFilename = app_params.report_filename;
         datatools::fetch_path_with_env(rtdBuilderResultsFilename);
-        rtdBuilderResultsOutfile.reset(new std::ofstream(rtdBuilderResultsFilename.c_str()));
-        DT_THROW_IF(!rtdBuilderResultsOutfile, std::logic_error,
-                    "Cannot open result file '" << rtdBuilderResultsFilename << "'!");
+        rtdBuilderResultsOutfile.reset(
+          new std::ofstream(rtdBuilderResultsFilename.c_str()));
+        DT_THROW_IF(!rtdBuilderResultsOutfile,
+                    std::logic_error,
+                    "Cannot open result file '" << rtdBuilderResultsFilename
+                                                << "'!");
         rtdBuilderResultsOut = rtdBuilderResultsOutfile.get();
       }
-      const auto & rtdBuilderResults = rtdBuilder.get_results();
+      const auto& rtdBuilderResults = rtdBuilder.get_results();
       int i = 0;
       *rtdBuilderResultsOut << "Results :" << std::endl;
-      for (const auto & res : rtdBuilderResults) {
+      for (const auto& res : rtdBuilderResults) {
         *rtdBuilderResultsOut << "- Worker #" << i;
         if (res.category == snfee::rtdb::builder::WORKER_INPUT_RHD) {
           *rtdBuilderResultsOut << " (input RHD";
-          *rtdBuilderResultsOut << ",crate=" << snfee::model::crate_model_label(res.crate_model);
+          *rtdBuilderResultsOut
+            << ",crate=" << snfee::model::crate_model_label(res.crate_model);
           *rtdBuilderResultsOut << ")";
         } else if (res.category == snfee::rtdb::builder::WORKER_OUTPUT_RTD) {
           *rtdBuilderResultsOut << " (output RTD)";
         }
         *rtdBuilderResultsOut << " : " << std::endl;
-        *rtdBuilderResultsOut << "   - Processed records : " << res.processed_records_counter1;
+        *rtdBuilderResultsOut << "   - Processed records : "
+                              << res.processed_records_counter1;
         *rtdBuilderResultsOut << std::endl;
         if (res.category == snfee::rtdb::builder::WORKER_OUTPUT_RTD) {
-          *rtdBuilderResultsOut << "   - Stored records    : " << res.processed_records_counter2;
+          *rtdBuilderResultsOut << "   - Stored records    : "
+                                << res.processed_records_counter2;
           *rtdBuilderResultsOut << std::endl;
         }
         i++;
       }
     }
-
-  } catch (std::exception & x) {
+  }
+  catch (std::exception& x) {
     std::cerr << "error: " << x.what() << std::endl;
     error_code = EXIT_FAILURE;
-  } catch (...) {
+  }
+  catch (...) {
     std::cerr << "error: "
               << "unexpected error!" << std::endl;
     error_code = EXIT_FAILURE;

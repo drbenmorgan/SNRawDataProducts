@@ -3,18 +3,17 @@
 #ifndef RTDREFORMATER_HH
 #define RTDREFORMATER_HH
 
-#include <snfee/data/raw_trigger_data.h>
 #include <snfee/data/RRawTriggerData.h>
+#include <snfee/data/raw_trigger_data.h>
 
 namespace snfee {
-namespace data {
+  namespace data {
 
-//! Convert input "online" RTD record to "offline" format
-snfee::data::RRawTriggerData
-rtdOnlineToOffline(const snfee::data::raw_trigger_data& rawRTD);
+    //! Convert input "online" RTD record to "offline" format
+    snfee::data::RRawTriggerData rtdOnlineToOffline(
+      const snfee::data::raw_trigger_data& rawRTD);
 
-} // namespace data
+  } // namespace data
 } // namespace snfee
 
 #endif // RTDREFORMATER_HH
-

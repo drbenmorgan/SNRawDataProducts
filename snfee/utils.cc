@@ -6,7 +6,8 @@
 
 namespace snfee {
 
-  const std::string & none_label()
+  const std::string&
+  none_label()
   {
     static std::unique_ptr<std::string> _label;
     if (_label.get() == nullptr) {
@@ -14,8 +15,9 @@ namespace snfee {
     }
     return *_label.get();
   }
-        
-  const std::string & invalid_label()
+
+  const std::string&
+  invalid_label()
   {
     static std::unique_ptr<std::string> _label;
     if (_label.get() == nullptr) {
@@ -24,7 +26,8 @@ namespace snfee {
     return *_label.get();
   }
 
-  const datatools::properties & empty_config()
+  const datatools::properties&
+  empty_config()
   {
     static std::unique_ptr<datatools::properties> _empty_config;
     if (_empty_config.get() == nullptr) {
@@ -32,5 +35,5 @@ namespace snfee {
     }
     return *_empty_config.get();
   }
- 
+
 } // namespace snfee

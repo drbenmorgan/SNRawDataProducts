@@ -22,29 +22,26 @@
 #define SNFEE_DATA_RAW_TRIGGER_DATA_H
 
 // Standard Library:
-#include <vector>
 #include <iostream>
+#include <vector>
 
 // Third Party Libraries:
-#include <bayeux/datatools/i_tree_dump.h>
 #include <bayeux/datatools/i_serializable.h>
+#include <bayeux/datatools/i_tree_dump.h>
 
 // This project:
-#include <snfee/utils.h>
-#include <snfee/data/trigger_record.h>
 #include <snfee/data/calo_hit_record.h>
 #include <snfee/data/tracker_hit_record.h>
+#include <snfee/data/trigger_record.h>
+#include <snfee/utils.h>
 
 namespace snfee {
   namespace data {
 
     /// \brief SuperNEMO raw trigger data (RTD)
-    class raw_trigger_data
-      : public datatools::i_tree_dumpable
-      , public datatools::i_serializable
-    {
+    class raw_trigger_data : public datatools::i_tree_dumpable,
+                             public datatools::i_serializable {
     public:
-
       /// Default constructor
       raw_trigger_data();
 
@@ -65,8 +62,9 @@ namespace snfee {
       /// poptions.put("indent", ">>> ");
       /// myCaloData.print_tree(std::clog, poptions);
       /// \endcode
-      virtual void print_tree(std::ostream & out_ = std::clog,
-                              const boost::property_tree::ptree & options_ = empty_options()) const override;
+      virtual void print_tree(std::ostream& out_ = std::clog,
+                              const boost::property_tree::ptree& options_ =
+                                empty_options()) const override;
 
       //! Reset the record
       void invalidate();
@@ -93,46 +91,48 @@ namespace snfee {
       bool has_trig() const;
 
       //! Set the trigger record
-      void set_trig(const const_trigger_record_ptr &);
+      void set_trig(const const_trigger_record_ptr&);
 
       //! Return the handle for the trigger record
-      const const_trigger_record_ptr & get_trig() const;
+      const const_trigger_record_ptr& get_trig() const;
 
       //! Return the trigger record
-      const trigger_record & get_trig_cref() const;
+      const trigger_record& get_trig_cref() const;
 
       //! Append a new calo hit record
-      void append_calo_hit(const const_calo_hit_record_ptr &);
+      void append_calo_hit(const const_calo_hit_record_ptr&);
 
       //! Return the collection of calorimeter hit records
-      const std::vector<const_calo_hit_record_ptr> & get_calo_hits() const;
+      const std::vector<const_calo_hit_record_ptr>& get_calo_hits() const;
 
       //! Append a new tracker hit record
-      void append_tracker_hit(const const_tracker_hit_record_ptr &);
+      void append_tracker_hit(const const_tracker_hit_record_ptr&);
 
       //! Return the collection of tracker hit records
-      const std::vector<const_tracker_hit_record_ptr> & get_tracker_hits() const;
+      const std::vector<const_tracker_hit_record_ptr>& get_tracker_hits() const;
 
       //! Print
-      friend std::ostream & operator<<(std::ostream & out_, const raw_trigger_data & rtd_);
+      friend std::ostream& operator<<(std::ostream& out_,
+                                      const raw_trigger_data& rtd_);
 
     private:
-
-      int32_t                                   _run_id_     = INVALID_RUN_ID;     ///< Run ID
-      int32_t                                   _trigger_id_ = INVALID_TRIGGER_ID; ///< Trigger ID
-      const_trigger_record_ptr                  _trig_;         ///< Handle for the trigger record
-      std::vector<const_calo_hit_record_ptr>    _calo_hits_;    ///< Collection of handles for calorimeter hit records
-      std::vector<const_tracker_hit_record_ptr> _tracker_hits_; ///< Collection of handles for tracker hit records
+      int32_t _run_id_ = INVALID_RUN_ID;         ///< Run ID
+      int32_t _trigger_id_ = INVALID_TRIGGER_ID; ///< Trigger ID
+      const_trigger_record_ptr _trig_; ///< Handle for the trigger record
+      std::vector<const_calo_hit_record_ptr>
+        _calo_hits_; ///< Collection of handles for calorimeter hit records
+      std::vector<const_tracker_hit_record_ptr>
+        _tracker_hits_; ///< Collection of handles for tracker hit records
 
       DATATOOLS_SERIALIZATION_DECLARATION()
-
     };
 
   } // namespace data
 } // namespace snfee
 
 #include <boost/serialization/export.hpp>
-BOOST_CLASS_EXPORT_KEY2(snfee::data::raw_trigger_data, "snfee::data::raw_trigger_data")
+BOOST_CLASS_EXPORT_KEY2(snfee::data::raw_trigger_data,
+                        "snfee::data::raw_trigger_data")
 
 #endif // SNFEE_DATA_CALO_HIT_RECORD_H
 

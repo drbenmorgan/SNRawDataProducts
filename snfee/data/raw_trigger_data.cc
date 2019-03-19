@@ -6,9 +6,9 @@
 #include <bayeux/datatools/exception.h>
 
 // This project:
-#include <snfee/utils.h>
-#include <snfee/model/feb_constants.h>
 #include <snfee/data/utils.h>
+#include <snfee/model/feb_constants.h>
+#include <snfee/utils.h>
 
 namespace snfee {
   namespace data {
@@ -16,17 +16,12 @@ namespace snfee {
     DATATOOLS_SERIALIZATION_IMPLEMENTATION(raw_trigger_data,
                                            "snfee::data::raw_trigger_data")
 
-    raw_trigger_data::raw_trigger_data()
-    {
-      return;
-    }
+    raw_trigger_data::raw_trigger_data() { return; }
 
-    raw_trigger_data::~raw_trigger_data()
-    {
-      return;
-    }
+    raw_trigger_data::~raw_trigger_data() { return; }
 
-    bool raw_trigger_data::is_complete() const
+    bool
+    raw_trigger_data::is_complete() const
     {
       if (!has_run_id()) {
         return false;
@@ -42,13 +37,13 @@ namespace snfee {
         std::cerr << "[devel] hits issue !" << std::endl;
         return false;
       }
-      for (const auto & chit : _calo_hits_) {
+      for (const auto& chit : _calo_hits_) {
         if (chit and !chit->is_complete()) {
           std::cerr << "[devel] calo hit issue !" << std::endl;
           return false;
         }
       }
-      for (const auto & thit : _tracker_hits_) {
+      for (const auto& thit : _tracker_hits_) {
         if (thit and !thit->is_complete()) {
           std::cerr << "[devel] tracker hit issue !" << std::endl;
           return false;
@@ -57,7 +52,8 @@ namespace snfee {
       return true;
     }
 
-    void raw_trigger_data::invalidate()
+    void
+    raw_trigger_data::invalidate()
     {
       _run_id_ = INVALID_TRIGGER_ID;
       _trigger_id_ = INVALID_TRIGGER_ID;
@@ -67,41 +63,49 @@ namespace snfee {
       return;
     }
 
-    bool raw_trigger_data::has_run_id() const
+    bool
+    raw_trigger_data::has_run_id() const
     {
       return _run_id_ != INVALID_RUN_ID;
     }
 
-    int32_t raw_trigger_data::get_run_id() const
+    int32_t
+    raw_trigger_data::get_run_id() const
     {
       return _run_id_;
     }
 
-    void raw_trigger_data::set_run_id(const int32_t rid_)
+    void
+    raw_trigger_data::set_run_id(const int32_t rid_)
     {
       _run_id_ = rid_;
       return;
     }
 
-    bool raw_trigger_data::has_trigger_id() const
+    bool
+    raw_trigger_data::has_trigger_id() const
     {
       return _trigger_id_ != INVALID_TRIGGER_ID;
     }
 
-    int32_t raw_trigger_data::get_trigger_id() const
+    int32_t
+    raw_trigger_data::get_trigger_id() const
     {
       return _trigger_id_;
     }
 
-    void raw_trigger_data::set_trigger_id(const int32_t tid_)
+    void
+    raw_trigger_data::set_trigger_id(const int32_t tid_)
     {
       _trigger_id_ = tid_;
       return;
     }
 
     // virtual
-    void raw_trigger_data::print_tree(std::ostream & out_,
-                                      const boost::property_tree::ptree & options_) const
+    void
+    raw_trigger_data::print_tree(
+      std::ostream& out_,
+      const boost::property_tree::ptree& options_) const
     {
       base_print_options popts;
       popts.configure_from(options_);
@@ -109,15 +113,13 @@ namespace snfee {
       if (popts.title.length()) {
         out_ << popts.indent << popts.title << std::endl;
 
-      out_ << popts.indent << tag
-           << "Run ID : " << _run_id_ << std::endl;
+        out_ << popts.indent << tag << "Run ID : " << _run_id_ << std::endl;
       }
 
-      out_ << popts.indent << tag
-           << "Trigger ID : " << _trigger_id_ << std::endl;
+      out_ << popts.indent << tag << "Trigger ID : " << _trigger_id_
+           << std::endl;
 
-      out_ << popts.indent << tag
-           << "Trigger record : ";
+      out_ << popts.indent << tag << "Trigger record : ";
       if (!_trig_) {
         out_ << "<none>";
       } else if (!_trig_->is_complete()) {
@@ -136,7 +138,7 @@ namespace snfee {
       out_ << popts.indent << tag
            << "Calorimeter hit records : " << _calo_hits_.size() << std::endl;
       for (std::size_t i = 0; i < _calo_hits_.size(); i++) {
-        const calo_hit_record & chit = *_calo_hits_[i];
+        const calo_hit_record& chit = *_calo_hits_[i];
         std::ostringstream indent2;
         indent2 << popts.indent << skip_tag;
         out_ << popts.indent << skip_tag;
@@ -154,9 +156,10 @@ namespace snfee {
       }
 
       out_ << popts.indent << tag
-           << "Tracker hit records     : " << _tracker_hits_.size() << std::endl;
+           << "Tracker hit records     : " << _tracker_hits_.size()
+           << std::endl;
       for (std::size_t i = 0; i < _tracker_hits_.size(); i++) {
-        const tracker_hit_record & thit = *_tracker_hits_[i];
+        const tracker_hit_record& thit = *_tracker_hits_[i];
         std::ostringstream indent2;
         indent2 << popts.indent << skip_tag;
         out_ << popts.indent << skip_tag;
@@ -179,63 +182,81 @@ namespace snfee {
       return;
     }
 
-    bool raw_trigger_data::has_trig() const
+    bool
+    raw_trigger_data::has_trig() const
     {
       return _trig_.get() != nullptr;
     }
 
-    void raw_trigger_data::set_trig(const const_trigger_record_ptr & trig_)
+    void
+    raw_trigger_data::set_trig(const const_trigger_record_ptr& trig_)
     {
-      DT_THROW_IF(!trig_ or !trig_->is_complete(), std::logic_error, "Trigger record is not complete!");
+      DT_THROW_IF(!trig_ or !trig_->is_complete(),
+                  std::logic_error,
+                  "Trigger record is not complete!");
       if (!has_trigger_id()) {
         set_trigger_id(trig_->get_trigger_id());
       } else {
         DT_THROW_IF(trig_->get_trigger_id() != _trigger_id_,
                     std::logic_error,
-                    "Set trigger ID [" <<_trigger_id_ << "] does not match trigger record's trigger ID [" << trig_->get_trigger_id() << "]!");
+                    "Set trigger ID ["
+                      << _trigger_id_
+                      << "] does not match trigger record's trigger ID ["
+                      << trig_->get_trigger_id() << "]!");
       }
       _trig_ = trig_;
       return;
     }
 
-    const const_trigger_record_ptr & raw_trigger_data::get_trig() const
+    const const_trigger_record_ptr&
+    raw_trigger_data::get_trig() const
     {
       return _trig_;
     }
 
-    const trigger_record & raw_trigger_data::get_trig_cref() const
+    const trigger_record&
+    raw_trigger_data::get_trig_cref() const
     {
       DT_THROW_IF(!has_trig(), std::logic_error, "RTD has no trigger record!");
       return *_trig_.get();
     }
 
-    void raw_trigger_data::append_calo_hit(const const_calo_hit_record_ptr & chrp_)
+    void
+    raw_trigger_data::append_calo_hit(const const_calo_hit_record_ptr& chrp_)
     {
-      DT_THROW_IF(!chrp_ or !chrp_->is_complete(), std::logic_error, "Calo hit record is not complete!");
+      DT_THROW_IF(!chrp_ or !chrp_->is_complete(),
+                  std::logic_error,
+                  "Calo hit record is not complete!");
       _calo_hits_.push_back(chrp_);
       return;
     }
 
-    const std::vector<const_calo_hit_record_ptr> & raw_trigger_data::get_calo_hits() const
+    const std::vector<const_calo_hit_record_ptr>&
+    raw_trigger_data::get_calo_hits() const
     {
       return _calo_hits_;
     }
 
-    void raw_trigger_data::append_tracker_hit(const const_tracker_hit_record_ptr & thrp_)
+    void
+    raw_trigger_data::append_tracker_hit(
+      const const_tracker_hit_record_ptr& thrp_)
     {
-      DT_THROW_IF(!thrp_ or !thrp_->is_complete(), std::logic_error, "Tracker hit record is not complete!");
+      DT_THROW_IF(!thrp_ or !thrp_->is_complete(),
+                  std::logic_error,
+                  "Tracker hit record is not complete!");
       _tracker_hits_.push_back(thrp_);
       return;
     }
 
-    const std::vector<const_tracker_hit_record_ptr> &
+    const std::vector<const_tracker_hit_record_ptr>&
     raw_trigger_data::get_tracker_hits() const
     {
       return _tracker_hits_;
     }
 
     // friend
-    std::ostream & operator<<(std::ostream & out_, const raw_trigger_data & rtd_)
+    std::ostream&
+    operator<<(std::ostream& out_, const raw_trigger_data& rtd_)
     {
       std::ostringstream obuffer;
       obuffer << "{run-id=";
@@ -256,10 +277,8 @@ namespace snfee {
       } else {
         obuffer << "none";
       }
-      obuffer << ";calo-hits="
-           << rtd_._calo_hits_.size()
-           << ";tracker-hits="
-           << rtd_._tracker_hits_.size() << "}";
+      obuffer << ";calo-hits=" << rtd_._calo_hits_.size()
+              << ";tracker-hits=" << rtd_._tracker_hits_.size() << "}";
       out_ << obuffer.str();
       return out_;
     }

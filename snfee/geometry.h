@@ -1,4 +1,4 @@
-  //! \file  snfee/geometry.h
+//! \file  snfee/geometry.h
 //! \brief SNFrontEndElectronics geometry constants
 //
 // Copyright (c) 2018 by François Mauger <mauger@lpccaen.in2p3.fr>
@@ -20,19 +20,18 @@
 
 #ifndef SNFEE_GEOMETRY_H
 #define SNFEE_GEOMETRY_H
- 
+
 // Third Party Libraries:
 // #include <bayeux/datatools/clhep_units.h>
 
 namespace snfee {
 
-  struct geometry
-  {
+  struct geometry {
     // static const uint16_t NSIDES          = 2;
     // static const uint16_t TRACKER_NROWS   = 113;
     // static const uint16_t TRACKER_NLAYERS = 9;
 
-    static const uint16_t SN_MODULE_NB_OF_SIDES  = 2;
+    static const uint16_t SN_MODULE_NB_OF_SIDES = 2;
 
     static const uint16_t SN_MODULE_NB_OF_COLUMNS_IN_CALO_MAIN_WALL = 20;
     static const uint16_t SN_MODULE_NB_OF_ROWS_IN_CALO_MAIN_WALL = 13;
@@ -48,13 +47,12 @@ namespace snfee {
     static const uint16_t SN_MODULE_NB_OF_ROW_IN_TRACKER_FRAME = 113;
 
     enum calo_type {
-      CALO_MAIN_WALL_SLOT  = 0,
-      CALO_X_WALL_SLOT     = 1,
+      CALO_MAIN_WALL_SLOT = 0,
+      CALO_X_WALL_SLOT = 1,
       CALO_GAMMA_VETO_SLOT = 2
     };
-   
   };
- 
+
 } // namespace snfee
 
 #endif // SNFEE_GEOMETRY_H

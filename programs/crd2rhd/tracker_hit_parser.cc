@@ -4,9 +4,9 @@
 
 // Third party:
 // - Boost:
-#include <boost/spirit/include/qi.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/phoenix/phoenix.hpp>
+#include <boost/spirit/include/qi.hpp>
 // #include <boost/fusion/include/at_c.hpp>
 #include <boost/algorithm/string.hpp>
 // - Bayeux:
@@ -19,7 +19,7 @@
 namespace snfee {
   namespace io {
 
-    tracker_hit_parser::tracker_hit_parser(const config_type & cfg_,
+    tracker_hit_parser::tracker_hit_parser(const config_type& cfg_,
                                            const datatools::logger::priority p_)
     {
       set_logging(p_);
@@ -27,23 +27,27 @@ namespace snfee {
       return;
     }
 
-    datatools::logger::priority tracker_hit_parser::get_logging() const
+    datatools::logger::priority
+    tracker_hit_parser::get_logging() const
     {
       return _logging_;
     }
 
-    void tracker_hit_parser::set_logging(const datatools::logger::priority l_)
+    void
+    tracker_hit_parser::set_logging(const datatools::logger::priority l_)
     {
       _logging_ = l_;
       return;
     }
 
-    const tracker_hit_parser::config_type & tracker_hit_parser::get_config() const
+    const tracker_hit_parser::config_type&
+    tracker_hit_parser::get_config() const
     {
       return _config_;
     }
 
-    void tracker_hit_parser::set_config(const config_type & cfg_)
+    void
+    tracker_hit_parser::set_config(const config_type& cfg_)
     {
       _config_ = cfg_;
       static const datatools::version_id version_2_4(2, 4);
@@ -55,7 +59,9 @@ namespace snfee {
       return;
     }
 
-    bool tracker_hit_parser::parse(std::istream & in_, snfee::data::tracker_hit_record & hit_)
+    bool
+    tracker_hit_parser::parse(std::istream& in_,
+                              snfee::data::tracker_hit_record& hit_)
     {
       DT_LOG_TRACE_ENTERING(_logging_);
       bool success = false;
@@ -86,19 +92,19 @@ namespace snfee {
         // Populate the tracker hit record:
 
         // int16_t   module_num  = _config_.module_num;
-        int16_t   crate_num   = _config_.crate_num;
-        int16_t   board_num   = hit_data.slot_id;
-        int16_t   chip_num    = hit_data.feast_id;
-        int16_t   channel_num = hit_data.channel_id;
-        snfee::data::tracker_hit_record::channel_category_type chCat
-          = snfee::data::tracker_hit_record::CHANNEL_UNDEF;
+        int16_t crate_num = _config_.crate_num;
+        int16_t board_num = hit_data.slot_id;
+        int16_t chip_num = hit_data.feast_id;
+        int16_t channel_num = hit_data.channel_id;
+        snfee::data::tracker_hit_record::channel_category_type chCat =
+          snfee::data::tracker_hit_record::CHANNEL_UNDEF;
         if (hit_data.channel_type == "AN") {
           chCat = snfee::data::tracker_hit_record::CHANNEL_ANODE;
         } else if (hit_data.channel_type == "CA") {
           chCat = snfee::data::tracker_hit_record::CHANNEL_CATHODE;
         }
-        snfee::data::tracker_hit_record::timestamp_category_type tsCat
-          = snfee::data::tracker_hit_record::TIMESTAMP_UNDEF;
+        snfee::data::tracker_hit_record::timestamp_category_type tsCat =
+          snfee::data::tracker_hit_record::TIMESTAMP_UNDEF;
         if (hit_data.timestamp_type == "R0") {
           tsCat = snfee::data::tracker_hit_record::TIMESTAMP_ANODE_R0;
         } else if (hit_data.timestamp_type == "R1") {
@@ -114,7 +120,9 @@ namespace snfee {
         } else if (hit_data.timestamp_type == "R6") {
           tsCat = snfee::data::tracker_hit_record::TIMESTAMP_CATHODE_R6;
         }
-        DT_LOG_DEBUG(_logging_, "Timestamp type label = '" << hit_data.timestamp_type << "'");
+        DT_LOG_DEBUG(_logging_,
+                     "Timestamp type label = '" << hit_data.timestamp_type
+                                                << "'");
         DT_LOG_DEBUG(_logging_, "Timestamp type       = [" << tsCat << "]");
         DT_LOG_DEBUG(_logging_, "Crate number         = [" << crate_num << "]");
         uint64_t timestamp = hit_data.timestamp_value;
@@ -129,7 +137,8 @@ namespace snfee {
                   tsCat,
                   timestamp);
         success = true;
-      } catch (std::exception & error) {
+      }
+      catch (std::exception& error) {
         DT_LOG_ERROR(_logging_, error.what());
         success = false;
       }
@@ -137,8 +146,9 @@ namespace snfee {
       return success;
     }
 
-    void tracker_hit_parser::_parse_timestamp_(const std::string & data_line_,
-                                               hit_data_type & hit_data_)
+    void
+    tracker_hit_parser::_parse_timestamp_(const std::string& data_line_,
+                                          hit_data_type& hit_data_)
     {
       DT_LOG_TRACE_ENTERING(_logging_);
       std::string data_line = data_line_;
@@ -155,60 +165,72 @@ namespace snfee {
       std::string::const_iterator end_iter = data_line.end();
 
       if (_format_ == FORMAT_FROM_2_4) {
-        res = qi::phrase_parse(str_iter,
-                               end_iter,
-                               //  Begin grammar
-                               (
-                                qi::lit("Slot")     >> qi::uint_[boost::phoenix::ref(hit_data_.slot_id) = boost::spirit::qi::_1]
-                                >> qi::lit("Feast") >> qi::uint_[boost::phoenix::ref(hit_data_.feast_id) = boost::spirit::qi::_1]
-                                >> qi::lit("Ch")    >> qi::uint_[boost::phoenix::ref(hit_data_.channel_id) = boost::spirit::qi::_1]
-                                >> (qi::string("AN") |
-                                    qi::string("CA"))[boost::phoenix::ref(hit_data_.channel_type) = boost::spirit::qi::_1]
-                                >> (qi::string("R0") |
-                                    qi::string("R1") |
-                                    qi::string("R2") |
-                                    qi::string("R3") |
-                                    qi::string("R4") |
-                                    qi::string("R5") |
-                                    qi::string("R6"))[boost::phoenix::ref(hit_data_.timestamp_type) = boost::spirit::qi::_1]
-                                >> qi::ulong_long[boost::phoenix::ref(hit_data_.timestamp_value) = boost::spirit::qi::_1]
-                                >> qi::double_[boost::phoenix::ref(hit_data_.timestamp_ns) = boost::spirit::qi::_1]
-                                >> qi::lit("UnixTime")      >> qi::double_[boost::phoenix::ref(hit_data_.unix_time) = boost::spirit::qi::_1]
-                                ),
-                               //  End grammar
-                               qi::space);
+        res = qi::phrase_parse(
+          str_iter,
+          end_iter,
+          //  Begin grammar
+          (qi::lit("Slot") >> qi::uint_[boost::phoenix::ref(hit_data_.slot_id) =
+                                          boost::spirit::qi::_1] >>
+           qi::lit("Feast") >>
+           qi::uint_[boost::phoenix::ref(hit_data_.feast_id) =
+                       boost::spirit::qi::_1] >>
+           qi::lit("Ch") >>
+           qi::uint_[boost::phoenix::ref(hit_data_.channel_id) =
+                       boost::spirit::qi::_1] >>
+           (qi::string("AN") |
+            qi::string("CA"))[boost::phoenix::ref(hit_data_.channel_type) =
+                                boost::spirit::qi::_1] >>
+           (qi::string("R0") | qi::string("R1") | qi::string("R2") |
+            qi::string("R3") | qi::string("R4") | qi::string("R5") |
+            qi::string("R6"))[boost::phoenix::ref(hit_data_.timestamp_type) =
+                                boost::spirit::qi::_1] >>
+           qi::ulong_long[boost::phoenix::ref(hit_data_.timestamp_value) =
+                            boost::spirit::qi::_1] >>
+           qi::double_[boost::phoenix::ref(hit_data_.timestamp_ns) =
+                         boost::spirit::qi::_1] >>
+           qi::lit("UnixTime") >>
+           qi::double_[boost::phoenix::ref(hit_data_.unix_time) =
+                         boost::spirit::qi::_1]),
+          //  End grammar
+          qi::space);
       } else {
-          res = qi::phrase_parse(str_iter,
-                                 end_iter,
-                                 //  Begin grammar
-                                 (
-                                  qi::lit("Slot")     >> qi::uint_[boost::phoenix::ref(hit_data_.slot_id) = boost::spirit::qi::_1]
-                                  >> qi::lit("Feast") >> qi::uint_[boost::phoenix::ref(hit_data_.feast_id) = boost::spirit::qi::_1]
-                                  >> qi::lit("Ch")    >> qi::uint_[boost::phoenix::ref(hit_data_.channel_id) = boost::spirit::qi::_1]
-                                  >> (qi::string("AN") |
-                                      qi::string("CA"))[boost::phoenix::ref(hit_data_.channel_type) = boost::spirit::qi::_1]
-                                  >> (qi::string("R0") |
-                                      qi::string("R1") |
-                                      qi::string("R2") |
-                                      qi::string("R3") |
-                                      qi::string("R4") |
-                                      qi::string("R5") |
-                                      qi::string("R6"))[boost::phoenix::ref(hit_data_.timestamp_type) = boost::spirit::qi::_1]
-                                  >> qi::ulong_long[boost::phoenix::ref(hit_data_.timestamp_value) = boost::spirit::qi::_1]
-                                  >> qi::double_[boost::phoenix::ref(hit_data_.timestamp_ns) = boost::spirit::qi::_1]
-                                  ),
-                                 //  End grammar
-                                 qi::space);
-        }
+        res = qi::phrase_parse(
+          str_iter,
+          end_iter,
+          //  Begin grammar
+          (qi::lit("Slot") >> qi::uint_[boost::phoenix::ref(hit_data_.slot_id) =
+                                          boost::spirit::qi::_1] >>
+           qi::lit("Feast") >>
+           qi::uint_[boost::phoenix::ref(hit_data_.feast_id) =
+                       boost::spirit::qi::_1] >>
+           qi::lit("Ch") >>
+           qi::uint_[boost::phoenix::ref(hit_data_.channel_id) =
+                       boost::spirit::qi::_1] >>
+           (qi::string("AN") |
+            qi::string("CA"))[boost::phoenix::ref(hit_data_.channel_type) =
+                                boost::spirit::qi::_1] >>
+           (qi::string("R0") | qi::string("R1") | qi::string("R2") |
+            qi::string("R3") | qi::string("R4") | qi::string("R5") |
+            qi::string("R6"))[boost::phoenix::ref(hit_data_.timestamp_type) =
+                                boost::spirit::qi::_1] >>
+           qi::ulong_long[boost::phoenix::ref(hit_data_.timestamp_value) =
+                            boost::spirit::qi::_1] >>
+           qi::double_[boost::phoenix::ref(hit_data_.timestamp_ns) =
+                         boost::spirit::qi::_1]),
+          //  End grammar
+          qi::space);
+      }
       DT_THROW_IF(!res || str_iter != end_iter,
                   std::logic_error,
-                  "Cannot parse file timestamp : " << data_line << "; failed at '" << *str_iter << "'!");
+                  "Cannot parse file timestamp : "
+                    << data_line << "; failed at '" << *str_iter << "'!");
       DT_LOG_DEBUG(_logging_, "slot_id         = " << hit_data_.slot_id);
       DT_LOG_DEBUG(_logging_, "feast_id        = " << hit_data_.feast_id);
       DT_LOG_DEBUG(_logging_, "channel_id      = " << hit_data_.channel_id);
       DT_LOG_DEBUG(_logging_, "channel_type    = " << hit_data_.channel_type);
       DT_LOG_DEBUG(_logging_, "timestamp_type  = " << hit_data_.timestamp_type);
-      DT_LOG_DEBUG(_logging_, "timestamp_value = " << hit_data_.timestamp_value);
+      DT_LOG_DEBUG(_logging_,
+                   "timestamp_value = " << hit_data_.timestamp_value);
       DT_LOG_DEBUG(_logging_, "timestamp_ns    = " << hit_data_.timestamp_ns);
       DT_LOG_DEBUG(_logging_, "unixtime        = " << hit_data_.unix_time);
 
@@ -218,4 +240,3 @@ namespace snfee {
 
   } // namespace io
 } // namespace snfee
-

@@ -10,17 +10,15 @@
 #include <memory>
 
 // This project:
-#include <snfee/data/raw_trigger_data.h>
 #include "rhd_record.h"
+#include <snfee/data/raw_trigger_data.h>
 
 namespace snfee {
   namespace io {
 
     /// \brief RTD record wrapper for raw trigger data object
-    class rtd_record
-    {
+    class rtd_record {
     public:
-
       rtd_record();
 
       void make_record(const int32_t run_id_, const int32_t trigger_id_);
@@ -31,23 +29,23 @@ namespace snfee {
 
       int32_t get_trigger_id() const;
 
-      snfee::data::raw_trigger_data & grab_rtd();
+      snfee::data::raw_trigger_data& grab_rtd();
 
-      const snfee::data::raw_trigger_data & get_rtd() const;
+      const snfee::data::raw_trigger_data& get_rtd() const;
 
-      const std::shared_ptr<snfee::data::raw_trigger_data> & get_rtd_ptr() const;
+      const std::shared_ptr<snfee::data::raw_trigger_data>& get_rtd_ptr() const;
 
-      void install_rhd(const snfee::io::rhd_record & rhd_rec_);
+      void install_rhd(const snfee::io::rhd_record& rhd_rec_);
 
-      void print(std::ostream & out_) const;
+      void print(std::ostream& out_) const;
 
-      friend std::ostream & operator<<(std::ostream & out_, const rtd_record & rec_);
+      friend std::ostream& operator<<(std::ostream& out_,
+                                      const rtd_record& rec_);
 
     private:
-
       int32_t _trigger_id_ = snfee::data::INVALID_TRIGGER_ID; ///< Trigger ID
-      std::shared_ptr<snfee::data::raw_trigger_data> _rtd_;   ///< Pointer to a raw trigger data (RTD)
-
+      std::shared_ptr<snfee::data::raw_trigger_data>
+        _rtd_; ///< Pointer to a raw trigger data (RTD)
     };
 
   } // namespace io

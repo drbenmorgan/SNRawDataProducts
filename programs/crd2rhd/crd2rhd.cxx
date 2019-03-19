@@ -1,34 +1,33 @@
 // Standard library:
 #include <cstdio>
-#include <iostream>
-#include <string>
-#include <sstream>
-#include <fstream>
 #include <exception>
-#include <stdexcept>
+#include <fstream>
+#include <iostream>
 #include <memory>
+#include <sstream>
+#include <stdexcept>
+#include <string>
 
 // Third party:
 // - Bayeux:
-#include <bayeux/datatools/logger.h>
 #include <bayeux/datatools/io_factory.h>
+#include <bayeux/datatools/logger.h>
 // - Boost:
-#include <boost/program_options.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
+#include <boost/program_options.hpp>
 
 // This project:
-#include <snfee/utils.h>
-#include <snfee/data/trigger_record.h>
 #include <snfee/data/calo_hit_record.h>
 #include <snfee/data/tracker_hit_record.h>
+#include <snfee/data/trigger_record.h>
 #include <snfee/io/multifile_data_writer.h>
+#include <snfee/utils.h>
 
 #include "raw_hit_reader.h"
 
 // \brief Application configuration parameters
-struct app_params_type
-{
+struct app_params_type {
   datatools::logger::priority logging = datatools::logger::PRIO_FATAL;
   datatools::logger::priority reader_logging = datatools::logger::PRIO_FATAL;
   snfee::io::raw_hit_reader::config_type reader_config;
@@ -36,23 +35,25 @@ struct app_params_type
   std::vector<std::string> input_filenames;
   // std::vector<std::string> output_filenames;
   std::string output_filename;
-  bool        dynamic_output_files = false;
+  bool dynamic_output_files = false;
   std::size_t max_rhd_files = 1;
   snfee::io::multifile_data_writer::config_type writer_config;
   std::size_t crd_counter_period = 1000;
-  bool        print_records = false;
+  bool print_records = false;
   std::string work_dir = "/tmp";
-  bool        force_fake_trigger_ids = false;
-  int32_t     session_id = 0;
+  bool force_fake_trigger_ids = false;
+  int32_t session_id = 0;
   std::size_t max_crd_per_input_file = 0;
 };
 
-int main(int argc_, char ** argv_)
+int
+main(int argc_, char** argv_)
 {
   int error_code = EXIT_SUCCESS;
   try {
     app_params_type app_params;
 
+    // clang-format off
     // Parse options:
     namespace po = boost::program_options;
     po::options_description opts("Allowed options");
@@ -150,30 +151,37 @@ int main(int argc_, char ** argv_)
        "set the maximum number of records collected per CRD input file (expert)")
 
       ; // end of options description
+    // clang-format on
 
     // Describe command line arguments :
     po::variables_map vm;
-    po::store(po::command_line_parser(argc_, argv_)
-              .options(opts)
-              .run(), vm);
+    po::store(po::command_line_parser(argc_, argv_).options(opts).run(), vm);
     po::notify(vm);
 
     // Use command line arguments :
     if (vm.count("help")) {
       std::cout << "snfee-crd2rhd : "
-                << "Convert commissioning raw data file (CRD) to official raw hit data file (RHD)"
-                << std::endl << std::endl;
+                << "Convert commissioning raw data file (CRD) to official raw "
+                   "hit data file (RHD)"
+                << std::endl
+                << std::endl;
       std::cout << "Usage : " << std::endl << std::endl;
       std::cout << "  snfee-crd2rhd [OPTIONS]" << std::endl << std::endl;
       std::cout << opts << std::endl;
       std::cout << "Example : " << std::endl << std::endl;
-      std::cout << " 1) Convert an unique CRD file to an unique RHD file : " << std::endl << std::endl;
+      std::cout << " 1) Convert an unique CRD file to an unique RHD file : "
+                << std::endl
+                << std::endl;
       std::cout << "    snfee-crd2rhd \\\n";
       std::cout << "      --crate-number 0 \\\n";
-      std::cout << "      --input-file \"/data/SuperNEMO/ManCom2108/Run_8/calo/RunCalo_8.dat\" \\\n";
+      std::cout
+        << "      --input-file "
+           "\"/data/SuperNEMO/ManCom2108/Run_8/calo/RunCalo_8.dat\" \\\n";
       std::cout << "      --output-file \"snemo_run-8_rhd_crate-0_part-0.xml\"";
       std::cout << std::endl << std::endl;
-      std::cout << " 2) Convert a list of CRD files to a list of RHD files: " << std::endl << std::endl;
+      std::cout << " 2) Convert a list of CRD files to a list of RHD files: "
+                << std::endl
+                << std::endl;
       std::cout << "    snfee-crd2rhd \\\n";
       std::cout << "      --crate-number 0 \\\n";
       std::cout << "      --force-fake-trigger-ids \\\n";
@@ -188,43 +196,70 @@ int main(int argc_, char ** argv_)
     // Use command line arguments :
     if (vm.count("logging")) {
       std::string logging_repr = vm["logging"].as<std::string>();
-      // DT_LOG_DEBUG(datatools::logger::PRIO_DEBUG, "Logging repr. = '" << logging_repr << "'");
+      // DT_LOG_DEBUG(datatools::logger::PRIO_DEBUG, "Logging repr. = '" <<
+      // logging_repr << "'");
       app_params.logging = datatools::logger::get_priority(logging_repr);
       DT_THROW_IF(app_params.logging == datatools::logger::PRIO_UNDEFINED,
                   std::logic_error,
-                  "Invalid logging priority '" << vm["logging"].as<std::string>() << "'!");
+                  "Invalid logging priority '"
+                    << vm["logging"].as<std::string>() << "'!");
     }
     if (vm.count("reader-logging")) {
       std::string logging_repr = vm["reader-logging"].as<std::string>();
-      // DT_LOG_DEBUG(datatools::logger::PRIO_DEBUG, "Logging repr. = '" << logging_repr << "'");
+      // DT_LOG_DEBUG(datatools::logger::PRIO_DEBUG, "Logging repr. = '" <<
+      // logging_repr << "'");
       app_params.reader_logging = datatools::logger::get_priority(logging_repr);
-      DT_THROW_IF(app_params.reader_logging == datatools::logger::PRIO_UNDEFINED,
+      DT_THROW_IF(app_params.reader_logging ==
+                    datatools::logger::PRIO_UNDEFINED,
                   std::logic_error,
-                  "Invalid reader logging priority '" << vm["reader-logging"].as<std::string>() << "'!");
+                  "Invalid reader logging priority '"
+                    << vm["reader-logging"].as<std::string>() << "'!");
     }
 
     // Checks:
-    DT_THROW_IF(app_params.reader_config.crate_num < 0, std::logic_error, "Missing crate number!");
-    // DT_THROW_IF(app_params.output_filename.empty(), std::logic_error, "Missing output production raw hit data file!");
+    DT_THROW_IF(app_params.reader_config.crate_num < 0,
+                std::logic_error,
+                "Missing crate number!");
+    // DT_THROW_IF(app_params.output_filename.empty(), std::logic_error,
+    // "Missing output production raw hit data file!");
 
-    DT_LOG_DEBUG(app_params.logging, "Input filename  = '" << app_params.reader_config.input_filename << "'");
-    DT_LOG_DEBUG(app_params.logging, "Crate number    = [" << app_params.reader_config.crate_num << "]");
-    DT_LOG_DEBUG(app_params.logging, "With calo       = " << std::boolalpha << app_params.reader_config.with_calo);
-    DT_LOG_DEBUG(app_params.logging, "With tracker    = " << std::boolalpha << app_params.reader_config.with_tracker);
+    DT_LOG_DEBUG(app_params.logging,
+                 "Input filename  = '"
+                   << app_params.reader_config.input_filename << "'");
+    DT_LOG_DEBUG(app_params.logging,
+                 "Crate number    = [" << app_params.reader_config.crate_num
+                                       << "]");
+    DT_LOG_DEBUG(app_params.logging,
+                 "With calo       = " << std::boolalpha
+                                      << app_params.reader_config.with_calo);
+    DT_LOG_DEBUG(app_params.logging,
+                 "With tracker    = " << std::boolalpha
+                                      << app_params.reader_config.with_tracker);
     if (app_params.reader_config.with_calo_waveforms) {
-      DT_LOG_DEBUG(app_params.logging, "With calo waveforms = " << std::boolalpha << app_params.reader_config.with_calo_waveforms);
+      DT_LOG_DEBUG(app_params.logging,
+                   "With calo waveforms = "
+                     << std::boolalpha
+                     << app_params.reader_config.with_calo_waveforms);
     }
-    DT_LOG_DEBUG(app_params.logging, "Output filename   = '" << app_params.output_filename << "'");
-    DT_LOG_DEBUG(app_params.logging, "Max total records = " << app_params.writer_config.max_total_records);
-    DT_LOG_DEBUG(app_params.logging, "Max records/file  = " << app_params.writer_config.max_records_per_file);
-    DT_LOG_DEBUG(app_params.logging, "Terminate/overrun = " << std::boolalpha << app_params.writer_config.terminate_on_overrun);
+    DT_LOG_DEBUG(app_params.logging,
+                 "Output filename   = '" << app_params.output_filename << "'");
+    DT_LOG_DEBUG(
+      app_params.logging,
+      "Max total records = " << app_params.writer_config.max_total_records);
+    DT_LOG_DEBUG(
+      app_params.logging,
+      "Max records/file  = " << app_params.writer_config.max_records_per_file);
+    DT_LOG_DEBUG(app_params.logging,
+                 "Terminate/overrun = "
+                   << std::boolalpha
+                   << app_params.writer_config.terminate_on_overrun);
 
     // Writer:
     std::unique_ptr<snfee::io::multifile_data_writer> pWriter;
     std::string output_file_dirname;
     std::string output_file_basename;
     std::string output_file_extension;
-    int         output_file_part_num = -1;
+    int output_file_part_num = -1;
     if (!app_params.output_filename.empty()) {
       std::string dirpath;
       std::string basename;
@@ -238,12 +273,14 @@ int main(int argc_, char ** argv_)
         }
         std::vector<std::string> strs;
         boost::split(strs, basename, boost::is_any_of("."));
-        DT_THROW_IF(strs.size() < 2, std::logic_error, "Missing output filename extension!");
+        DT_THROW_IF(strs.size() < 2,
+                    std::logic_error,
+                    "Missing output filename extension!");
         std::ostringstream basename_s;
         basename_s << strs[0];
         output_file_basename = basename_s.str();
         std::ostringstream extension_s;
-        for (int i = 1; i < (int) strs.size(); i++) {
+        for (int i = 1; i < (int)strs.size(); i++) {
           extension_s << '.' << strs[i];
         }
         output_file_extension = extension_s.str();
@@ -259,16 +296,18 @@ int main(int argc_, char ** argv_)
       if (app_params.dynamic_output_files) {
         unique_output_file = false;
       }
-      snfee::io::multifile_data_writer::config_type writerCfg = app_params.writer_config;
+      snfee::io::multifile_data_writer::config_type writerCfg =
+        app_params.writer_config;
       // Build the initial list of output files:
       if (unique_output_file) {
         // Unique output file:
         DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION,
-                           "Set output file : '" << app_params.output_filename << "'");
+                           "Set output file : '" << app_params.output_filename
+                                                 << "'");
         writerCfg.filenames.push_back(app_params.output_filename);
       } else {
         // Multiple output files (with automated postfix index):
-        for (int ipart = 0; ipart < (int) app_params.max_rhd_files; ipart++) {
+        for (int ipart = 0; ipart < (int)app_params.max_rhd_files; ipart++) {
           int part_index = 0;
           // if (output_file_part_num >= 0) {
           //   part_index = output_file_part_num;
@@ -278,7 +317,8 @@ int main(int argc_, char ** argv_)
           if (!dirpath.empty()) {
             filename_s << dirpath << '/';
           }
-          filename_s << output_file_basename << "_part-" << part_index << output_file_extension;
+          filename_s << output_file_basename << "_part-" << part_index
+                     << output_file_extension;
           std::string filename = filename_s.str();
           DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION,
                              "Add output file : '" << filename << "'");
@@ -287,24 +327,30 @@ int main(int argc_, char ** argv_)
         }
       }
       output_file_dirname = dirpath;
-      pWriter.reset(new snfee::io::multifile_data_writer(writerCfg, app_params.logging));
+      pWriter.reset(
+        new snfee::io::multifile_data_writer(writerCfg, app_params.logging));
     }
 
     // Hack for messy trigger IDs:
-    int32_t     fake_trigger_id = 0;
-    std::string fake_trigger_id_save
-      = app_params.work_dir + "/snfee-crd2rhd_fake_trigger_ids-" + std::to_string(app_params.session_id) + ".save";
+    int32_t fake_trigger_id = 0;
+    std::string fake_trigger_id_save =
+      app_params.work_dir + "/snfee-crd2rhd_fake_trigger_ids-" +
+      std::to_string(app_params.session_id) + ".save";
     if (app_params.force_fake_trigger_ids) {
       datatools::fetch_path_with_env(fake_trigger_id_save);
       if (boost::filesystem::exists(fake_trigger_id_save)) {
         std::ifstream load_fake_trigger_id(fake_trigger_id_save);
-        DT_THROW_IF(!load_fake_trigger_id, std::logic_error,
+        DT_THROW_IF(!load_fake_trigger_id,
+                    std::logic_error,
                     "Cannot open '" << fake_trigger_id_save << "'!");
         load_fake_trigger_id >> fake_trigger_id;
-        DT_THROW_IF(!load_fake_trigger_id, std::logic_error,
-                    "Cannot read next fake trigger ID from file '" << fake_trigger_id_save << "'!");
+        DT_THROW_IF(!load_fake_trigger_id,
+                    std::logic_error,
+                    "Cannot read next fake trigger ID from file '"
+                      << fake_trigger_id_save << "'!");
       }
-      DT_LOG_NOTICE(app_params.logging, "Forcing starting trigger ID : " << fake_trigger_id);
+      DT_LOG_NOTICE(app_params.logging,
+                    "Forcing starting trigger ID : " << fake_trigger_id);
     }
 
     if (!app_params.input_listname.empty()) {
@@ -312,8 +358,10 @@ int main(int argc_, char ** argv_)
       std::string listname = app_params.input_listname;
       datatools::fetch_path_with_env(listname);
       std::ifstream finput_list(listname);
-      DT_THROW_IF(!finput_list, std::logic_error, "Cannot open input files list filename!");
-      while (finput_list and ! finput_list.eof()) {
+      DT_THROW_IF(!finput_list,
+                  std::logic_error,
+                  "Cannot open input files list filename!");
+      while (finput_list and !finput_list.eof()) {
         std::string line;
         std::getline(finput_list, line);
         boost::trim_copy(line);
@@ -329,18 +377,22 @@ int main(int argc_, char ** argv_)
       }
     }
     DT_THROW_IF(app_params.input_filenames.empty(),
-                std::logic_error, "Missing CRD input files!");
+                std::logic_error,
+                "Missing CRD input files!");
     std::size_t stored_rhd_counter = 0;
     std::size_t crd_counter = 0;
     // Input file loop:
     bool end_of_input = false;
     for (int i_input_filename = 0;
-         i_input_filename < (int) app_params.input_filenames.size();
+         i_input_filename < (int)app_params.input_filenames.size();
          i_input_filename++) {
-      app_params.reader_config.input_filename = app_params.input_filenames[i_input_filename];
+      app_params.reader_config.input_filename =
+        app_params.input_filenames[i_input_filename];
       DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION,
-                         "Reading CRD input file : '" + app_params.reader_config.input_filename + "'");
-      // Reader for RHD data file (for the commissioning phase using the SN CRATE SOFTWARE acquisition program):
+                         "Reading CRD input file : '" +
+                           app_params.reader_config.input_filename + "'");
+      // Reader for RHD data file (for the commissioning phase using the SN
+      // CRATE SOFTWARE acquisition program):
       snfee::io::raw_hit_reader reader;
       reader.set_logging(app_params.reader_logging);
       reader.set_config(app_params.reader_config);
@@ -351,10 +403,10 @@ int main(int argc_, char ** argv_)
       // Reader loop:
       while (reader.has_next_hit()) {
         DT_LOG_DEBUG(app_params.logging, "Loading next record...");
-        snfee::data::calo_hit_record    myCaloRec;
+        snfee::data::calo_hit_record myCaloRec;
         snfee::data::tracker_hit_record myTrackerRec;
-        snfee::io::raw_record_parser::record_type ret
-          = reader.load_next_hit(myCaloRec, myTrackerRec);
+        snfee::io::raw_record_parser::record_type ret =
+          reader.load_next_hit(myCaloRec, myTrackerRec);
         if (ret == snfee::io::raw_record_parser::RECORD_CALO) {
           DT_LOG_DEBUG(app_params.logging, "Found a calo hit record.");
           if (app_params.print_records) {
@@ -392,21 +444,26 @@ int main(int argc_, char ** argv_)
         crd_counter_for_this_file++;
         // End of loop:
         if (crd_counter % app_params.crd_counter_period == 0) {
-          DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION, "Loaded CRD records: " << crd_counter);
+          DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION,
+                             "Loaded CRD records: " << crd_counter);
         }
-        if (app_params.writer_config.max_total_records
-            and crd_counter == app_params.writer_config.max_total_records) {
-          DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION, "Max CRD records reached!");
+        if (app_params.writer_config.max_total_records and
+            crd_counter == app_params.writer_config.max_total_records) {
+          DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION,
+                             "Max CRD records reached!");
           end_of_input_for_this_file = true;
           end_of_input = true;
         }
-        if (app_params.max_crd_per_input_file
-            and crd_counter_for_this_file == app_params.max_crd_per_input_file) {
-          DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION, "Max CRD records per input file reached!");
+        if (app_params.max_crd_per_input_file and
+            crd_counter_for_this_file == app_params.max_crd_per_input_file) {
+          DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION,
+                             "Max CRD records per input file reached!");
           end_of_input_for_this_file = true;
         }
-        if (end_of_input) break;
-        if (end_of_input_for_this_file) break;
+        if (end_of_input)
+          break;
+        if (end_of_input_for_this_file)
+          break;
         if (pWriter) {
           if (app_params.dynamic_output_files && pWriter->is_last_file()) {
             output_file_part_num++;
@@ -414,36 +471,44 @@ int main(int argc_, char ** argv_)
             if (!output_file_dirname.empty()) {
               filename_s << output_file_dirname << '/';
             }
-            filename_s << output_file_basename << "_part-" << output_file_part_num << output_file_extension;
+            filename_s << output_file_basename << "_part-"
+                       << output_file_part_num << output_file_extension;
             std::string rhd_filename = filename_s.str();
             DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION,
-                               "Additional output file : '" << rhd_filename << "'");
+                               "Additional output file : '" << rhd_filename
+                                                            << "'");
             pWriter->add_filename(rhd_filename);
           }
         }
       } // end of reader loop:
       reader.reset();
-      if (end_of_input) break;
+      if (end_of_input)
+        break;
     } // end of input file loop.
 
     if (app_params.force_fake_trigger_ids) {
-      DT_LOG_NOTICE(datatools::logger::PRIO_INFORMATION, "Saving next starting trigger ID : " << fake_trigger_id);
+      DT_LOG_NOTICE(datatools::logger::PRIO_INFORMATION,
+                    "Saving next starting trigger ID : " << fake_trigger_id);
       std::ofstream save_fake_trigger_id(fake_trigger_id_save);
       save_fake_trigger_id << fake_trigger_id << std::endl;
-     }
+    }
 
     if (pWriter) {
       pWriter.reset();
     }
 
-    DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION, "Loaded CRD records: " << crd_counter);
-    DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION, "Stored RHD records: " << stored_rhd_counter);
-
-  } catch (std::exception & x) {
+    DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION,
+                       "Loaded CRD records: " << crd_counter);
+    DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION,
+                       "Stored RHD records: " << stored_rhd_counter);
+  }
+  catch (std::exception& x) {
     std::cerr << "error: " << x.what() << std::endl;
     error_code = EXIT_FAILURE;
-  } catch (...) {
-    std::cerr << "error: " << "unexpected error!" << std::endl;
+  }
+  catch (...) {
+    std::cerr << "error: "
+              << "unexpected error!" << std::endl;
     error_code = EXIT_FAILURE;
   }
   return (error_code);

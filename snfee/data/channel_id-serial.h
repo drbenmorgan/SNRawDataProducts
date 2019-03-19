@@ -20,14 +20,14 @@ namespace snfee {
      *  @arg ar_ an archive type (ASCII, XML or binary)
      *  @arg version_ the archive version number (not used)
      */
-    template<class Archive>
-    void channel_id::serialize(Archive & ar_,
-                               const unsigned int /*version_*/)
+    template <class Archive>
+    void
+    channel_id::serialize(Archive& ar_, const unsigned int /*version_*/)
     {
-      ar_ & boost::serialization::make_nvp("module_number",  _module_number_);
-      ar_ & boost::serialization::make_nvp("crate_number",   _crate_number_);
-      ar_ & boost::serialization::make_nvp("board_number",   _board_number_);
-      ar_ & boost::serialization::make_nvp("channel_number", _channel_number_);
+      ar_& boost::serialization::make_nvp("module_number", _module_number_);
+      ar_& boost::serialization::make_nvp("crate_number", _crate_number_);
+      ar_& boost::serialization::make_nvp("board_number", _board_number_);
+      ar_& boost::serialization::make_nvp("channel_number", _channel_number_);
       return;
     }
 

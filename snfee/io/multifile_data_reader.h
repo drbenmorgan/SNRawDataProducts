@@ -7,8 +7,8 @@
 #define SNFEE_IO_MULTIFILE_DATA_READER_H
 
 // Standard library:
-#include <string>
 #include <memory>
+#include <string>
 
 // Third party:
 // - Boost:
@@ -20,23 +20,19 @@ namespace snfee {
   namespace io {
 
     //! \brief Multifile data reader
-    class multifile_data_reader
-      : private boost::noncopyable
-    {
+    class multifile_data_reader : private boost::noncopyable {
     public:
-
       /// \brief Configuration data:
-      struct config_type
-      {
+      struct config_type {
         std::vector<std::string> filenames; ///< Sequence of input filenames
       };
-  
+
       //! Default constructor
-      multifile_data_reader(const config_type &);
+      multifile_data_reader(const config_type&);
 
       //! Destructor
       virtual ~multifile_data_reader();
- 
+
       //! Check if the reader is terminated
       bool is_terminated() const;
 
@@ -44,44 +40,43 @@ namespace snfee {
       bool has_record_tag() const;
 
       //! Check if the tag associated to a next record is of a certain type
-      bool record_tag_is(const std::string &) const;
+      bool record_tag_is(const std::string&) const;
 
       //! Return the current record tag
       std::string get_record_tag() const;
 
       //! Load an arbitrary serialization records
       template <typename Data>
-      void load(Data & data_)
+      void
+      load(Data& data_)
       {
         _reader_().load(data_);
         _at_load_();
         return;
       }
- 
+
       /// Force termination of the reader
       void terminate();
 
       /// Return the number of loaded records
       std::size_t get_counter() const;
-     
-    private:
 
+    private:
       void _at_load_(); //!< At load action
-      
-      datatools::data_reader & _reader_(); //!< Return a ref to the current reader
-     
-    private:
 
+      datatools::data_reader&
+      _reader_(); //!< Return a ref to the current reader
+
+    private:
       // Configuration::
-      config_type _config_;      ///< Configuration
+      config_type _config_; ///< Configuration
 
       // Management:
       bool _terminated_ = false; ///< Forced termination flag
       std::size_t _counter_ = 0; ///< Record counter
-      
+
       struct pimpl_type;
       std::unique_ptr<pimpl_type> _pimpl_; ///< Private working data
-      
     };
 
   } // namespace io

@@ -24,8 +24,7 @@
 namespace snfee {
   namespace data {
 
-    class has_trigger_id_interface
-    {
+    class has_trigger_id_interface {
     public:
       // Require virtual destructor for inheritance
       // TODO: Do we need the rule of five for the others?
@@ -36,12 +35,10 @@ namespace snfee {
 
       //! Return the trigger ID
       virtual int32_t get_trigger_id() const = 0;
-
     };
 
   } // namespace data
 } // namespace snfee
-
 
 #endif // SNFEE_DATA_HAS_TRIGGER_ID_INTERFACE_H
 

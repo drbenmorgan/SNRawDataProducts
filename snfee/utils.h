@@ -1,5 +1,5 @@
 //! \file  snfee/utils.h
-//! \brief Utilities 
+//! \brief Utilities
 //
 // Copyright (c) 2018 by François Mauger <mauger@lpccaen.in2p3.fr>
 //
@@ -29,16 +29,17 @@
 #include <bayeux/datatools/properties.h>
 
 namespace snfee {
-  
-    /// Label representing a missing resource
-    const std::string & none_label();
-  
-    /// Label representing an invalid resource
-    const std::string & invalid_label();
-  
-    /// Explicit singleton for an empty configuration (Bayeux/datatools properties)
-    const datatools::properties & empty_config();
+
+  /// Label representing a missing resource
+  const std::string& none_label();
+
+  /// Label representing an invalid resource
+  const std::string& invalid_label();
+
+  /// Explicit singleton for an empty configuration (Bayeux/datatools
+  /// properties)
+  const datatools::properties& empty_config();
 
 } // namespace snfee
 
-#endif //SNFEE_UTILS_H
+#endif // SNFEE_UTILS_H
