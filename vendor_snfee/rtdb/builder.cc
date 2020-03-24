@@ -23,6 +23,7 @@
 #include <snfee/data/tracker_hit_record.h>
 #include <snfee/data/trigger_record.h>
 #include <snfee/data/raw_trigger_data.h>
+#include <snfee/data/utils.h>
 #include <snfee/io/multifile_data_reader.h>
 #include <snfee/io/multifile_data_writer.h>
 #include <snfee/io/rhd_record.h>
@@ -228,21 +229,23 @@ namespace snfee {
       {
         return is_empty() and is_terminated();
       }
- 
-      /// Check if a given trigger ID is complete
-      bool trig_id_is_finished(const int32_t test_trig_id_) const
-      {
-        if (is_finished()) {
-          // No more record is the buffer and no hope to get more:
-          return true;
-        }
-        if (_front_trig_id_ != snfee::data::INVALID_TRIGGER_ID
-            and test_trig_id_ < _front_trig_id_) {
-          // The current trigger ID in the buffer is newer than the tested value:
-          return true; 
-        }
-        return false;
-      }
+
+      // Commented out 2019-05-27:
+      // /// Check if a given trigger ID is complete
+      // bool trig_id_is_finished(const int32_t test_trig_id_) const
+      // {
+      //   if (is_finished()) {
+      //     // No more record is the buffer and no hope to get more:
+      //     return true;
+      //   }
+      //   snfee::data::trigger_id_comparator_type trigger_id_less;
+      //   if (_front_trig_id_ != snfee::data::INVALID_TRIGGER_ID
+      //       and trigger_id_less(test_trig_id_, _front_trig_id_)) {
+      //     // The current trigger ID in the buffer is newer than the tested value:
+      //     return true; 
+      //   }
+      //   return false;
+      // }
 
       int32_t get_front_trig_id() const
       {
@@ -260,10 +263,11 @@ namespace snfee {
       /// Insert a new record in the buffer
       void insert_record(const snfee::io::rhd_record rhd_rec_)
       {
-        bool process_unsorted_records = false;
-        if (_min_popping_trig_ids_ > 1) {
-          process_unsorted_records = true;
-        }
+        snfee::data::trigger_id_comparator_type trigger_id_less;
+        // bool process_unsorted_records = false;
+        // if (_min_popping_trig_ids_ > 1) {
+        //   process_unsorted_records = true;
+        // }
         int32_t new_trig_id = rhd_rec_.get_trigger_id();
         if (_rhd_recs_.size() == 0) {
           // RHD records =      [ ]
@@ -271,30 +275,36 @@ namespace snfee {
           _rhd_recs_.push_back(rhd_rec_);
           _front_trig_id_ = new_trig_id;
         } else {
-          if (new_trig_id < _front_trig_id_) {
-            DT_THROW_IF(!process_unsorted_records, std::logic_error, "Unsorted input RHD! This is a bug!");
-            // Exceptional case:
+          // Protect against unsorted input:
+          if (trigger_id_less(new_trig_id, _front_trig_id_)) {
+           // Unsorted case:
             // RHD records =      [ ][4][4][4][5][5][6][6][6][6][7][7][7][9][9][9][9][9]
             // New record  = [3]---^                                  
-            _rhd_recs_.push_front(rhd_rec_);
-            _front_trig_id_ = new_trig_id;
+            DT_THROW(std::logic_error,
+                     "Unsorted input RHD: new trigger ID=" << new_trig_id << "<"
+                     << "front trigger ID=" <<  _front_trig_id_ << "! This is a bug!");
+            //// _rhd_recs_.push_front(rhd_rec_);
+            //// _front_trig_id_ = new_trig_id;
           }
-          if (new_trig_id < *_trig_ids_.rbegin()) {
-            DT_THROW_IF(!process_unsorted_records, std::logic_error, "Unsorted input RHD! This is a bug!");
-            // Rare case (rhd_rec_.get_trigger_id() < *_trig_ids_.rbegin() :
+          if (trigger_id_less(new_trig_id, *_trig_ids_.rbegin())) {
+            // Unsorted case (rhd_rec_.get_trigger_id() < *_trig_ids_.rbegin() :
             // RHD records = [4][4][4][5][5][6][6][6][6][7][7][7][9][9][9][9][9]
             // New record  = [6]-------------^                    ^              
             // New record  = [8]----------------------------------'                                 
-            std::deque<snfee::io::rhd_record>::iterator insert_iter = _rhd_recs_.end();
-            for (std::deque<snfee::io::rhd_record>::iterator it = _rhd_recs_.begin();
-                 it != _rhd_recs_.end();
-                 it++) {
-              if (it->get_trigger_id() >= new_trig_id) {
-                insert_iter = it;
-                break;
-              }
-            }
-            _rhd_recs_.insert(insert_iter, rhd_rec_);
+            DT_THROW(std::logic_error,
+                     "Unsorted input RHD: new trigger ID=" << new_trig_id << "<"
+                     << "last trigger ID=" << *_trig_ids_.rbegin() << "! This is a bug!");
+            //// std::deque<snfee::io::rhd_record>::iterator insert_iter = _rhd_recs_.end();
+            //// for (std::deque<snfee::io::rhd_record>::iterator it = _rhd_recs_.begin();
+            ////      it != _rhd_recs_.end();
+            ////      it++) {
+            ////   //if (it->get_trigger_id() >= new_trig_id) {
+            ////   if (! trigger_id_less(it->get_trigger_id(), new_trig_id)) {
+            ////     insert_iter = it;
+            ////     break;
+            ////   }
+            //// }
+            //// _rhd_recs_.insert(insert_iter, rhd_rec_);
           }
           // Usual case:
           // RHD records = [4][4][4][5][5][6][6][ ]
@@ -305,10 +315,12 @@ namespace snfee {
         _trig_ids_.insert(new_trig_id);
         return;
       }
- 
+
+      /*
       /// Insert with sorting a new record in the buffer
       void insert_record_with_sort(const snfee::io::rhd_record rhd_rec_)
       {
+        snfee::data::trigger_id_comparator_type trigger_id_less;
         // DT_LOG_DEBUG(_logging_, "About to insert record in RHD buffer " << _id_);
         int32_t new_trig_id = rhd_rec_.get_trigger_id();
         // DT_LOG_DEBUG(_logging_, "Buffer id=" << _id_ << " new trigger ID = " << new_trig_id);
@@ -333,13 +345,16 @@ namespace snfee {
           _rhd_recs_.push_back(rhd_rec_);
           _front_trig_id_ = new_trig_id;
         } else {
-          if (new_trig_id >= *_trig_ids_.rbegin()) {
+          // if (new_trig_id >= *_trig_ids_.rbegin()) {
+          if (!trigger_id_less(new_trig_id, *_trig_ids_.rbegin())) {
             // Usual case:
             // RHD records = [4][4][4][5][5][6][6][ ]
             // New record  = [6]-------------------^                                  
             // New record  = [8]-------------------'                                 
             _rhd_recs_.push_back(rhd_rec_);
-          } else if (new_trig_id < _front_trig_id_) {
+            //         } else if (new_trig_id < _front_trig_id_) {
+          } else if (trigger_id_less(new_trig_id, _front_trig_id_)) {
+
             // Exceptional case:
             // RHD records =      [ ][4][4][4][5][5][6][6][6][6][7][7][7][9][9][9][9][9]
             // New record  = [3]---^                                  
@@ -365,7 +380,8 @@ namespace snfee {
         _trig_ids_.insert(new_trig_id);
         return;
       }
-
+      */
+      
       /// Pop a record from the buffer
       snfee::io::rhd_record pop_record()
       {
@@ -378,7 +394,7 @@ namespace snfee {
           // Update the current trigger ID with the ones from the next record:
           const snfee::io::rhd_record & next_rec = _rhd_recs_.front();
           _front_trig_id_ = next_rec.get_trigger_id();
-          // Update the set of embedded trigger IDs
+          // Update the set of embedded trigger IDs:
           for (const auto & rhd_rec : _rhd_recs_) {
             _trig_ids_.insert(rhd_rec.get_trigger_id());
           }
@@ -668,7 +684,7 @@ namespace snfee {
       }
 
       // Configuration:
-      datatools::logger::priority _logging_;              ///< Logging priority
+      datatools::logger::priority _logging_; ///< Logging priority
       int          _id_ = -1; ///< Identifier of the input worker
       std::mutex & _mtx_;     ///< Handle to the mutex associated to the input RHD buffer
       rhd_buffer & _buf_;     ///< Handle to the input RHD buffer
@@ -831,6 +847,7 @@ namespace snfee {
 
       int32_t get_minimum_trigger_id_from_input_buffers() const
       {
+        snfee::data::trigger_id_comparator_type trigger_id_less;
         int32_t mintrigid = snfee::data::INVALID_TRIGGER_ID;
         bool cannot_determine = false;
         for (int i = 0; i < (int) _pimpl_.ibuffers.size(); i++) {
@@ -848,7 +865,7 @@ namespace snfee {
               if (!cannot_determine) {
                 if (ibuf.get_front_trig_id() != snfee::data::INVALID_TRIGGER_ID) {
                   if (mintrigid == snfee::data::INVALID_TRIGGER_ID
-                      or mintrigid > next_trig_id) {
+                      or trigger_id_less(next_trig_id, mintrigid)) {
                     mintrigid = next_trig_id;
                   }
                 }
@@ -867,7 +884,7 @@ namespace snfee {
       void run()
       { 
         DT_LOG_TRACE_ENTERING(_logging_);
-        
+        snfee::data::trigger_id_comparator_type trigger_id_less;
         // Working RTD record:
         snfee::io::rtd_record rtd_rec;
         
@@ -892,15 +909,15 @@ namespace snfee {
           bool push_current_rtd = false;
           if (process_input_rhd) {
             if (rtd_rec.get_trigger_id() != snfee::data::INVALID_TRIGGER_ID
-                and rtd_rec.get_trigger_id() < fetchable_trig_id) {
+                and trigger_id_less(rtd_rec.get_trigger_id(), fetchable_trig_id)) {
               // We already have a working RTD record and it has been completed
               // (no more records with same trigger ID are expected from the input buffers),
               // so we push it in the output buffer:
-              DT_LOG_DEBUG(_logging_, "Make the current RDT pushable because input buffers cannot provide RHD records with trigger ID = " << rtd_rec.get_trigger_id() << " anymore.");
+              DT_LOG_DEBUG(_logging_, "Make the current RTD pushable because input buffers cannot provide RHD records with trigger ID = " << rtd_rec.get_trigger_id() << " anymore.");
               push_current_rtd = true;
             }
           } else if (all_input_buffers_finished) {
-            DT_LOG_DEBUG(_logging_, "Make the current RDT pushable because this is the end of the input buffers.");
+            DT_LOG_DEBUG(_logging_, "Make the current RTD pushable because this is the end of the input buffers.");
             push_current_rtd = true;
           }
           
@@ -914,6 +931,20 @@ namespace snfee {
               DT_THROW_IF(_force_complete_rtd_ and !rtd_rec.get_rtd().is_complete(),
                           std::logic_error,
                           "Incomplete RTD data!");
+              if (!rtd_rec.get_rtd().has_trig()) {
+                if (_use_mock_trig_) {
+                  auto & rtd = rtd_rec.grab_rtd();
+                  auto trig_ptr = std::make_shared<snfee::data::trigger_record>();
+                  int32_t trigger_hit_num = 0;
+                  int32_t trigger_id = rtd_rec.get_trigger_id();
+                  snfee::data::trigger_record::trigger_mode_type trigger_mode = snfee::data::trigger_record::TRIGGER_MODE_CALO_ONLY;
+                  trig_ptr->make(trigger_hit_num,
+                                 trigger_id,
+                                 trigger_mode);
+                  rtd.set_trig(trig_ptr);
+                }
+              }
+              
               _pimpl_.obuffer.push_record(rtd_rec);
               // We reset the working RTD record and trigger ID:
               DT_LOG_DEBUG(_logging_, "Reset the working RTD record...");
@@ -1029,11 +1060,18 @@ namespace snfee {
         return;
       }
 
+      void set_use_mock_trig(bool umt_)
+      {
+        _use_mock_trig_ = umt_;
+        return;
+      }
+
     private:
 
       // Configuration:
       int32_t                     _run_id_ = snfee::data::INVALID_RUN_ID;
       bool                        _force_complete_rtd_ = false;
+      bool                        _use_mock_trig_ = false;
       datatools::logger::priority _logging_ = datatools::logger::PRIO_FATAL;
 
       // Working:

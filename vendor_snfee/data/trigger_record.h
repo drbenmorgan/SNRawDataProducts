@@ -1,7 +1,7 @@
 //! \file  snfee/data/trigger_record.h
 //! \brief Description of the SuperNEMO trigger raw record 
 //
-// Copyright (c) 2018 by François Mauger <mauger@lpccaen.in2p3.fr>
+// Copyright (c) 2018-2019 by François Mauger <mauger@lpccaen.in2p3.fr>
 //
 // This file is part of SNFrontEndElectronics.
 //
@@ -24,6 +24,7 @@
 // Standard Library:
 #include <vector>
 #include <memory>
+#include <limits>
 
 // Third Party Libraries:
 #include <bayeux/datatools/i_tree_dump.h>
@@ -31,8 +32,9 @@
 
 // This project:
 #include <snfee/geometry.h>
-#include <snfee/data/has_trigger_id_interface.h>
+#include <snfee/data/raw_record_interface.h>
 #include <snfee/data/utils.h>
+#include <snfee/data/time.h>
 
 namespace snfee {
   namespace data {
@@ -41,9 +43,12 @@ namespace snfee {
     class trigger_record
       : public datatools::i_tree_dumpable
       , public datatools::i_serializable
-      , public has_trigger_id_interface
+      , public raw_record_interface
     {
     public:
+
+      static const int32_t INVALID_NUMBER = -1;
+      static const uint32_t INVALID_CLOCKTICK = std::numeric_limits<uint32_t>::max();
 
       enum trigger_mode_type {
         TRIGGER_MODE_INVALID      = 0,
@@ -55,7 +60,6 @@ namespace snfee {
         TRIGGER_MODE_DAVE         = 6,
         TRIGGER_MODE_SCREENING    = 7
       };
-
       static std::string trigger_mode_label(const trigger_mode_type);
      
       /// Default constructor
@@ -81,6 +85,12 @@ namespace snfee {
       virtual void print_tree(std::ostream & out_ = std::clog,
                               const boost::property_tree::ptree & options_ = empty_options()) const;
 
+      /// Set the hit ID
+      void set_hit_num(const int32_t);
+
+      //! Return the hit number 
+      int32_t get_hit_num() const override;
+
       /// Set the trigger ID
       void set_trigger_id(const int32_t); 
 
@@ -89,23 +99,42 @@ namespace snfee {
     
       /// Return the L2 trigger mode
       trigger_mode_type get_trigger_mode() const;
-    
+
+      /// Check if the progenitor trigger ID is set
+      bool has_progenitor_trigger_id() const;
+      
+      /// Set the progenitor trigger ID
+      void set_progenitor_trigger_id(const int32_t); 
+
+      /// Return the progenitor_trigger ID
+      int32_t get_progenitor_trigger_id() const;
+
+      /// Set the 1600 ns clocktick at L2 trigger decision
+      void set_l2_clocktick_1600ns(const uint32_t);
+      
       /// Return the 1600 ns clocktick at L2 trigger decision
       uint32_t get_l2_clocktick_1600ns() const;
 
       //! Initialize the record with values
-      void make(const uint32_t trigger_id_,
-                const trigger_mode_type trigger_mode_,
-                const uint32_t l2_clocktick_1600ns_);
+      void make(const int32_t trigger_hit_num_,
+                const int32_t trigger_id_,
+                const trigger_mode_type trigger_mode_);
  
       //! Reset the record
-      void invalidate();
+      void invalidate() override;
+
+      //! Convert the trigger decision timestamp to a timestamp object
+      timestamp convert_timestamp() const;
       
     private:
 
-      int32_t           _trigger_id_          = INVALID_TRIGGER_ID;   //!< Trigger ID
-      trigger_mode_type _trigger_mode_        = TRIGGER_MODE_INVALID; //!< Trigger mode
-      uint32_t          _l2_clocktick_1600ns_ = 0;                    //!< L2 trigger decision timestamp
+      int32_t           _hit_num_               = INVALID_NUMBER;       //!< Hit number
+      int32_t           _trigger_id_            = INVALID_TRIGGER_ID;   //!< Trigger ID
+      trigger_mode_type _trigger_mode_          = TRIGGER_MODE_INVALID; //!< Trigger mode
+
+      
+      uint32_t          _l2_clocktick_1600ns_   = INVALID_CLOCKTICK;    //!< L2 trigger decision timestamp
+      int32_t           _progenitor_trigger_id_ = INVALID_TRIGGER_ID;   //!< Progenitor trigger ID (for APE/DAVE trigger mode)  
 
       // bool            _cell_matrix_[geometry::NSIDES][geometry::TRACKER_NLAYERS][geometry::TRACKER_NROWS];
       // uint32_t        _cell_matrix_clocktick_1600ns_ = 0;

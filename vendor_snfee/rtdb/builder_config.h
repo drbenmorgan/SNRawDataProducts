@@ -55,21 +55,21 @@ namespace snfee {
       /// \brief Input configuration description
       struct input_config_type
       {
-        std::string                    label;          /// Identification (human friendly string)
+        std::string                    label;         ///< Identification (human friendly string)
         snfee::model::crate_model_type crate_model = snfee::model::CRATE_UNDEF; ///< Crate model
-        int32_t                        crate_id = -1;  ///< Crate ID
-        std::string                    listname;       ///< Name of a file containing the list of input RHD files
-        std::vector<std::string>       filenames;      ///< Explicit list of input RHD files
-        format_type                    format;         ///< Format description (unused)
+        int32_t                        crate_id = -1; ///< Crate ID
+        std::string                    listname;      ///< Name of a file containing the list of input RHD files
+        std::vector<std::string>       filenames;     ///< Explicit list of input RHD files
+        format_type                    format;        ///< Format description (unused)
       };
       
       /// \brief Output configuration description
       struct output_config_type
       {
-        std::string              label;      /// Identification (human friendly string)
+        std::string              label;      ///< Identification (human friendly string)
         std::vector<std::string> filenames;  ///< Explicit list of output RTD files
-        std::size_t              max_records_per_file = 0; ///< Maximum number of RTD records per output file
-        std::size_t              max_total_records = 0;    ///< Maximum total number of RTD records
+        std::size_t              max_records_per_file = 0;     ///< Maximum number of RTD records per output file
+        std::size_t              max_total_records    = 0;     ///< Maximum total number of RTD records
         bool                     terminate_on_overrun = false; ///< Flag to silently terminate the overrunning writer (dont' throw if set, unused)
         format_type              format;     ///< Format description (unused)
       };
@@ -91,6 +91,12 @@ namespace snfee {
 
       /// Set the forced complete RTD flag
       void set_force_complete_rtd(bool f_);
+      
+      /// Check if use mock trig flag is set
+      bool is_use_mock_trig() const;
+
+      /// Set the use mock trig flag
+      void set_use_mock_trig(bool umt_);
 
       /// Check if the output config
       bool has_output_config() const;
@@ -159,6 +165,7 @@ namespace snfee {
       std::vector<input_config_type> input_configs; ///< List of configuration for RHD inputs
       output_config_type             output_config; ///< Configuration for RTD output
       bool                           force_complete_rtd = false; ///< Flag to force complete RTD (for production runs)
+      bool                           use_mock_trig = false; ///< Flag to use mock trigger record if none are available in the merger's input
       uint32_t calo_rhd_buffer_capacity    = DEFAULT_CALO_RHD_BUFFER_CAPACITY; ///< Input RHD buffer capacity for calorimeter hits
       uint32_t tracker_rhd_buffer_capacity = DEFAULT_TRACKER_RHD_BUFFER_CAPACITY; ///< Input RHD buffer capacity for tracker hits
       bool     accept_unsorted_records = false;
