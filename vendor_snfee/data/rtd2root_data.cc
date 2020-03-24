@@ -60,6 +60,8 @@ namespace snfee {
         out_.calo_ch0_charge[calo_count]       = chit.get_channel_data(0).get_charge();
         out_.calo_ch0_rising_cell[calo_count]  = chit.get_channel_data(0).get_rising_cell();
         out_.calo_ch0_falling_cell[calo_count] = chit.get_channel_data(0).get_falling_cell();
+        out_.calo_ch0_lt_trigger_counter[calo_count] = chit.get_lt_trigger_counter(0);
+        out_.calo_ch0_lt_time_counter[calo_count]    = chit.get_lt_time_counter(0);
        
         out_.calo_ch1_lt[calo_count]           = chit.get_channel_data(1).is_lt();
         out_.calo_ch1_ht[calo_count]           = chit.get_channel_data(1).is_ht();
@@ -71,6 +73,8 @@ namespace snfee {
         out_.calo_ch1_charge[calo_count]       = chit.get_channel_data(1).get_charge();
         out_.calo_ch1_rising_cell[calo_count]  = chit.get_channel_data(1).get_rising_cell();
         out_.calo_ch1_falling_cell[calo_count] = chit.get_channel_data(1).get_falling_cell();
+        out_.calo_ch1_lt_trigger_counter[calo_count] = chit.get_lt_trigger_counter(1);
+        out_.calo_ch1_lt_time_counter[calo_count]    = chit.get_lt_time_counter(1);
 
         const snfee::data::calo_hit_record::waveforms_record & waveforms = chit.get_waveforms();
         for (int isample = 0; isample < chit.get_waveform_number_of_samples(); isample++) {

@@ -8,7 +8,7 @@ namespace snfee {
     {
       return;
     }
- 
+
     void rtd_record::make_record(const int32_t run_id_, const int32_t trigger_id_)
     {
       _trigger_id_ = trigger_id_;
@@ -28,6 +28,12 @@ namespace snfee {
     bool rtd_record::has_record() const
     {
       return _rtd_.get() != nullptr;
+    }
+       
+    bool rtd_record::empty() const
+    {
+      if (_rtd_) return false;
+      return true;
     }
       
     int32_t rtd_record::get_trigger_id() const
@@ -50,6 +56,13 @@ namespace snfee {
     const std::shared_ptr<snfee::data::raw_trigger_data> & rtd_record::get_rtd_ptr() const
     {
       return _rtd_;
+    }
+     
+    void rtd_record::make_record()
+    {
+      reset();
+      _rtd_ = std::make_shared<snfee::data::raw_trigger_data>();
+      return;
     }
 
     void rtd_record::install_rhd(const snfee::io::rhd_record & rhd_rec_)

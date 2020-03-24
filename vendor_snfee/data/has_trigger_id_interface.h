@@ -24,12 +24,19 @@
 namespace snfee {
   namespace data {
     
-    class has_trigger_id_interface
+    //! \brief Abstract interface for records with a mandatory trigger ID of type int32_t (raw hits...)
+    class has_trigger_id_interface 
     {
     public:
 
       //! Return the trigger ID 
       virtual int32_t get_trigger_id() const = 0;
+
+      //! Check if the trigger ID is set
+      bool has_trigger_id() const
+      {
+        return get_trigger_id() >= 0;
+      }
       
     };
 

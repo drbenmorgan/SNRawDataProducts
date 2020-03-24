@@ -119,7 +119,7 @@ namespace snfee {
         D : a 64 bit floating point   (Double_t)
         L : a 64 bit signed integer   (Long64_t)
         l : a 64 bit unsigned integer (ULong64_t)
-        O : a boolean (Bool_t)
+        O : a boolean                 (Bool_t)
       */
       
       // General:
@@ -131,16 +131,22 @@ namespace snfee {
       
       // Calo hit records:
       tree->Branch("nb_calo_hits",         &_pimpl_->rtd2Root.nb_calo_hits,    "nb_calo_hits/i");
-      tree->Branch("calo_tdc",              _pimpl_->rtd2Root.calo_tdc,        "calo_tdc[nb_calo_hits]/S");
+      tree->Branch("calo_tdc",              _pimpl_->rtd2Root.calo_tdc,        "calo_tdc[nb_calo_hits]/l"); 
       tree->Branch("calo_crate_num",        _pimpl_->rtd2Root.calo_crate_num,  "calo_crate_num[nb_calo_hits]/S");
       tree->Branch("calo_board_num",        _pimpl_->rtd2Root.calo_board_num,  "calo_board_num[nb_calo_hits]/S");
       tree->Branch("calo_chip_num",         _pimpl_->rtd2Root.calo_chip_num,   "calo_chip_num[nb_calo_hits]/S");
       tree->Branch("calo_event_id",         _pimpl_->rtd2Root.calo_event_id,   "calo_event_id[nb_calo_hits]/s");
       tree->Branch("calo_l2_id",            _pimpl_->rtd2Root.calo_l2_id,      "calo_l2_id[nb_calo_hits]/s");
       tree->Branch("calo_fcr",              _pimpl_->rtd2Root.calo_fcr,        "calo_fcr[nb_calo_hits]/s");
-      tree->Branch("calo_has_waveforms",              _pimpl_->rtd2Root.calo_has_waveforms,              "calo_has_waveforms[nb_calo_hits]/O");
-      tree->Branch("calo_waveform_start_sample",      _pimpl_->rtd2Root.calo_waveform_start_sample,      "calo_waveform_start_sample[nb_calo_hits]/s");
-      tree->Branch("calo_waveform_number_of_samples", _pimpl_->rtd2Root.calo_waveform_number_of_samples, "calo_waveform_number_of_samples[nb_calo_hits]/s");
+      tree->Branch("calo_has_waveforms",
+                   _pimpl_->rtd2Root.calo_has_waveforms,
+                   "calo_has_waveforms[nb_calo_hits]/O");
+      tree->Branch("calo_waveform_start_sample",
+                   _pimpl_->rtd2Root.calo_waveform_start_sample,
+                   "calo_waveform_start_sample[nb_calo_hits]/s");
+      tree->Branch("calo_waveform_number_of_samples",
+                   _pimpl_->rtd2Root.calo_waveform_number_of_samples,
+                   "calo_waveform_number_of_samples[nb_calo_hits]/s");
 
       tree->Branch("calo_ch0_lt",           _pimpl_->rtd2Root.calo_ch0_lt,           "calo_ch0_lt[nb_calo_hits]/O");
       tree->Branch("calo_ch0_ht",           _pimpl_->rtd2Root.calo_ch0_ht,           "calo_ch0_ht[nb_calo_hits]/O");
@@ -152,7 +158,14 @@ namespace snfee {
       tree->Branch("calo_ch0_charge",       _pimpl_->rtd2Root.calo_ch0_charge,       "calo_ch0_charge[nb_calo_hits]/I");
       tree->Branch("calo_ch0_rising_cell",  _pimpl_->rtd2Root.calo_ch0_rising_cell,  "calo_ch0_rising_cell[nb_calo_hits]/I");
       tree->Branch("calo_ch0_falling_cell", _pimpl_->rtd2Root.calo_ch0_falling_cell, "calo_ch0_rising_falling[nb_calo_hits]/I");
-      
+      // Trigger statistics:
+      tree->Branch("calo_ch0_lt_trigger_counter",
+                   _pimpl_->rtd2Root.calo_ch0_lt_trigger_counter,
+                   "calo_ch0_lt_trigger_counter[nb_calo_hits]/s");
+      tree->Branch("calo_ch0_lt_time_counter",
+                   _pimpl_->rtd2Root.calo_ch0_lt_time_counter,
+                   "calo_ch0_lt_time_counter[nb_calo_hits]/i");
+      // Channel data:
       tree->Branch("calo_ch1_lt",           _pimpl_->rtd2Root.calo_ch1_lt,           "calo_ch1_lt[nb_calo_hits]/O");
       tree->Branch("calo_ch1_ht",           _pimpl_->rtd2Root.calo_ch1_ht,           "calo_ch1_ht[nb_calo_hits]/O");
       tree->Branch("calo_ch1_underflow",    _pimpl_->rtd2Root.calo_ch1_underflow,    "calo_ch1_underflow[nb_calo_hits]/O");
@@ -163,7 +176,14 @@ namespace snfee {
       tree->Branch("calo_ch1_charge",       _pimpl_->rtd2Root.calo_ch1_charge,       "calo_ch1_charge[nb_calo_hits]/I");
       tree->Branch("calo_ch1_rising_cell",  _pimpl_->rtd2Root.calo_ch1_rising_cell,  "calo_ch1_rising_cell[nb_calo_hits]/I");
       tree->Branch("calo_ch1_falling_cell", _pimpl_->rtd2Root.calo_ch1_falling_cell, "calo_ch1_rising_falling[nb_calo_hits]/I");
-
+      // Trigger statistics:
+      tree->Branch("calo_ch1_lt_trigger_counter",
+                   _pimpl_->rtd2Root.calo_ch1_lt_trigger_counter,
+                   "calo_ch1_lt_trigger_counter[nb_calo_hits]/s");
+      tree->Branch("calo_ch1_lt_time_counter",
+                   _pimpl_->rtd2Root.calo_ch1_lt_time_counter,
+                   "calo_ch1_lt_time_counter[nb_calo_hits]/i");
+      // Waveforms:
       tree->Branch("calo_ch0_waveform",
                    _pimpl_->rtd2Root.calo_ch0_waveform,
                    "calo_ch0_waveform[nb_calo_hits][1024]/S");
@@ -197,7 +217,7 @@ namespace snfee {
       snfee::data::raw_trigger_data rtd;
 
       // Working RTD->ROOT conversion structure:
-      snfee::data::rtd2root_data    rtd2Root;
+      snfee::data::rtd2root_data rtd2Root;
 
       // Main loop on RTD input:
       _pimpl_->nb_processed_counter = 0;

@@ -14,6 +14,9 @@
 #include <boost/serialization/nvp.hpp>
 #include <boost/serialization/vector.hpp>
 
+// This project:
+#include <snfee/model/feb_constants.h>
+
 namespace snfee {
   namespace data {
 
@@ -84,13 +87,12 @@ namespace snfee {
     /// Serialization method
     template <class Archive>
     void calo_hit_record::serialize(Archive & ar_,
-                                    const unsigned int /* version */)
+                                    const unsigned int version_)
     {
       ar_ & DATATOOLS_SERIALIZATION_I_SERIALIZABLE_BASE_OBJECT_NVP;
       ar_ & boost::serialization::make_nvp("hit_num",      _hit_num_);
       ar_ & boost::serialization::make_nvp("trigger_id",   _trigger_id_);
       ar_ & boost::serialization::make_nvp("tdc",          _tdc_);
-      // ar_ & boost::serialization::make_nvp("module_num",   _module_num_);
       ar_ & boost::serialization::make_nvp("crate_num",    _crate_num_);
       ar_ & boost::serialization::make_nvp("board_num",    _board_num_);
       ar_ & boost::serialization::make_nvp("chip_num",     _chip_num_);
@@ -104,6 +106,22 @@ namespace snfee {
         ar_ & boost::serialization::make_nvp("waveforms_record", _waveforms_);
       }
       ar_ & boost::serialization::make_nvp("channel_data", _channel_data_);
+      // From class version 1, add LT trigger/time counter per SAMLONG channel:
+      if (version_ < 1) {
+        if (Archive::is_loading::value) {
+          for (int ich = 0; ich < snfee::model::feb_constants::SAMLONG_NUMBER_OF_CHANNELS; ich++) {
+
+            _lt_trigger_counter_[ich] = 0;
+            _lt_time_counter_[ich] = 0;
+          }
+        } else {
+          ar_ & boost::serialization::make_nvp("lt_trigger_counter", _lt_trigger_counter_);
+          ar_ & boost::serialization::make_nvp("lt_time_counter", _lt_time_counter_);
+        }
+      } else {
+        ar_ & boost::serialization::make_nvp("lt_trigger_counter", _lt_trigger_counter_);
+        ar_ & boost::serialization::make_nvp("lt_time_counter", _lt_time_counter_);
+      }
       return;
     }
 

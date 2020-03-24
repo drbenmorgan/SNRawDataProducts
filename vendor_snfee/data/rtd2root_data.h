@@ -68,6 +68,8 @@ namespace snfee {
       int32_t  calo_ch0_rising_cell[MAX_CALO_HITS];      
       int32_t  calo_ch0_falling_cell[MAX_CALO_HITS];      
       int16_t  calo_ch0_waveform[MAX_CALO_HITS][MAX_WAVEFORM_SAMPLES];
+      uint16_t calo_ch0_lt_trigger_counter[MAX_CALO_HITS];      
+      uint32_t calo_ch0_lt_time_counter[MAX_CALO_HITS];      
 
       bool     calo_ch1_lt[MAX_CALO_HITS];      
       bool     calo_ch1_ht[MAX_CALO_HITS];      
@@ -80,7 +82,9 @@ namespace snfee {
       int32_t  calo_ch1_rising_cell[MAX_CALO_HITS];      
       int32_t  calo_ch1_falling_cell[MAX_CALO_HITS];
       int16_t  calo_ch1_waveform[MAX_CALO_HITS][MAX_WAVEFORM_SAMPLES];
-      
+      uint16_t calo_ch1_lt_trigger_counter[MAX_CALO_HITS];      
+      uint32_t calo_ch1_lt_time_counter[MAX_CALO_HITS];      
+
       // Tracker hit records:
       uint32_t nb_tracker_hits = 0;
       int16_t  tracker_crate_num[MAX_TRACKER_HITS];

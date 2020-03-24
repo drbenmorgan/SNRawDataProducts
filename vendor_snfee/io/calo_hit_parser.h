@@ -65,14 +65,14 @@ namespace snfee {
       /// \brief SuperNEMO Crate Software output
       struct header_type
       {
-        uint32_t  slot_id       = std::numeric_limits<uint32_t>::max();
-        uint32_t  channel_id    = std::numeric_limits<uint32_t>::max();
+        uint16_t  slot_id       = std::numeric_limits<uint16_t>::max(); ///< Board slot
+        uint16_t  channel_id    = std::numeric_limits<uint16_t>::max(); ///< Channel ID
         uint16_t  lto_flag      = 0; ///< Boolean
         uint16_t  ht_flag       = 0; ///< Boolean
-        uint32_t  event_id      = std::numeric_limits<uint32_t>::max();
+        uint16_t  event_id      = std::numeric_limits<uint16_t>::max();
         uint64_t  raw_tdc       = std::numeric_limits<uint64_t>::max();
         double    raw_tdc_ns    = std::numeric_limits<double>::quiet_NaN(); ///< Software computed (not raw data)
-        uint32_t  lt_trig_count = 0;
+        uint16_t  lt_trig_count = 0;
         uint32_t  lt_time_count = 0;
 
         int32_t   raw_baseline  = std::numeric_limits<int32_t>::max();

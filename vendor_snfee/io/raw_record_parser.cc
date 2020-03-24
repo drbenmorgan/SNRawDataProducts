@@ -25,6 +25,9 @@ namespace snfee {
     {
       set_logging(l_);
       set_config(cfg_);
+      _sw_hit_id_   = -1;
+      _hit_number_  = -1;
+      _trigger_id_  = -1;
       _record_type_ = RECORD_UNDEF;
       return;
     }
@@ -52,7 +55,6 @@ namespace snfee {
       DT_THROW_IF(! _config_.with_calo and ! _config_.with_tracker,
                   std::logic_error,
                   "At least one type of raw records must be allowed!");
-
       if (_config_.with_calo) {
         calo_hit_parser::config_type caloCfg;
         // caloCfg.module_num = _config_.module_num;
@@ -84,8 +86,8 @@ namespace snfee {
                                                             snfee::data::calo_hit_record & calo_hit_,
                                                             snfee::data::tracker_hit_record & tracker_hit_)
     {
+      //_logging_ = datatools::logger::PRIO_TRACE;
       DT_LOG_TRACE_ENTERING(_logging_);
-      // bool success = false;
       record_type ret = RECORD_UNDEF;
       try {
 
@@ -99,14 +101,20 @@ namespace snfee {
         }
 
         DT_LOG_DEBUG(_logging_, "Current raw record type after header parsing = " << _record_type_ );
-        DT_LOG_DEBUG(_logging_, "Current raw hit ID after header parsing      = " << _hit_id_);
+        DT_LOG_DEBUG(_logging_, "Current raw hit ID after header parsing      = " << _sw_hit_id_);
+        DT_LOG_DEBUG(_logging_, "Current raw hit number                       = " << _hit_number_);
         DT_LOG_DEBUG(_logging_, "Current raw trigger ID after header parsing  = " << _trigger_id_);
-
+        // Compute the hit number:
+        if (_hit_number_ < 0) {
+          _hit_number_ = 0;
+        } else {
+          _hit_number_++;
+        }
         // Calo or tracker parser:
         if (_record_type_ == RECORD_CALO) {
           DT_THROW_IF(!_config_.with_calo, std::logic_error,
                       "Unexpected calo hit record!");
-          calo_hit_.set_hit_num(_hit_id_);
+          calo_hit_.set_hit_num(_hit_number_);
           calo_hit_.set_trigger_id(_trigger_id_);
           bool success = _calo_hit_parser_->parse(in_, calo_hit_);
           DT_THROW_IF(!success, std::logic_error, "Failed to parse a calo hit!");
@@ -124,7 +132,7 @@ namespace snfee {
         } else if (_record_type_ == RECORD_TRACKER){
           DT_THROW_IF(!_config_.with_tracker, std::logic_error,
                       "Unexpected tracker hit record!");
-          tracker_hit_.set_hit_num(_hit_id_);
+          tracker_hit_.set_hit_num(_hit_number_);
           tracker_hit_.set_trigger_id(_trigger_id_);
           bool success = _tracker_hit_parser_->parse(in_, tracker_hit_);
           DT_THROW_IF(!success, std::logic_error, "Failed to parse a tracker hit!");
@@ -158,21 +166,21 @@ namespace snfee {
                                //  Begin grammar
                                (
                                 qi::lit("= HIT")
-                                >> qi::ulong_long
+                                >> qi::int_
                                 >> "="
                                 >> (+~qi::char_("="))
                                 >> "="
                                 >> qi::lit("TRIG_ID")
-                                >> qi::ulong_long
+                                >> qi::int_ // was "qi::ulong_long" for original type uint64_t
                                 >> "="
                                 ),
                                //  End grammar
                                qi::space,
-                               _hit_id_, hit_type, _trigger_id_);
+                               _sw_hit_id_, hit_type, _trigger_id_);
         DT_THROW_IF(!res || str_iter != end_iter,
                     std::logic_error,
                     "Cannot parse file header line #" << index_);
-        DT_LOG_DEBUG(_logging_, "_hit_id_ = " << _hit_id_);
+        DT_LOG_DEBUG(_logging_, "Software hit ID = " << _sw_hit_id_);
         DT_LOG_DEBUG(_logging_, "hit_type = " << hit_type);
         DT_LOG_DEBUG(_logging_, "_trigger_id_ = " << _trigger_id_);
         DT_THROW_IF(hit_type != "CALO" && hit_type != "TRACKER", std::logic_error, "Invalid hit type label '" << hit_type << "'!");
