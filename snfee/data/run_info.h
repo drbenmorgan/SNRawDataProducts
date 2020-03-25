@@ -82,9 +82,9 @@ namespace snfee {
       void reset();
 
       /// Smart print
-      virtual void print_tree(std::ostream& out_ = std::clog,
-                              const boost::property_tree::ptree& options_ =
-                                empty_options()) const override;
+      virtual void print_tree(
+        std::ostream& out_ = std::clog,
+        const boost::property_tree::ptree& options_ = empty_options()) const;
 
     private:
       int32_t _run_id_ = INVALID_RUN_ID;         ///< Unique run ID (mandatory)
@@ -103,3 +103,9 @@ namespace snfee {
 BOOST_CLASS_EXPORT_KEY2(snfee::data::run_info, "snfee::data::run_info")
 
 #endif // SNFEE_DATA_RUN_INFO_H
+
+// Local Variables: --
+// Mode: c++ --
+// c-file-style: "gnu" --
+// tab-width: 2 --
+// End: --

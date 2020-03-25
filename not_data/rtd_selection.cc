@@ -2,14 +2,14 @@
 #include <snfee/data/rtd_selection.h>
 
 // This project:
-#include <snfee/data/trigger_record.h>
 #include <snfee/data/calo_hit_record.h>
 #include <snfee/data/tracker_hit_record.h>
+#include <snfee/data/trigger_record.h>
 
 namespace snfee {
   namespace data {
 
-    calo_selection::calo_selection(const config_type & cfg_)
+    calo_selection::calo_selection(const config_type& cfg_)
       : _crate_num_(cfg_.crate_num)
       , _board_num_(cfg_.board_num)
       , _chip_num_(cfg_.chip_num)
@@ -17,7 +17,7 @@ namespace snfee {
     {
       return;
     }
- 
+
     calo_selection::calo_selection(const int16_t crate_num_,
                                    const int16_t board_num_,
                                    const int16_t chip_num_,
@@ -30,20 +30,22 @@ namespace snfee {
       return;
     }
 
-    bool calo_selection::is_activated() const
+    bool
+    calo_selection::is_activated() const
     {
-      if (_crate_num_ == -1 and
-          _board_num_ == -1 and
-          _chip_num_ == -1) return false;
+      if (_crate_num_ == -1 and _board_num_ == -1 and _chip_num_ == -1)
+        return false;
       return true;
     }
-                     
-    bool calo_selection::operator()(const snfee::data::raw_trigger_data & rtd_) const
+
+    bool
+    calo_selection::operator()(const snfee::data::raw_trigger_data& rtd_) const
     {
-      if (!is_activated()) return true;
+      if (!is_activated())
+        return true;
       uint32_t nb_matching_hits = 0;
-      for (const auto & pchit : rtd_.get_calo_hits()) {
-        const calo_hit_record & chit = *pchit;
+      for (const auto& pchit : rtd_.get_calo_hits()) {
+        const calo_hit_record& chit = *pchit;
         bool this_hit_matches = true;
         if (this_hit_matches and _crate_num_ != -1) {
           if (chit.get_crate_num() != _crate_num_) {

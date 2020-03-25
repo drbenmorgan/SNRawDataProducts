@@ -3,6 +3,8 @@ add_executable(rtd2root rtd2root.cxx
   rtd2root_data.h
   rtd2root_converter.cc
   rtd2root_converter.h
+  rtd_selection.cc
+  rtd_selection.h
   )
 target_link_libraries(rtd2root PRIVATE SNRawDataProducts)
 _snrtd_install_rpath(rtd2root)

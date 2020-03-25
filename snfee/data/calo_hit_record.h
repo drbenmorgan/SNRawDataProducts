@@ -2,7 +2,7 @@
 //! \brief Description of the SuperNEMO calorimeter frontend board raw hit data
 //! record
 //
-// Copyright (c) 2018 by François Mauger <mauger@lpccaen.in2p3.fr>
+// Copyright (c) 2018-2019 by François Mauger <mauger@lpccaen.in2p3.fr>
 //
 // This file is part of SNFrontEndElectronics.
 //
@@ -31,7 +31,8 @@
 #include <bayeux/datatools/i_tree_dump.h>
 
 // This project:
-#include <snfee/data/has_trigger_id_interface.h>
+#include <snfee/data/raw_record_interface.h>
+#include <snfee/data/time.h>
 #include <snfee/data/utils.h>
 #include <snfee/model/feb_constants.h>
 
@@ -45,7 +46,7 @@ namespace snfee {
     ///
     class calo_hit_record : public datatools::i_tree_dumpable,
                             public datatools::i_serializable,
-                            public has_trigger_id_interface {
+                            public raw_record_interface {
     public:
       // Constants:
       static const int32_t INVALID_NUMBER = -1;
@@ -58,6 +59,7 @@ namespace snfee {
       static const uint16_t SAMPLE_ADC_DEFAULT = SAMPLE_ADC_MAX;
       static const uint64_t TDC_INVALID = std::numeric_limits<uint64_t>::max();
       static const uint64_t TDC_MAX = 0xFFFFFFFFFF;
+      static const uint64_t TDC_MODULO = 0x10000000000;
 
       /// Default constructor
       calo_hit_record();
@@ -79,11 +81,11 @@ namespace snfee {
       /// poptions.put("indent", ">>> ");
       /// myCaloHitRec.print_tree(std::clog, poptions);
       /// \endcode
-      virtual void print_tree(std::ostream& out_ = std::clog,
-                              const boost::property_tree::ptree& options_ =
-                                empty_options()) const override;
+      virtual void print_tree(
+        std::ostream& out_ = std::clog,
+        const boost::property_tree::ptree& options_ = empty_options()) const;
 
-      /// \bried Two channel ADC sample record for the SAMLONG ASIC
+      /// \brief Two channel ADC sample record for the SAMLONG ASIC
       struct two_channel_adc_record {
       public:
         /// Constructor
@@ -208,9 +210,8 @@ namespace snfee {
       private:
         bool _lt_ = false;        //!< Channel passed LT (1 bit)
         bool _ht_ = false;        //!< Channel passed HT (1 bit)
-        bool _underflow_ = false; //!< Underflow flag (1 bit) [Not used]
-        bool _overflow_ =
-          false; //!< Charge time overflow flag (1 bit) [To be confirmed]
+        bool _underflow_ = false; //!< Charge time underflow flag (1 bit)
+        bool _overflow_ = false;  //!< Charge time overflow flag (1 bit)
         int16_t _baseline_ = 0; //!< Baseline (16 bits, in unit of ADC LSB / 16,
                                 //!< computed in FEB FPGA)
         int16_t _peak_ = 0; //!< Peak maximum amplitude (16 bits, in unit of ADC
@@ -218,13 +219,13 @@ namespace snfee {
         int16_t _peak_cell_ = 0; //!< Peak time at maximum amplitude (10 bits,
                                  //!< in unit of TDC LSB, computed in FEB FPGA)
         int32_t _charge_ =
-          0; //!< Computed charge (23 bits, computed in FEB FPGA)
+          0; //!< Computed charge (23 signed bits, computed in FEB FPGA)
         int32_t _rising_cell_ =
-          0; //!< Positive edge cell index (19 from 24 bits, in unit of TDC LSB
-             //!< / 256, computed in FEB FPGA)
+          0; //!< Positive edge cell index (24 bits, in unit of TDC LSB / 256,
+             //!< computed in FEB FPGA)
         int32_t _falling_cell_ =
-          0; //!< Negative edge cell index (19 from 24 bits, in unit of TDC LSB
-             //!< / 256, computed in FEB FPGA)
+          0; //!< Negative edge cell index (24 bits, in unit of TDC LSB / 256,
+             //!< computed in FEB FPGA)
 
         BOOST_SERIALIZATION_BASIC_DECLARATION()
 
@@ -241,7 +242,7 @@ namespace snfee {
       uint64_t get_tdc() const;
 
       //! Return the hit number
-      int32_t get_hit_num() const;
+      int32_t get_hit_num() const override;
 
       //! Return the trigger ID
       int32_t get_trigger_id() const override;
@@ -283,6 +284,12 @@ namespace snfee {
       //! Return the mutable channel record per channel
       channel_data_record& grab_channel_data(const uint16_t channel_num_);
 
+      //! Return LT trigger counter for a given channel
+      uint16_t get_lt_trigger_counter(const uint16_t channel_num_) const;
+
+      //! Return LT time counter for a given channel
+      uint16_t get_lt_time_counter(const uint16_t channel_num_) const;
+
       //! Initialize the record with values
       void make(const int32_t hit_num_,
                 const int32_t trigger_id_,
@@ -311,13 +318,18 @@ namespace snfee {
                         const int32_t rising_cell_,
                         const int32_t falling_cell_);
 
-      //! Set the waveform ADC value at a given channel and sample
+      //! Set trigger statistics for a channel
+      void make_channel_trigger_stat(const int channel_num_,
+                                     const uint16_t lt_trigger_counter_,
+                                     const uint32_t lt_time_counter_);
+
+      //! Set the waveform ADC value for a given channel and sample
       void set_waveform_adc(const uint16_t channel_index_,
                             const uint16_t sample_index_,
                             const uint16_t adc_);
 
       //! Reset the record
-      void invalidate();
+      void invalidate() override;
 
       //! Populate a mock calorimeter hit record (for debug and test)
       static void populate_mock_hit(
@@ -340,6 +352,9 @@ namespace snfee {
       //! Provide a mock sampled signal (for debug and test)
       static const std::vector<int16_t>& mock_adc_samples();
 
+      //! Convert the TDC calorimeter record to a timestamp object
+      timestamp convert_timestamp() const;
+
     private:
       // Pre-data:
       int32_t _hit_num_ = INVALID_NUMBER;        //!< Hit number
@@ -349,14 +364,15 @@ namespace snfee {
         INVALID_NUMBER_16; //!< Frontend crate number (3 bits)
       int16_t _board_num_ =
         INVALID_NUMBER_16; //!< Frontend board slot number (5 bits)
-      int16_t _chip_num_ =
-        INVALID_NUMBER_16; //!< SAMLONG chip number (3-4 bits?)
+      int16_t _chip_num_ = INVALID_NUMBER_16; //!< SAMLONG chip number (4 bits)
       uint16_t _event_id_ =
-        0; //!< Local event ID (8 bits, should be the trigger ID mod 256)
+        INVALID_NUMBER_16U; //!< Local event ID (8 bits, should be the trigger
+                            //!< ID mod 256)
       uint16_t _l2_id_ = INVALID_NUMBER_16U; //!< L2 signal ID (5 bits, should
                                              //!< be the trigger ID mod 32)
-      uint16_t _fcr_ = snfee::model::feb_constants::
-        SAMLONG_INVALID_SAMPLE; //!< First cell read (10-11 bits ?)
+      uint16_t _fcr_ =
+        snfee::model::feb_constants::SAMLONG_INVALID_SAMPLE; //!< First cell
+                                                             //!< read (10 bits)
 
       // Waveform data:
       bool _has_waveforms_ =
@@ -366,7 +382,7 @@ namespace snfee {
                                        //!< (default: 0)
       uint16_t _waveform_number_of_samples_ =
         INVALID_WAVEFORM_NUMBER_OF_SAMPLES; //!< Waveform number of samples
-                                            //!< (default at construct: -1,
+                                            //!< (default at construct: 0,
                                             //!< typical: 1024)
       waveforms_record
         _waveforms_; // 2-channel waveforms (2 x 12 bits ADC samples)
@@ -377,6 +393,12 @@ namespace snfee {
                          SAMLONG_NUMBER_OF_CHANNELS]; //!< Channel post-data
                                                       //!< records (features:
                                                       //!< charge, peak...)
+
+      // Trigger rate data:
+      uint16_t _lt_trigger_counter_
+        [snfee::model::feb_constants::SAMLONG_NUMBER_OF_CHANNELS];
+      uint32_t _lt_time_counter_
+        [snfee::model::feb_constants::SAMLONG_NUMBER_OF_CHANNELS];
 
       DATATOOLS_SERIALIZATION_DECLARATION()
     };
@@ -390,5 +412,8 @@ namespace snfee {
 #include <boost/serialization/export.hpp>
 BOOST_CLASS_EXPORT_KEY2(snfee::data::calo_hit_record,
                         "snfee::data::calo_hit_record")
+
+#include <boost/serialization/version.hpp>
+BOOST_CLASS_VERSION(snfee::data::calo_hit_record, 1)
 
 #endif // SNFEE_DATA_CALO_HIT_RECORD_H

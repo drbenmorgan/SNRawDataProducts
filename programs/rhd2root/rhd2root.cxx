@@ -97,13 +97,15 @@ namespace {
       // To be adjusted based on typical RHD file size (or from GetNbytes)
       unsortedTree->SetMaxVirtualSize(1e9);
 
-      const auto nentries = unsortedTree->BuildIndex(rhdTriggerIDBranchName.c_str());
+      const auto nentries =
+        unsortedTree->BuildIndex(rhdTriggerIDBranchName.c_str());
       auto index = dynamic_cast<TTreeIndex*>(unsortedTree->GetTreeIndex());
 
       RHDType* hit{nullptr};
       unsortedTree->SetBranchAddress(rhdBranchName.c_str(), &hit);
 
-      TFile sortedFile{sortedFilename.c_str(), "RECREATE", rhdFileTitle.c_str()};
+      TFile sortedFile{
+        sortedFilename.c_str(), "RECREATE", rhdFileTitle.c_str()};
       auto sortedTree = unsortedTree->CloneTree(0);
 
       std::string msg{"Sorting RHD Tree by Trigger ID: "};
@@ -126,8 +128,9 @@ namespace {
     // by gsl finally)
     int rmStatus = std::remove(unsortedFilename.c_str());
     if (rmStatus) {
-      std::perror(("Failed to remove intermediate ROOT file '" +
-                  unsortedFilename + "'").c_str());
+      std::perror(
+        ("Failed to remove intermediate ROOT file '" + unsortedFilename + "'")
+          .c_str());
     }
   }
 } // namespace
@@ -182,12 +185,13 @@ main(int argc, char* argv[])
       rhd2root<snfee::data::tracker_hit_record>(reader, outputFile);
     } else {
       std::cerr << "Unknown RHD type '" << rhdType << "' in input stream "
-          << std::endl;
+                << std::endl;
       return EXIT_FAILURE;
     }
   }
-  catch(std::exception& e) {
-    std::cerr << "RHD2ROOT Conversion threw an exception: " << e.what() << std::endl;
+  catch (std::exception& e) {
+    std::cerr << "RHD2ROOT Conversion threw an exception: " << e.what()
+              << std::endl;
     return EXIT_FAILURE;
   }
 

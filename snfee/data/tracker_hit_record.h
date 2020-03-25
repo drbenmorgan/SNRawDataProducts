@@ -1,7 +1,7 @@
 //! \file  snfee/data/tracker_hit_record.h
 //! \brief Description of the SuperNEMO tracker frontend board hit data record
 //
-// Copyright (c) 2018 by François Mauger <mauger@lpccaen.in2p3.fr>
+// Copyright (c) 2018-2019 by François Mauger <mauger@lpccaen.in2p3.fr>
 //
 // This file is part of SNFrontEndElectronics.
 //
@@ -31,7 +31,8 @@
 #include <bayeux/datatools/i_tree_dump.h>
 
 // This project:
-#include <snfee/data/has_trigger_id_interface.h>
+#include <snfee/data/raw_record_interface.h>
+#include <snfee/data/time.h>
 #include <snfee/data/utils.h>
 
 namespace snfee {
@@ -40,7 +41,7 @@ namespace snfee {
     /// \brief SuperNEMO tracker frontend board raw hit record
     class tracker_hit_record : public datatools::i_tree_dumpable,
                                public datatools::i_serializable,
-                               public has_trigger_id_interface {
+                               public raw_record_interface {
     public:
       /// Default constructor
       tracker_hit_record();
@@ -62,9 +63,9 @@ namespace snfee {
       /// poptions.put("indent", ">>> ");
       /// myTrackData.print_tree(std::clog, poptions);
       /// \endcode
-      virtual void print_tree(std::ostream& out_ = std::clog,
-                              const boost::property_tree::ptree& options_ =
-                                empty_options()) const override;
+      virtual void print_tree(
+        std::ostream& out_ = std::clog,
+        const boost::property_tree::ptree& options_ = empty_options()) const;
 
       enum channel_category_type {
         CHANNEL_UNDEF = 0,  ///< Undefined category of channel
@@ -105,13 +106,10 @@ namespace snfee {
       void set_trigger_id(const int32_t);
 
       //! Return the hit number
-      int32_t get_hit_num() const;
+      int32_t get_hit_num() const override;
 
       //! Return the trigger ID
       int32_t get_trigger_id() const override;
-
-      // //! Return the module number
-      // int16_t get_module_num() const;
 
       //! Return the crate number
       int16_t get_crate_num() const;
@@ -134,10 +132,12 @@ namespace snfee {
       //! Return the timestamp value
       uint64_t get_timestamp() const;
 
+      //! Convert the tracker record timestamp to a timestamp object
+      timestamp convert_timestamp() const;
+
       //! Initialize the record with values
       void make(const int32_t hit_num_,
                 const int32_t trigger_id_,
-                // const int16_t module_num_,
                 const int16_t crate_num_,
                 const int16_t board_num_,
                 const int16_t chip_num_,
@@ -147,15 +147,14 @@ namespace snfee {
                 const uint64_t timestamp_);
 
       //! Reset the record
-      void invalidate();
+      void invalidate() override;
 
     private:
       int32_t _hit_num_ = INVALID_NUMBER;        //!< Hit number
       int32_t _trigger_id_ = INVALID_TRIGGER_ID; //!< Trigger ID
-      // int16_t _module_num_  = INVALID_NUMBER_16; //!< Module number
-      int16_t _crate_num_ = INVALID_NUMBER_16; //!< Crate number
-      int16_t _board_num_ = INVALID_NUMBER_16; //!< Frontend board slot number
-      int16_t _chip_num_ = INVALID_NUMBER_16;  //!< FEAST chip number (0, 1)
+      int16_t _crate_num_ = INVALID_NUMBER_16;   //!< Crate number
+      int16_t _board_num_ = INVALID_NUMBER_16;   //!< Frontend board slot number
+      int16_t _chip_num_ = INVALID_NUMBER_16;    //!< FEAST chip number (0, 1)
       int16_t _channel_num_ =
         INVALID_NUMBER_16; //!< FEAST channel number (0, 53)
       channel_category_type _channel_category_ =

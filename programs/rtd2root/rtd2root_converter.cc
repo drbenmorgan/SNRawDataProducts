@@ -3,6 +3,7 @@
 // Ourselves:
 #include "rtd2root_converter.h"
 #include "rtd2root_data.h"
+#include "rtd_selection.h"
 
 // Third party:
 // - Boost:
@@ -126,7 +127,7 @@ namespace snfee {
         D : a 64 bit floating point   (Double_t)
         L : a 64 bit signed integer   (Long64_t)
         l : a 64 bit unsigned integer (ULong64_t)
-        O : a boolean (Bool_t)
+        O : a boolean                 (Bool_t)
       */
 
       // General:
@@ -140,7 +141,7 @@ namespace snfee {
       tree->Branch(
         "nb_calo_hits", &_pimpl_->rtd2Root.nb_calo_hits, "nb_calo_hits/i");
       tree->Branch(
-        "calo_tdc", _pimpl_->rtd2Root.calo_tdc, "calo_tdc[nb_calo_hits]/S");
+        "calo_tdc", _pimpl_->rtd2Root.calo_tdc, "calo_tdc[nb_calo_hits]/l");
       tree->Branch("calo_crate_num",
                    _pimpl_->rtd2Root.calo_crate_num,
                    "calo_crate_num[nb_calo_hits]/S");
@@ -198,7 +199,14 @@ namespace snfee {
       tree->Branch("calo_ch0_falling_cell",
                    _pimpl_->rtd2Root.calo_ch0_falling_cell,
                    "calo_ch0_rising_falling[nb_calo_hits]/I");
-
+      // Trigger statistics:
+      tree->Branch("calo_ch0_lt_trigger_counter",
+                   _pimpl_->rtd2Root.calo_ch0_lt_trigger_counter,
+                   "calo_ch0_lt_trigger_counter[nb_calo_hits]/s");
+      tree->Branch("calo_ch0_lt_time_counter",
+                   _pimpl_->rtd2Root.calo_ch0_lt_time_counter,
+                   "calo_ch0_lt_time_counter[nb_calo_hits]/i");
+      // Channel data:
       tree->Branch("calo_ch1_lt",
                    _pimpl_->rtd2Root.calo_ch1_lt,
                    "calo_ch1_lt[nb_calo_hits]/O");
@@ -229,7 +237,14 @@ namespace snfee {
       tree->Branch("calo_ch1_falling_cell",
                    _pimpl_->rtd2Root.calo_ch1_falling_cell,
                    "calo_ch1_rising_falling[nb_calo_hits]/I");
-
+      // Trigger statistics:
+      tree->Branch("calo_ch1_lt_trigger_counter",
+                   _pimpl_->rtd2Root.calo_ch1_lt_trigger_counter,
+                   "calo_ch1_lt_trigger_counter[nb_calo_hits]/s");
+      tree->Branch("calo_ch1_lt_time_counter",
+                   _pimpl_->rtd2Root.calo_ch1_lt_time_counter,
+                   "calo_ch1_lt_time_counter[nb_calo_hits]/i");
+      // Waveforms:
       tree->Branch("calo_ch0_waveform",
                    _pimpl_->rtd2Root.calo_ch0_waveform,
                    "calo_ch0_waveform[nb_calo_hits][1024]/S");
@@ -273,6 +288,9 @@ namespace snfee {
       DT_THROW_IF(
         !is_initialized(), std::logic_error, "Converter is not initialized!");
 
+      // Calorimeter raw hit record selector:
+      snfee::data::calo_selection caloSel(_config_.calo_sel_config);
+
       // Working RTD object:
       snfee::data::raw_trigger_data rtd;
 
@@ -294,6 +312,12 @@ namespace snfee {
           }
           _pimpl_->nb_processed_counter++;
           bool export_rtd = true;
+          if (caloSel.is_activated()) {
+            // Apply calorimeter selection on the RTD object:
+            if (export_rtd and !caloSel(rtd)) {
+              export_rtd = false;
+            }
+          }
           if (export_rtd) {
             // ROOT export:
             snfee::data::rtd2root_data::export_to_root(rtd, _pimpl_->rtd2Root);

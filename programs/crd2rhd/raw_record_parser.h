@@ -77,9 +77,10 @@ namespace snfee {
         _calo_hit_parser_; //!< Handler for the calo hit parser
       std::unique_ptr<tracker_hit_parser>
         _tracker_hit_parser_;    //!< Handler for the tracker hit parser
-      uint64_t _hit_id_;         //!< Current hit ID
+      int32_t _sw_hit_id_;       //!< Current hit ID
+      int32_t _hit_number_;      //!< Current hit number
       record_type _record_type_; //!< Current record type
-      uint64_t _trigger_id_;     //!< Current trigger ID
+      int32_t _trigger_id_;      //!< Current trigger ID
     };
 
   } // namespace io

@@ -27,7 +27,14 @@ namespace snfee {
 
       bool has_record() const;
 
+      /// Check if this record is not set
+      bool empty() const;
+
+      /// Return the trigger ID
       int32_t get_trigger_id() const;
+
+      /// Make a record
+      void make_record();
 
       snfee::data::raw_trigger_data& grab_rtd();
 

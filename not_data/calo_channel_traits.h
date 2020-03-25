@@ -22,26 +22,26 @@
 #define SNFEE_DATA_CALO_CHANNEL_TRAITS_H
 
 // Standard library:
-#include <string>
-#include <iostream>
-#include <sstream>
 #include <cstdint>
-#include <vector>
-#include <map>
+#include <iostream>
 #include <limits>
+#include <map>
+#include <sstream>
+#include <string>
+#include <vector>
 
 // Third party:
 // - Boost:
 // #include <boost/serialization/access.hpp>
 // - Bayeux:
-#include <bayeux/datatools/logger.h>
-#include <bayeux/mygsl/tabulated_function.h>
-#include <bayeux/datatools/serialization_macros.h>
 #include <bayeux/datatools/i_tree_dump.h>
+#include <bayeux/datatools/logger.h>
+#include <bayeux/datatools/serialization_macros.h>
+#include <bayeux/mygsl/tabulated_function.h>
 
 // This project:
-#include <snfee/data/channel_id.h>
 #include <snfee/data/calo_waveform_data.h>
+#include <snfee/data/channel_id.h>
 
 namespace snfee {
   namespace data {
@@ -51,10 +51,8 @@ namespace snfee {
     /// A charge range is defined via negative signal charge:
     ///   0 <= lower charge < Q < upper charge (charge unit: nV.s)
     /// Example: [-2.0 nV.s: -3.0 nV.s]
-    class charge_range
-    {
+    class charge_range {
     public:
-
       /// Default constructor
       charge_range();
 
@@ -64,12 +62,16 @@ namespace snfee {
       /// snfee::data::charge_range qGpr0( 0.0, -2.0); // [ 0.0 nV.s: -2.0 nV.s]
       /// snfee::data::charge_range qGpr1(-2.0, -4.0); // [-2.0 nV.s: -4.0 nV.s]
       /// snfee::data::charge_range qGpr2(-4.0, -6.0); // [-4.0 nV.s: -6.0 nV.s]
-      /// snfee::data::charge_range qGpr2(-6.0);       // [-4.0 nV.s: -infinity [
-      /// \encode
-      charge_range(const double lower_charge_nVs_, const double upper_charge_nVs_ = -std::numeric_limits<double>::infinity());
+      /// snfee::data::charge_range qGpr2(-6.0);       // [-4.0 nV.s: -infinity
+      /// [ \encode
+      charge_range(const double lower_charge_nVs_,
+                   const double upper_charge_nVs_ =
+                     -std::numeric_limits<double>::infinity());
 
       /// Set the lower and upper charges (unit: nV.s) of the range
-      void set(const double lower_charge_nVs_, const double upper_charge_nVs_ = -std::numeric_limits<double>::infinity());
+      void set(const double lower_charge_nVs_,
+               const double upper_charge_nVs_ =
+                 -std::numeric_limits<double>::infinity());
 
       /// Return the lower charge (unit: nV.s) of the range
       double get_lower_charge_nVs() const;
@@ -81,31 +83,26 @@ namespace snfee {
       bool inside(const double charge_nVs_) const;
 
     private:
-
-      double _lower_charge_nVs_; ///< Lower bound of the charge range (unit: nV.s)
-      double _upper_charge_nVs_; ///< Upper bound of the charge range (unit: nV.s)
+      double
+        _lower_charge_nVs_; ///< Lower bound of the charge range (unit: nV.s)
+      double
+        _upper_charge_nVs_; ///< Upper bound of the charge range (unit: nV.s)
 
       BOOST_SERIALIZATION_BASIC_DECLARATION()
-
     };
 
     /// \brief Calorimeter channel traits
-    class calo_channel_traits
-      : public datatools::i_tree_dumpable
-    {
+    class calo_channel_traits : public datatools::i_tree_dumpable {
     public:
-
       /// \brief Flags
       enum flag_type {
         flag_dead_channel = 0x1, ///< Dead channel flag
-        flag_pmt_5inch    = 0x2, ///< 5-inch PMT
-        flag_pmt_8inch    = 0x4  ///< 8-inch PMT
+        flag_pmt_5inch = 0x2,    ///< 5-inch PMT
+        flag_pmt_8inch = 0x4     ///< 8-inch PMT
       };
 
       /// \brief Information associated to a range of charge
-      struct charge_range_info
-        : public datatools::i_tree_dumpable
-      {
+      struct charge_range_info : public datatools::i_tree_dumpable {
         /// Constructor
         charge_range_info();
 
@@ -129,24 +126,23 @@ namespace snfee {
         /// poptions.put("indent", ">>> ");
         /// qRangeInfo.print_tree(std::clog, poptions);
         /// \endcode
-        virtual void print_tree(std::ostream & out_ = std::clog,
-                                const boost::property_tree::ptree & options_ = empty_options()) const;
+        virtual void print_tree(
+          std::ostream& out_ = std::clog,
+          const boost::property_tree::ptree& options_ = empty_options()) const;
 
-        int    range_id = -1;  ///< Charge range unique ID
-        double ref_time_ns;    ///< Reference time of the mean signal (unit: ns)
-        mygsl::tabulated_function mean_signal; ///< Mean signal (time unit: ns, signal amplitude unit: mV)
-        double q2a_factor;     ///< Charge to effective amplitude conversion factor: A = f * Q  (unit: mV / nV / s)
+        int range_id = -1;  ///< Charge range unique ID
+        double ref_time_ns; ///< Reference time of the mean signal (unit: ns)
+        mygsl::tabulated_function mean_signal; ///< Mean signal (time unit: ns,
+                                               ///< signal amplitude unit: mV)
+        double q2a_factor; ///< Charge to effective amplitude conversion factor:
+                           ///< A = f * Q  (unit: mV / nV / s)
 
         BOOST_SERIALIZATION_BASIC_DECLARATION()
-
       };
 
       /// \brief High voltage regime information
-      class hv_regime_info
-        : public datatools::i_tree_dumpable
-      {
+      class hv_regime_info : public datatools::i_tree_dumpable {
       public:
-
         /// Constructor
         hv_regime_info();
 
@@ -163,10 +159,10 @@ namespace snfee {
         double get_nominal_hv_V() const;
 
         /// Set the expected baseline data
-        void set_baseline(const calo_waveform_baseline & baseline_);
+        void set_baseline(const calo_waveform_baseline& baseline_);
 
         /// Return the expected baseline data
-        const calo_waveform_baseline & get_baseline() const;
+        const calo_waveform_baseline& get_baseline() const;
 
         /// Return the index of charge range associated to a charge
         int get_charge_range_index(const double q_nVs_) const;
@@ -175,15 +171,15 @@ namespace snfee {
         bool has_charge_range(const double q_nVs_) const;
 
         /// Return the charge range associated to a charge
-        const charge_range & get_charge_range(const double q_nVs_) const;
+        const charge_range& get_charge_range(const double q_nVs_) const;
 
         /// Add a range of charge
         ///
         /// \return charge range index
-        int add_charge_range(const charge_range &);
+        int add_charge_range(const charge_range&);
 
         /// Return the vector of range of charges
-        const std::vector<charge_range> & get_charge_ranges() const;
+        const std::vector<charge_range>& get_charge_ranges() const;
 
         /// Clear the vector of charge ranges
         void clear_charge_ranges();
@@ -192,19 +188,22 @@ namespace snfee {
         typedef std::map<int, charge_range_info> charge_range_info_dict_type;
 
         /// Add a charge range info
-        void add_charge_range_info(const charge_range_info &);
+        void add_charge_range_info(const charge_range_info&);
 
         /// Clear the informations classified by charge ranges
         void clear_charge_range_infos();
 
-        /// Return the dictionary of informations on mean waveform for different charge ranges
-        const charge_range_info_dict_type & get_charge_range_infos() const;
+        /// Return the dictionary of informations on mean waveform for different
+        /// charge ranges
+        const charge_range_info_dict_type& get_charge_range_infos() const;
 
-        /// Check if a charge range info associated to a given charge range exists
+        /// Check if a charge range info associated to a given charge range
+        /// exists
         bool has_charge_range_info(const int range_id_) const;
 
         /// Return the charge range info associated to a given charge range
-        const charge_range_info & get_charge_range_info(const int range_id_) const;
+        const charge_range_info& get_charge_range_info(
+          const int range_id_) const;
 
         /// Smart print
         ///
@@ -217,35 +216,37 @@ namespace snfee {
         /// poptions.put("indent", ">>> ");
         /// myCaloChTraits.print_tree(std::clog, poptions);
         /// \endcode
-        virtual void print_tree(std::ostream & out_ = std::clog,
-                                const boost::property_tree::ptree & options_ = empty_options()) const;
+        virtual void print_tree(
+          std::ostream& out_ = std::clog,
+          const boost::property_tree::ptree& options_ = empty_options()) const;
 
         /// Display
-        static void display(const hv_regime_info & hvrinfo_,
+        static void display(const hv_regime_info& hvrinfo_,
                             const int range_id_,
-                            const std::string & id_ = "",
-                            const std::string & title_ = "",
+                            const std::string& id_ = "",
+                            const std::string& title_ = "",
                             const uint32_t flags_ = 0);
 
       private:
-
-        double                      _nominal_hv_V_;       ///< Nominal HV (unit: V)
-        calo_waveform_baseline      _baseline_;           ///< Baseline data
-        std::vector<charge_range>   _charge_ranges_;      ///< Definition of ranges of charge
-        charge_range_info_dict_type _charge_range_infos_; ///< Informations on mean waveform for different charge ranges
+        double _nominal_hv_V_;             ///< Nominal HV (unit: V)
+        calo_waveform_baseline _baseline_; ///< Baseline data
+        std::vector<charge_range>
+          _charge_ranges_; ///< Definition of ranges of charge
+        charge_range_info_dict_type
+          _charge_range_infos_; ///< Informations on mean waveform for different
+                                ///< charge ranges
 
         BOOST_SERIALIZATION_BASIC_DECLARATION()
-
       };
 
       /// Constructor
       calo_channel_traits();
 
       /// Set the channel ID
-      void set_ch_id(const channel_id &);
+      void set_ch_id(const channel_id&);
 
       /// Return the channel ID
-      const channel_id & get_ch_id() const;
+      const channel_id& get_ch_id() const;
 
       /// Check some flag(s)
       bool has_flags(const uint32_t flag_) const;
@@ -275,25 +276,25 @@ namespace snfee {
       void clear_hv_regime_infos();
 
       /// Return HV regime informations associated to various HVs
-      const hv_regime_info_dict_type & get_hv_regime_infos() const;
+      const hv_regime_info_dict_type& get_hv_regime_infos() const;
 
       /// Add some HV regime informations associated to a HVs
-      void add_hv_regime_info(const hv_regime_info &);
+      void add_hv_regime_info(const hv_regime_info&);
 
       /// Check if HV regime informations associated to a given HVs is set
       bool has_hv_regime_info(const double hv_V_) const;
 
       /// Return HV regime informations associated to a given HVs
-      const hv_regime_info & get_hv_regime_info(const double hv_V_) const;
+      const hv_regime_info& get_hv_regime_info(const double hv_V_) const;
 
       /// Check if the PMT ID is set
       bool has_pmt_id() const;
 
       /// Set the PMT ID
-      void set_pmt_id(const std::string & pmt_id_);
+      void set_pmt_id(const std::string& pmt_id_);
 
       /// Return the PMT ID
-      const std::string & get_pmt_id() const;
+      const std::string& get_pmt_id() const;
 
       /// Smart print
       ///
@@ -306,18 +307,18 @@ namespace snfee {
       /// poptions.put("indent", ">>> ");
       /// myCaloChTraits.print_tree(std::clog, poptions);
       /// \endcode
-      virtual void print_tree(std::ostream & out_ = std::clog,
-                              const boost::property_tree::ptree & options_ = empty_options()) const override;
+      virtual void print_tree(
+        std::ostream& out_ = std::clog,
+        const boost::property_tree::ptree& options_ = empty_options()) const;
 
     private:
-
       channel_id _ch_id_; ///< Readout channel ID
-      uint32_t   _flags_; ///< Flags
-      hv_regime_info_dict_type _hv_regime_infos_; ///< Dictionary of HV regime informations object
+      uint32_t _flags_;   ///< Flags
+      hv_regime_info_dict_type
+        _hv_regime_infos_;  ///< Dictionary of HV regime informations object
       std::string _pmt_id_; ///< PMT ID
 
       BOOST_SERIALIZATION_BASIC_DECLARATION()
-
     };
 
   } // namespace data

@@ -22,10 +22,13 @@ namespace snfee {
     trigger_record::serialize(Archive& ar_, const unsigned int /* version */)
     {
       ar_& DATATOOLS_SERIALIZATION_I_SERIALIZABLE_BASE_OBJECT_NVP;
+      ar_& boost::serialization::make_nvp("hit_num", _hit_num_);
       ar_& boost::serialization::make_nvp("trigger_id", _trigger_id_);
       ar_& boost::serialization::make_nvp("trigger_mode", _trigger_mode_);
       ar_& boost::serialization::make_nvp("l2_clocktick_1600ns",
                                           _l2_clocktick_1600ns_);
+      ar_& boost::serialization::make_nvp("progenitor_trigger_id",
+                                          _progenitor_trigger_id_);
       return;
     }
 

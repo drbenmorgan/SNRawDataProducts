@@ -30,6 +30,14 @@ namespace snfee {
       return _rtd_.get() != nullptr;
     }
 
+    bool
+    rtd_record::empty() const
+    {
+      if (_rtd_)
+        return false;
+      return true;
+    }
+
     int32_t
     rtd_record::get_trigger_id() const
     {
@@ -54,6 +62,14 @@ namespace snfee {
     rtd_record::get_rtd_ptr() const
     {
       return _rtd_;
+    }
+
+    void
+    rtd_record::make_record()
+    {
+      reset();
+      _rtd_ = std::make_shared<snfee::data::raw_trigger_data>();
+      return;
     }
 
     void

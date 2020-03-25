@@ -66,6 +66,8 @@ add_library(SNRawDataProducts SHARED
   snfee/data/run_info-serial.h
   snfee/data/run_info.cc
   snfee/data/run_info.h
+  snfee/data/time.cc
+  snfee/data/time.h
   snfee/data/tracker_hit_record.cc
   snfee/data/tracker_hit_record.h
   snfee/data/trigger_record.cc

@@ -189,7 +189,7 @@ namespace snfee {
             DT_LOG_DEBUG(_logging_, "hitline = '" << hitline << "'");
             std::string::const_iterator str_iter = hitline.begin();
             std::string::const_iterator end_iter = hitline.end();
-            int32_t next_hit_number;
+            int32_t next_sw_hit_id;
             int32_t next_trigger_id;
             bool res = false;
             res =
@@ -197,7 +197,7 @@ namespace snfee {
                                end_iter,
                                //  Begin grammar
                                (qi::lit("=") >> qi::lit("HIT") >>
-                                qi::int_[boost::phoenix::ref(next_hit_number) =
+                                qi::int_[boost::phoenix::ref(next_sw_hit_id) =
                                            boost::spirit::qi::_1] >>
                                 qi::lit("=") >> qi::lit("CALO") >>
                                 qi::lit("=") >> qi::lit("TRIG_ID") >>
@@ -211,11 +211,11 @@ namespace snfee {
               std::logic_error,
               "Cannot parse file calo intermediate hit line; failed at '"
                 << *str_iter << "'!");
-            DT_THROW_IF(next_hit_number != hit_.get_hit_num() + 1,
-                        std::logic_error,
-                        "Hit numbers (" << next_hit_number << " vs "
-                                        << hit_.get_hit_num()
-                                        << " do not match (ch0 vs ch1)!");
+            // Do not check the software hit ID:
+            // DT_THROW_IF(next_sw_hit_id != hit_.get_hit_num() + 1,
+            // std::logic_error,
+            //             "Hit numbers (" << next_sw_hit_id << " vs " <<
+            //             hit_.get_hit_num() << " do not match (ch0 vs ch1)!");
             DT_THROW_IF(next_trigger_id != hit_.get_trigger_id(),
                         std::logic_error,
                         "Trigger IDs do not match (ch0 vs ch1)!");
@@ -249,13 +249,24 @@ namespace snfee {
         int16_t crate_num = _config_.crate_num;
         int16_t board_num = headers[0].slot_id;
         int16_t chip_num = headers[0].channel_id / 2;
-        // uint16_t  l2_id = headers[0].l2_id;
-        uint16_t event_id = trigger_id % 0xFF;
-        uint16_t l2_id = trigger_id % 0x1F;
+        uint16_t event_id = headers[0].event_id;
+        if (event_id > 0xFF) {
+          DT_LOG_WARNING(_logging_,
+                         "Event ID=[" << event_id << "] is out of range");
+          event_id = trigger_id % 0xFF;
+          DT_LOG_WARNING(_logging_, "Fix Event ID=[" << event_id << "]");
+        }
+        uint16_t l2_id = headers[0].l2_id;
+        if (l2_id > 0x1F) {
+          DT_LOG_WARNING(_logging_, "L2 ID=[" << l2_id << "] is out of range");
+          l2_id = trigger_id % 0x1F;
+          DT_LOG_WARNING(_logging_, "Fix L2 ID=[" << l2_id << "]");
+        }
         uint16_t fcr = headers[0].fcr;
         if (fcr >= 1024) {
-          DT_LOG_WARNING(_logging_, "FCR=[" << fcr << "] is out of range.");
+          DT_LOG_WARNING(_logging_, "FCR=[" << fcr << "] is out of range");
           fcr = fcr % 1024;
+          DT_LOG_WARNING(_logging_, "Fix FCR=[" << fcr << "]");
         }
         bool has_waveforms = _config_.with_waveforms;
         DT_LOG_DEBUG(_logging_,
@@ -290,6 +301,7 @@ namespace snfee {
                   waveform_start_sample,
                   waveform_number_of_samples,
                   true);
+
         /// >>> XXX
         // std::cerr << "==============================================" <<
         // std::endl; DT_LOG_DEBUG(_logging_, "[DEVEL] >>>>> TEST 1"); std::cerr
@@ -316,10 +328,10 @@ namespace snfee {
           bool lt = (ht || lto);
           bool underflow = false;
           bool overflow = headers[ichannel].charge_overflow;
-          int32_t baseline = headers[ichannel].raw_baseline;
+          int16_t baseline = headers[ichannel].raw_baseline;
           int16_t peak = headers[ichannel].raw_peak;
           int16_t peak_cell = headers[ichannel].peak_cell;
-          int16_t charge = headers[ichannel].raw_charge;
+          int32_t charge = headers[ichannel].raw_charge;
           int32_t rising_cell = headers[ichannel].rising_cell * 256 +
                                 headers[ichannel].rising_offset;
           int32_t falling_cell = headers[ichannel].falling_cell * 256 +
@@ -336,6 +348,10 @@ namespace snfee {
                             rising_cell,
                             falling_cell);
         }
+        hit_.make_channel_trigger_stat(
+          0, headers[0].lt_trig_count, headers[0].lt_time_count);
+        hit_.make_channel_trigger_stat(
+          1, headers[1].lt_trig_count, headers[1].lt_time_count);
         // /// >>> XXX
         // std::cerr << "==============================================" <<
         // std::endl; std::cerr << "[DEVEL] Waveforms @ " <<
@@ -359,6 +375,12 @@ namespace snfee {
         DT_LOG_ERROR(_logging_, error.what());
         success = false;
       }
+      // {
+      //   std::cerr << "[debug] " << "calo_hit_parser::parse: Parsed hit: " <<
+      //   "\n"; boost::property_tree::ptree poptions;
+      //   poptions.put("with_waveform_samples", true);
+      //   hit_.print_tree(std::cerr, poptions);
+      // }
       DT_LOG_TRACE_EXITING(_logging_);
       return success;
     }

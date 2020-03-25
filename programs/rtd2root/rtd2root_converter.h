@@ -18,6 +18,7 @@
 #include <bayeux/datatools/logger.h>
 
 // This project
+#include "rtd_selection.h"
 #include <snfee/io/multifile_data_reader.h>
 
 namespace snfee {
@@ -35,6 +36,8 @@ namespace snfee {
         std::string output_root_filename; ///< Output Root filename
         std::size_t max_total_records =
           0; ///< Max number of converted RTD records
+        /// Calorimeter hit record selection:
+        snfee::data::calo_selection::config_type calo_sel_config;
       };
 
       //! Default constructor

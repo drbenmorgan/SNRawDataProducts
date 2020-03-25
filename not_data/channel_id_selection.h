@@ -1,5 +1,5 @@
 //! \file  snfee/data/channel_id_selection.h
-//! \brief Selection for channel ID 
+//! \brief Selection for channel ID
 //
 // Copyright (c) 2018 by François Mauger <mauger@lpccaen.in2p3.fr>
 //
@@ -22,60 +22,60 @@
 #define SNFEE_DATA_CHANNEL_ID_SELECTION_H
 
 // Standard Library:
+#include <cstdint>
 #include <iostream>
 #include <set>
 #include <vector>
-#include <cstdint>
 
 // This project:
-#include <snfee/data/utils.h>
 #include <snfee/data/channel_id.h>
+#include <snfee/data/utils.h>
 
 namespace snfee {
   namespace data {
 
     /// \brief Simple selector about channel ID
-    class channel_id_selection
-    {
+    class channel_id_selection {
     public:
-
       struct config_type {
-        std::vector<int16_t>    selected_crates;   ///< Select channel IDs with these crates
-        std::vector<int16_t>    selected_boards;   ///< Select channel IDs with these boards
-        std::vector<int16_t>    selected_channels; ///< Select channel IDs with channels
-        std::vector<channel_id> selected_ids;      ///< Select channel IDs with this list
-        bool                    reverse   = false; ///< Reverse the selection
+        std::vector<int16_t>
+          selected_crates; ///< Select channel IDs with these crates
+        std::vector<int16_t>
+          selected_boards; ///< Select channel IDs with these boards
+        std::vector<int16_t>
+          selected_channels; ///< Select channel IDs with channels
+        std::vector<channel_id>
+          selected_ids;       ///< Select channel IDs with this list
+        bool reverse = false; ///< Reverse the selection
       };
-     
+
       /// Default constructor
       channel_id_selection();
-     
-      /// Constructor
-      channel_id_selection(const config_type & cfg_);
 
-      void configure(const config_type & cfg_);
-      
+      /// Constructor
+      channel_id_selection(const config_type& cfg_);
+
+      void configure(const config_type& cfg_);
+
       void add_crate(const int16_t);
 
       void add_board(const int16_t);
 
       void add_channel(const int16_t);
 
-      void add_id(const channel_id &);
+      void add_id(const channel_id&);
 
       void set_reverse(const bool = false);
-      
-      /// Selection operator
-      bool operator()(const snfee::data::channel_id & chid_) const;
 
-    private :
-      
-      std::set<int16_t>    _selected_crates_;   ///< List of selected crates
-      std::set<int16_t>    _selected_boards_;   ///< List of selected boards
-      std::set<int16_t>    _selected_channels_; ///< List of selected channels
-      std::set<channel_id> _selected_ids_;      ///< List of selected ids
-      bool                 _reverse_ = false;   ///< Reverse the selection
-    
+      /// Selection operator
+      bool operator()(const snfee::data::channel_id& chid_) const;
+
+    private:
+      std::set<int16_t> _selected_crates_;   ///< List of selected crates
+      std::set<int16_t> _selected_boards_;   ///< List of selected boards
+      std::set<int16_t> _selected_channels_; ///< List of selected channels
+      std::set<channel_id> _selected_ids_;   ///< List of selected ids
+      bool _reverse_ = false;                ///< Reverse the selection
     };
 
   } // namespace data

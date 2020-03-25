@@ -33,7 +33,6 @@ struct app_params_type {
   snfee::io::raw_hit_reader::config_type reader_config;
   std::string input_listname;
   std::vector<std::string> input_filenames;
-  // std::vector<std::string> output_filenames;
   std::string output_filename;
   bool dynamic_output_files = false;
   std::size_t max_rhd_files = 1;
@@ -79,50 +78,52 @@ main(int argc_, char** argv_)
       ("input-file,i",
        po::value<std::vector<std::string>>(&app_params.input_filenames)
        ->value_name("path"),
-       "add an RHD input filename")
+       "add an CRD input filename")
 
       ("output-file,o",
-       po::value<std::string>(& app_params.output_filename)
+       po::value<std::string>(&app_params.output_filename)
        ->value_name("path"),
        "set the RHD output filename or filename pattern")
 
       ("crate-number,c",
-       po::value<int16_t>(& app_params.reader_config.crate_num)
+       po::value<int16_t>(&app_params.reader_config.crate_num)
        ->value_name("number"),
        "set the crate number (0, 1 or 2)")
 
       ("max-records,m",
-       po::value<std::size_t>(& app_params.writer_config.max_total_records)
+       po::value<std::size_t>(
+       &app_params.writer_config.max_total_records)
        ->value_name("number")
        ->default_value(0),
-       "set the maximum total number of collected RHD records")
+       "set the maximum total number of output RHD records")
 
       ("max-records-per-file,f",
-       po::value<std::size_t>(& app_params.writer_config.max_records_per_file)
+       po::value<std::size_t>(
+       &app_params.writer_config.max_records_per_file)
        ->value_name("number")
        ->default_value(0),
-       "set the maximum number of collected RHD records per file")
+       "set the maximum number of output RHD records per file")
 
       ("max-output-files,M",
-       po::value<std::size_t>(& app_params.max_rhd_files)
+       po::value<std::size_t>(&app_params.max_rhd_files)
        ->value_name("number")
        ->default_value(1),
        "set the maximum number of RHD output files")
 
       ("dynamic-output-files,Y",
-       po::value<bool>(& app_params.dynamic_output_files)
+       po::value<bool>(&app_params.dynamic_output_files)
        ->zero_tokens()
        ->default_value(false),
        "allow to dynamically add more RHD output files as needed")
 
       ("allow-overrun,O",
-       po::value<bool>(& app_params.writer_config.terminate_on_overrun)
+       po::value<bool>(&app_params.writer_config.terminate_on_overrun)
        ->zero_tokens()
        ->default_value(false),
        "allow data writer overrun (expert)")
 
       ("print-records,P",
-       po::value<bool>(& app_params.print_records)
+       po::value<bool>(&app_params.print_records)
        ->zero_tokens()
        ->default_value(false),
        "print records (debug only)")
@@ -134,9 +135,9 @@ main(int argc_, char** argv_)
        "force trigger IDs and ignore those from CRD input files (expert)")
 
       ("session-id,S",
-       po::value<int32_t>(& app_params.session_id)
+       po::value<int32_t>(&app_params.session_id)
        ->default_value(0),
-        "set the session ID (expert)")
+       "set the session ID (expert)")
 
       ("work-dir,W",
        po::value<std::string>(& app_params.work_dir)
@@ -391,7 +392,7 @@ main(int argc_, char** argv_)
       DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION,
                          "Reading CRD input file : '" +
                            app_params.reader_config.input_filename + "'");
-      // Reader for RHD data file (for the commissioning phase using the SN
+      // Reader for CRD data file (for the commissioning phase using the SN
       // CRATE SOFTWARE acquisition program):
       snfee::io::raw_hit_reader reader;
       reader.set_logging(app_params.reader_logging);

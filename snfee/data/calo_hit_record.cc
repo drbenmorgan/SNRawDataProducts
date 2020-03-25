@@ -173,7 +173,7 @@ namespace snfee {
       _crate_num_ = INVALID_NUMBER_16;
       _board_num_ = INVALID_NUMBER_16;
       _chip_num_ = INVALID_NUMBER_16;
-      _event_id_ = 0;
+      _event_id_ = INVALID_NUMBER_16U;
       _l2_id_ = INVALID_NUMBER_16U;
       _fcr_ = snfee::model::feb_constants::SAMLONG_INVALID_SAMPLE;
       _has_waveforms_ = false;
@@ -402,6 +402,10 @@ namespace snfee {
              << "Waveforms size : " << get_waveforms().get_samples().size()
              << std::endl;
 
+        out_ << popts.indent << tag
+             << "Print waveform samples : " << std::boolalpha
+             << print_waveform_samples << std::endl;
+
         if (print_waveform_samples) {
           out_ << popts.indent << tag << "Waveforms @ : " << &get_waveforms()
                << std::endl;
@@ -449,6 +453,18 @@ namespace snfee {
         }
       }
 
+      for (int ich = 0;
+           ich < snfee::model::feb_constants::SAMLONG_NUMBER_OF_CHANNELS;
+           ich++) {
+        out_ << popts.indent << tag << "Channel #" << ich
+             << " trigger statistics : " << std::endl;
+        out_ << popts.indent << skip_tag << tag
+             << "LT trigger counter : " << _lt_trigger_counter_[ich]
+             << std::endl;
+        out_ << popts.indent << skip_tag << last_tag
+             << "LT time counter    : " << _lt_time_counter_[ich] << std::endl;
+      }
+
       out_ << popts.indent << inherit_tag(popts.inherit)
            << "Complete : " << std::boolalpha << is_complete() << std::endl;
 
@@ -467,9 +483,16 @@ namespace snfee {
     }
 
     void
-    calo_hit_record::set_trigger_id(const int32_t trig_id_)
+    calo_hit_record::set_trigger_id(const int32_t tid_)
     {
-      _trigger_id_ = trig_id_;
+      DT_THROW_IF(tid_ > MAX_TRIGGER_ID,
+                  std::logic_error,
+                  "Invalid Trigger ID=[" << tid_ << "]!");
+      if (tid_ < 0) {
+        _trigger_id_ = INVALID_TRIGGER_ID;
+      } else {
+        _trigger_id_ = tid_;
+      }
       return;
     }
 
@@ -477,6 +500,20 @@ namespace snfee {
     calo_hit_record::get_tdc() const
     {
       return _tdc_;
+    }
+
+    timestamp
+    calo_hit_record::convert_timestamp() const
+    {
+      timestamp ts;
+      if (_tdc_ == TDC_INVALID) {
+        ts.set_clock(CLOCK_UNDEF);
+        ts.set_ticks(INVALID_TICKS);
+      } else {
+        ts.set_clock(CLOCK_160MHz);
+        ts.set_ticks(_tdc_);
+      }
+      return ts;
     }
 
     int32_t
@@ -553,6 +590,26 @@ namespace snfee {
                   std::logic_error,
                   "Invalid SAMLONG channel number!");
       return _channel_data_[channel_num_];
+    }
+
+    uint16_t
+    calo_hit_record::get_lt_trigger_counter(const uint16_t channel_num_) const
+    {
+      DT_THROW_IF(channel_num_ >=
+                    snfee::model::feb_constants::SAMLONG_NUMBER_OF_CHANNELS,
+                  std::logic_error,
+                  "Invalid SAMLONG channel number!");
+      return _lt_trigger_counter_[channel_num_];
+    }
+
+    uint16_t
+    calo_hit_record::get_lt_time_counter(const uint16_t channel_num_) const
+    {
+      DT_THROW_IF(channel_num_ >=
+                    snfee::model::feb_constants::SAMLONG_NUMBER_OF_CHANNELS,
+                  std::logic_error,
+                  "Invalid SAMLONG channel number!");
+      return _lt_time_counter_[channel_num_];
     }
 
     uint16_t
@@ -669,6 +726,14 @@ namespace snfee {
             hit_rec_.set_waveform_adc(channel_num, icell, adc);
           }
         }
+        uint16_t lt_trigger_counter = 1261;
+        uint32_t lt_time_counter = 13265;
+        if (channel_num == 1) {
+          lt_trigger_counter = 1821;
+          lt_time_counter = 17131;
+        }
+        hit_rec_.make_channel_trigger_stat(
+          channel_num, lt_trigger_counter, lt_time_counter);
       }
 
       return;
@@ -728,6 +793,7 @@ namespace snfee {
                   std::logic_error,
                   "Invalid SAMLONG chip number!");
       _chip_num_ = chip_num_;
+      DT_THROW_IF(event_id_ > 0xFF, std::logic_error, "Invalid Event ID!");
       _event_id_ = event_id_;
       DT_THROW_IF(l2_id_ > 0x1F, std::logic_error, "Invalid L2 ID!");
       _l2_id_ = l2_id_;
@@ -761,6 +827,20 @@ namespace snfee {
             "Waveforms current depth does not match the number of samples!");
         }
       }
+      return;
+    }
+
+    void
+    calo_hit_record::make_channel_trigger_stat(
+      const int channel_num_,
+      const uint16_t lt_trigger_counter_,
+      const uint32_t lt_time_counter_)
+    {
+      DT_THROW_IF(channel_num_ != 0 and channel_num_ != 1,
+                  std::logic_error,
+                  "Invalid SAMLONG channel number!");
+      _lt_trigger_counter_[channel_num_] = lt_trigger_counter_;
+      _lt_time_counter_[channel_num_] = lt_time_counter_;
       return;
     }
 

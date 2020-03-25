@@ -133,9 +133,16 @@ namespace snfee {
     }
 
     void
-    tracker_hit_record::set_trigger_id(const int32_t trig_id_)
+    tracker_hit_record::set_trigger_id(const int32_t tid_)
     {
-      _trigger_id_ = trig_id_;
+      DT_THROW_IF(tid_ > MAX_TRIGGER_ID,
+                  std::logic_error,
+                  "Invalid Trigger ID=[" << tid_ << "]!");
+      if (tid_ < 0) {
+        _trigger_id_ = INVALID_TRIGGER_ID;
+      } else {
+        _trigger_id_ = tid_;
+      }
       return;
     }
 
@@ -198,12 +205,25 @@ namespace snfee {
       return _timestamp_;
     }
 
+    timestamp
+    tracker_hit_record::convert_timestamp() const
+    {
+      timestamp ts;
+      if (_timestamp_ == INVALID_TIMESTAMP) {
+        ts.set_clock(CLOCK_UNDEF);
+        ts.set_ticks(INVALID_TICKS);
+      } else {
+        ts.set_clock(CLOCK_80MHz);
+        ts.set_ticks(_timestamp_);
+      }
+      return ts;
+    }
+
     void
     tracker_hit_record::invalidate()
     {
       _hit_num_ = INVALID_NUMBER;
       _trigger_id_ = INVALID_TRIGGER_ID;
-      // _module_num_ = INVALID_NUMBER_16;
       _crate_num_ = INVALID_NUMBER_16;
       _board_num_ = INVALID_NUMBER_16;
       _chip_num_ = INVALID_NUMBER_16;

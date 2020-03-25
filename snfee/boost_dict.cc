@@ -36,6 +36,10 @@
 // Macros, macros everywhere, so leave them be
 // clang-format off
 
+#include <snfee/data/time-serial.h>
+DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::timestamp)
+BOOST_CLASS_EXPORT_IMPLEMENT(snfee::data::timestamp)
+
 #include <snfee/data/calo_hit_record-serial.h>
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::calo_hit_record)
 BOOST_CLASS_EXPORT_IMPLEMENT(snfee::data::calo_hit_record)
@@ -58,6 +62,10 @@ BOOST_CLASS_EXPORT_IMPLEMENT(snfee::data::run_info)
 
 #include <snfee/data/channel_id-serial.h>
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::channel_id)
+
+#include <snfee/data/raw_event_data-serial.h>
+DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::raw_event_data)
+BOOST_CLASS_EXPORT_IMPLEMENT(snfee::data::raw_event_data)
 
 #include <snfee/data/RRawTriggerData-serial.h>
 DATATOOLS_SERIALIZATION_CLASS_SERIALIZE_INSTANTIATE_ALL(snfee::data::RRawTriggerData)

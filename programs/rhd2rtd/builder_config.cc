@@ -51,6 +51,19 @@ namespace snfee {
     }
 
     bool
+    builder_config::is_use_mock_trig() const
+    {
+      return use_mock_trig;
+    }
+
+    void
+    builder_config::set_use_mock_trig(bool umt_)
+    {
+      use_mock_trig = umt_;
+      return;
+    }
+
+    bool
     builder_config::has_output_config() const
     {
       return !output_config.filenames.size();
@@ -231,8 +244,12 @@ namespace snfee {
            << "Tracker RHD buffer capacity : " << tracker_rhd_buffer_capacity
            << std::endl;
 
-      outs << popts.indent << inherit_tag(popts.inherit)
+      outs << popts.indent << skip_tag
            << "Force complete RTD : " << std::boolalpha << force_complete_rtd
+           << std::endl;
+
+      outs << popts.indent << inherit_tag(popts.inherit)
+           << "Use mock trig RTD : " << std::boolalpha << use_mock_trig
            << std::endl;
 
       out_ << outs.str();
@@ -249,6 +266,7 @@ namespace snfee {
         output_config = empty;
       }
       force_complete_rtd = false;
+      use_mock_trig = false;
       return;
     }
 
@@ -305,6 +323,13 @@ namespace snfee {
       if (rtdb_config.has_key("force_complete_rtd")) {
         force_complete_rtd = rtdb_config.fetch_boolean("force_complete_rtd");
         cfg_.set_force_complete_rtd(force_complete_rtd);
+      }
+
+      // Use mock trig:
+      bool use_mock_trig = false;
+      if (rtdb_config.has_key("use_mock_trig")) {
+        use_mock_trig = rtdb_config.fetch_boolean("use_mock_trig");
+        cfg_.set_use_mock_trig(use_mock_trig);
       }
 
       // RHD inputs:

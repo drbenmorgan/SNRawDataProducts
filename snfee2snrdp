@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# Import and filter SNFrontEndElectronics code to SNRawDataProducts
+selfdir=`dirname $0`
+selfdata="$selfdir/snfee2snrdp.txt"
+
+if [ ! -f "$selfdata" ] ; then
+  echo "expected data file '$selfdata' does not exist"
+  exit 1;
+fi
+
+# Get list of conversions
+copypairs=`cat $selfdata | sed -E -e '/^#.*$/d' -e 's/ +/;/g'`
+
+# Copy/create as needed
+for line in $copypairs ; do
+  from=$selfdir/`echo $line | cut -d\; -f1`
+  to=$selfdir/`echo $line | cut -d\; -f2`
+
+  if [ ! -f "$from" ] ; then
+    echo "expected input file '$from' does not exist"
+    exit 1;
+  fi
+
+  # Input files may result in new directories, so create if needed
+  todir=`dirname $to`
+  if [ ! -d "$todir" ] ; then
+    mkdir -p $todir
+  fi
+
+  echo "copying $from to $to"
+  cp "$from" "$to"
+done

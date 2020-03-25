@@ -62,9 +62,9 @@ namespace snfee {
       /// poptions.put("indent", ">>> ");
       /// myCaloData.print_tree(std::clog, poptions);
       /// \endcode
-      virtual void print_tree(std::ostream& out_ = std::clog,
-                              const boost::property_tree::ptree& options_ =
-                                empty_options()) const override;
+      virtual void print_tree(
+        std::ostream& out_ = std::clog,
+        const boost::property_tree::ptree& options_ = empty_options()) const;
 
       //! Reset the record
       void invalidate();

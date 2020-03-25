@@ -30,22 +30,22 @@ namespace snfee {
         return false;
       }
       if (_trig_ and !_trig_->is_complete()) {
-        std::cerr << "[devel] trig issue !" << std::endl;
+        // std::cerr << "[devel] trig issue !" << std::endl;
         return false;
       }
       if (_calo_hits_.size() + _tracker_hits_.size() == 0) {
-        std::cerr << "[devel] hits issue !" << std::endl;
+        // std::cerr << "[devel] hits issue !" << std::endl;
         return false;
       }
       for (const auto& chit : _calo_hits_) {
         if (chit and !chit->is_complete()) {
-          std::cerr << "[devel] calo hit issue !" << std::endl;
+          // std::cerr << "[devel] calo hit issue !" << std::endl;
           return false;
         }
       }
       for (const auto& thit : _tracker_hits_) {
         if (thit and !thit->is_complete()) {
-          std::cerr << "[devel] tracker hit issue !" << std::endl;
+          // std::cerr << "[devel] tracker hit issue !" << std::endl;
           return false;
         }
       }

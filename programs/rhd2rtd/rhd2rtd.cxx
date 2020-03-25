@@ -51,61 +51,69 @@ main(int argc_, char** argv_)
 
       ("skel-config,K", "produce a skeleton configuration file")
 
-      ("skel-run-id",
-       po::value<uint32_t>(&app_params.skel_run_id)
-       ->value_name("number"),
-       "set the run ID (>=100) for the production of the skeleton configuration file")
+          ("skel-run-id",
+           po::value<uint32_t>(&app_params.skel_run_id)->value_name("number"),
+           "set the run ID (>=100) for the production of the skeleton "
+           "configuration file")
 
-      ("skel-nb-crates",
-       po::value<uint32_t>(&app_params.skel_nb_crates)
-       ->value_name("number"),
-       "set the number of crates (1 <= N <= 6) for the production of the skeleton configuration file")
+            ("skel-nb-crates",
+             po::value<uint32_t>(&app_params.skel_nb_crates)
+               ->value_name("number"),
+             "set the number of crates (1 <= N <= 6) for the production of the "
+             "skeleton configuration file")
 
-      ("logging,L",
-       po::value<std::string>()->value_name("level"),
-       "logging priority")
+              ("logging,L",
+               po::value<std::string>()->value_name("level"),
+               "logging priority")
 
-      ("config,c",
-       po::value<std::string>(&app_params.config_filename)
-       ->value_name("path"),
-       "set the configuration filename")
+                ("config,c",
+                 po::value<std::string>(&app_params.config_filename)
+                   ->value_name("path"),
+                 "set the configuration filename")
 
-      ("report,r",
-       po::value<std::string>(&app_params.report_filename)
-       ->value_name("path"),
-       "set the report filename")
+                  ("report,r",
+                   po::value<std::string>(&app_params.report_filename)
+                     ->value_name("path"),
+                   "set the report filename")
 
-      ("run-id,R",
-       po::value<int32_t>(&app_params.run_id)
-       ->value_name("number"),
-       "set the run ID (override value from the config file)")
+                    ("run-id,R",
+                     po::value<int32_t>(&app_params.run_id)
+                       ->value_name("number"),
+                     "set the run ID (override value from the config file)")
 
-      ("force-complete-rtd,C",
-        po::value<bool>(&app_params.force_complete_rtd)
-       ->default_value(false)
-       ->zero_tokens(),
-       "force complete RTD on output (override value from the config file, expert)")
+                      ("force-complete-rtd,C",
+                       po::value<bool>(&app_params.force_complete_rtd)
+                         ->default_value(false)
+                         ->zero_tokens(),
+                       "force complete RTD on output (override value from the "
+                       "config file, expert)")
 
-      ("max-total-records,M",
-       po::value<std::size_t>(&app_params.max_total_records)
-       ->value_name("number"),
-       "set the maximum number of RTD records to be generated (expert)")
+                        ("max-total-records,M",
+                         po::value<std::size_t>(&app_params.max_total_records)
+                           ->value_name("number"),
+                         "set the maximum number of RTD records to be "
+                         "generated (expert)")
 
-      ("calo-rhd-buffer-capacity",
-       po::value<uint32_t>(&app_params.calo_rhd_buffer_capacity)
-       ->value_name("number"),
-       "set the capacity of calorimeter RHD input buffers (expert)")
+                          ("calo-rhd-buffer-capacity",
+                           po::value<uint32_t>(
+                             &app_params.calo_rhd_buffer_capacity)
+                             ->value_name("number"),
+                           "set the capacity of calorimeter RHD input buffers "
+                           "(expert)")
 
-      ("tracker-rhd-buffer-capacity",
-       po::value<uint32_t>(&app_params.tracker_rhd_buffer_capacity)
-       ->value_name("number"),
-       "set the capacity of tracker RHD input buffers (expert)")
+                            ("tracker-rhd-buffer-capacity",
+                             po::value<uint32_t>(
+                               &app_params.tracker_rhd_buffer_capacity)
+                               ->value_name("number"),
+                             "set the capacity of tracker RHD input buffers "
+                             "(expert)")
 
-      ("accept-unsorted-rhd,U",
-       po::value<bool>(&app_params.accept_unsorted_rhd)
-       ->zero_tokens()
-       ->default_value(false),
-       "accept unsorted records from RHD input buffers (expert)")
+                              ("accept-unsorted-rhd,U",
+                               po::value<bool>(&app_params.accept_unsorted_rhd)
+                                 ->zero_tokens()
+                                 ->default_value(false),
+                               "accept unsorted records from RHD input buffers "
+                               "(expert)")
 
     ; // end of options description
     // clang-format on
@@ -115,25 +123,29 @@ main(int argc_, char** argv_)
     po::store(po::command_line_parser(argc_, argv_).options(opts).run(), vm);
     po::notify(vm);
 
-    // clang-format off
     // Use command line arguments :
     if (vm.count("help")) {
-      std::cout << "snfee-rhd2rtd : "
-                << "Merge raw hit data file (RHD) into raw trigger data file (RTD)"
-                << std::endl << std::endl;
-      std::cout <<
-        "\n"
-        "  +----------------------------------+         +----------+\n"
-        "  |   Calo crate #0 RHD hit records  |-------->|          |\n"
-        "  +----------------------------------+         |          |\n"
-        "                                               |          |\n"
-        "  +----------------------------------+         |          |       +-----------+\n"
-        "  |   Calo crate #1 RHD hit records  |-------->|  merger  |------>|    RTD    |\n"
-        "  +----------------------------------+         |          |       +-----------+\n"
-        "                    :                          |          |\n"
-        "  +----------------------------------+         |          |\n"
-        "  | Tracker crate #2 RHD hit records |-------->|          |\n"
-        "  +----------------------------------+         +----------+\n";
+      std::cout
+        << "snfee-rhd2rtd : "
+        << "Merge raw hit data file (RHD) into raw trigger data file (RTD)"
+        << std::endl
+        << std::endl;
+      std::cout
+        << "\n"
+           "  +----------------------------------+         +----------+\n"
+           "  |   Calo crate #0 RHD hit records  |-------->|          |\n"
+           "  +----------------------------------+         |          |\n"
+           "                                               |          |\n"
+           "  +----------------------------------+         |          |       "
+           "+-----------+\n"
+           "  |   Calo crate #1 RHD hit records  |-------->|  merger  "
+           "|------>|    RTD    |\n"
+           "  +----------------------------------+         |          |       "
+           "+-----------+\n"
+           "                    :                          |          |\n"
+           "  +----------------------------------+         |          |\n"
+           "  | Tracker crate #2 RHD hit records |-------->|          |\n"
+           "  +----------------------------------+         +----------+\n";
       std::cout << std::endl;
       std::cout << "Usage : " << std::endl << std::endl;
       std::cout << "  snfee-rhd2rtd [OPTIONS]" << std::endl << std::endl;
@@ -153,7 +165,6 @@ main(int argc_, char** argv_)
       std::cout << std::endl << std::endl;
       return (-1);
     }
-    // clang-format on
 
     // Use command line arguments :
     if (vm.count("help-config")) {
@@ -171,6 +182,8 @@ main(int argc_, char** argv_)
     // Use command line arguments :
     if (vm.count("logging")) {
       std::string logging_repr = vm["logging"].as<std::string>();
+      // DT_LOG_DEBUG(datatools::logger::PRIO_DEBUG, "Logging repr. = '" <<
+      // logging_repr << "'");
       app_params.logging = datatools::logger::get_priority(logging_repr);
       DT_THROW_IF(app_params.logging == datatools::logger::PRIO_UNDEFINED,
                   std::logic_error,
