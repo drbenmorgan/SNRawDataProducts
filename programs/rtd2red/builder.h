@@ -35,7 +35,7 @@
 #include <snfee/data/has_trigger_id_interface.h>
 #include <snfee/data/raw_trigger_data.h>
 #include <snfee/model/utils.h>
-#include <snfee/redb/builder_config.h>
+#include "builder_config.h"
 
 namespace snfee {
   namespace redb {

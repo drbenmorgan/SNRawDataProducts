@@ -26,10 +26,10 @@
 #include <mutex>
 
 // This project:
-#include <snfee/redb/input_worker.h>
-#include <snfee/redb/output_worker.h>
-#include <snfee/redb/red_buffer.h>
-#include <snfee/redb/rtd_buffer.h>
+#include "input_worker.h"
+#include "output_worker.h"
+#include "red_buffer.h"
+#include "rtd_buffer.h"
 
 namespace snfee {
   namespace redb {

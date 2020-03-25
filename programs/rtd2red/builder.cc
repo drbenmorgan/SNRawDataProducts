@@ -1,5 +1,5 @@
 // Ourselves:
-#include <snfee/redb/builder.h>
+#include "builder.h"
 
 // Standard Library:
 #include <chrono>
@@ -28,12 +28,13 @@
 #include <snfee/data/utils.h>
 #include <snfee/io/multifile_data_reader.h>
 #include <snfee/io/multifile_data_writer.h>
-#include <snfee/redb/builder_pimpl.h>
-#include <snfee/redb/input_worker.h>
-#include <snfee/redb/output_worker.h>
-#include <snfee/redb/red_buffer.h>
-#include <snfee/redb/rtd2red_builder.h>
-#include <snfee/redb/rtd_buffer.h>
+
+#include "builder_pimpl.h"
+#include "input_worker.h"
+#include "output_worker.h"
+#include "red_buffer.h"
+#include "rtd2red_builder.h"
+#include "rtd_buffer.h"
 
 namespace snfee {
   namespace redb {

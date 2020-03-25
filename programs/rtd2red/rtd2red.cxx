@@ -15,7 +15,7 @@
 #include <boost/program_options.hpp>
 
 // This project:
-#include <snfee/redb/builder.h>
+#include "builder.h"
 #include <snfee/utils.h>
 
 struct app_params_type {

@@ -14,7 +14,10 @@ function(_snrtd_install_rpath target)
   endif()
 endfunction()
 
+add_subdirectory(librecord)
+
 add_subdirectory(crd2rhd)
 add_subdirectory(rhd2rtd)
 add_subdirectory(rhd2root)
 add_subdirectory(rtd2root)
+add_subdirectory(rtd2red)

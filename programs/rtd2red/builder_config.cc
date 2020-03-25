@@ -1,5 +1,5 @@
 // Ourselves:
-#include <snfee/redb/builder_config.h>
+#include "builder_config.h"
 
 // Standard Library:
 #include <sstream>

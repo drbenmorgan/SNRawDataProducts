@@ -37,8 +37,8 @@
 
 // This project:
 #include <snfee/io/multifile_data_writer.h>
-#include <snfee/redb/builder_config.h>
-#include <snfee/redb/red_buffer.h>
+#include "builder_config.h"
+#include "red_buffer.h"
 
 namespace snfee {
   namespace redb {

@@ -66,16 +66,16 @@ vendor_snfee/io/raw_record_parser.cc             programs/crd2rhd/raw_record_par
 vendor_snfee/io/raw_record_parser.h              programs/crd2rhd/raw_record_parser.h
 vendor_snfee/io/raw_run_header.cc                programs/crd2rhd/raw_run_header.cc
 vendor_snfee/io/raw_run_header.h                 programs/crd2rhd/raw_run_header.h
-vendor_snfee/io/red_record.cc                    programs/rtd2red/red_record.cc
-vendor_snfee/io/red_record.h                     programs/rtd2red/red_record.h
-vendor_snfee/io/rhd_record.cc                    programs/rhd2rtd/rhd_record.cc
-vendor_snfee/io/rhd_record.h                     programs/rhd2rtd/rhd_record.h
+vendor_snfee/io/red_record.cc                    programs/librecord/red_record.cc
+vendor_snfee/io/red_record.h                     programs/librecord/red_record.h
+vendor_snfee/io/rhd_record.cc                    programs/librecord/rhd_record.cc
+vendor_snfee/io/rhd_record.h                     programs/librecord/rhd_record.h
 vendor_snfee/io/rhd_sorter.cc                    programs/rhd2rtd/rhd_sorter.cc
 vendor_snfee/io/rhd_sorter.h                     programs/rhd2rtd/rhd_sorter.h
 vendor_snfee/io/rtd2root_converter.cc            programs/rtd2root/rtd2root_converter.cc
 vendor_snfee/io/rtd2root_converter.h             programs/rtd2root/rtd2root_converter.h
-vendor_snfee/io/rtd_record.cc                    programs/rhd2rtd/rtd_record.cc
-vendor_snfee/io/rtd_record.h                     programs/rhd2rtd/rtd_record.h
+vendor_snfee/io/rtd_record.cc                    programs/librecord/rtd_record.cc
+vendor_snfee/io/rtd_record.h                     programs/librecord/rtd_record.h
 vendor_snfee/io/tracker_hit_parser.cc            programs/crd2rhd/tracker_hit_parser.cc
 vendor_snfee/io/tracker_hit_parser.h             programs/crd2rhd/tracker_hit_parser.h
 # Leave out most model/ files here as clearly related to underlying electronics
@@ -96,7 +96,8 @@ vendor_snfee/redb/red_buffer.cc                  programs/rtd2red/red_buffer.cc
 vendor_snfee/redb/red_buffer.h                   programs/rtd2red/red_buffer.h
 vendor_snfee/redb/rtd2red_builder.cc             programs/rtd2red/rtd2red_builder.cc
 vendor_snfee/redb/rtd2red_builder.h              programs/rtd2red/rtd2red_builder.h
-vendor_snfee/redb/rtd_buffer.cc                  programs/rtd2red/redb/rtd_buffer.h
+vendor_snfee/redb/rtd_buffer.cc                  programs/rtd2red/rtd_buffer.cc
+vendor_snfee/redb/rtd_buffer.h                   programs/rtd2red/rtd_buffer.h
 vendor_snfee/rtdb/builder.cc                     programs/rhd2rtd/builder.cc 
 vendor_snfee/rtdb/builder.h                      programs/rhd2rtd/builder.h
 vendor_snfee/rtdb/builder_config.cc              programs/rhd2rtd/builder_config.cc

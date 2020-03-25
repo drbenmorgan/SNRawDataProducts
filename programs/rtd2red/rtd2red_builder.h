@@ -29,8 +29,8 @@
 // This project:
 #include <snfee/data/raw_trigger_data.h>
 #include <snfee/data/utils.h>
-#include <snfee/redb/builder_config.h>
-#include <snfee/redb/builder_pimpl.h>
+#include "builder_config.h"
+#include "builder_pimpl.h"
 
 namespace snfee {
   namespace redb {

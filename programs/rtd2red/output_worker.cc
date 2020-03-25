@@ -1,5 +1,5 @@
 // Ourselves:
-#include <snfee/redb/output_worker.h>
+#include "output_worker.h"
 
 namespace snfee {
   namespace redb {

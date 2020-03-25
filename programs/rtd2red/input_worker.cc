@@ -1,5 +1,5 @@
 // Ourselves:
-#include <snfee/redb/input_worker.h>
+#include "input_worker.h"
 
 namespace snfee {
   namespace redb {

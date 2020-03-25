@@ -29,7 +29,7 @@
 // This project:
 #include <snfee/data/raw_trigger_data.h>
 #include <snfee/data/utils.h>
-#include <snfee/io/red_record.h>
+#include "red_record.h"
 
 namespace snfee {
   namespace redb {

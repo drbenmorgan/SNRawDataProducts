@@ -38,8 +38,8 @@
 
 // This project:
 #include <snfee/io/multifile_data_reader.h>
-#include <snfee/redb/builder_config.h>
-#include <snfee/redb/rtd_buffer.h>
+#include "builder_config.h"
+#include "rtd_buffer.h"
 
 namespace snfee {
   namespace redb {

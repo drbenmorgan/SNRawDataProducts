@@ -12,7 +12,7 @@
 
 // This project:
 #include <snfee/data/raw_event_data.h>
-#include <snfee/io/rtd_record.h>
+#include "rtd_record.h"
 
 namespace snfee {
   namespace io {
