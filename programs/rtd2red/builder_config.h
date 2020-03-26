@@ -80,12 +80,6 @@ namespace snfee {
         format_type format = FORMAT_UNDEF; ///< Format description (unused)
       };
 
-      /// Default constructor
-      builder_config();
-
-      /// Destructor
-      virtual ~builder_config();
-
       /// Set the run ID
       void set_run_id(const int32_t rid_);
 

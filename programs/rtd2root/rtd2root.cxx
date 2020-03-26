@@ -101,7 +101,7 @@ main(int argc_, char** argv_)
     po::notify(vm);
 
     // Use command line arguments :
-    if (vm.count("help")) {
+    if (vm.count("help") != 0U) {
       std::cout << "snfee-rtd2root : "
                 << "Convert raw trigger data file (RTD) to a Root file"
                 << std::endl
@@ -124,10 +124,8 @@ main(int argc_, char** argv_)
     }
 
     // Use command line arguments :
-    if (vm.count("logging")) {
+    if (vm.count("logging") != 0U) {
       std::string logging_repr = vm["logging"].as<std::string>();
-      // DT_LOG_DEBUG(datatools::logger::PRIO_DEBUG, "Logging repr. = '" <<
-      // logging_repr << "'");
       app_params.logging = datatools::logger::get_priority(logging_repr);
       DT_THROW_IF(app_params.logging == datatools::logger::PRIO_UNDEFINED,
                   std::logic_error,
@@ -137,7 +135,7 @@ main(int argc_, char** argv_)
 
     // Checks:
     DT_THROW_IF(app_params.converter_cfg.input_rtd_listname.empty() and
-                  app_params.converter_cfg.input_rtd_filenames.size() == 0,
+                  app_params.converter_cfg.input_rtd_filenames.empty(),
                 std::logic_error,
                 "Missing input RTD filenames!");
     DT_THROW_IF(app_params.converter_cfg.output_root_filename.empty(),

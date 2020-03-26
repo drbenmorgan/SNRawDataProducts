@@ -4,27 +4,22 @@
 namespace snfee {
   namespace io {
 
-    rhd_record::rhd_record() { return; }
-
     rhd_record::rhd_record(
       const std::shared_ptr<snfee::data::trigger_record>& trig_rec_)
     {
       _trig_rec_ = trig_rec_;
-      return;
     }
 
     rhd_record::rhd_record(
       const std::shared_ptr<snfee::data::calo_hit_record>& calo_hit_rec_)
     {
       _calo_hit_rec_ = calo_hit_rec_;
-      return;
     }
 
     rhd_record::rhd_record(
       const std::shared_ptr<snfee::data::tracker_hit_record>& tracker_hit_rec_)
     {
       _tracker_hit_rec_ = tracker_hit_rec_;
-      return;
     }
 
     void
@@ -32,7 +27,6 @@ namespace snfee {
     {
       reset();
       _trig_rec_ = std::make_shared<snfee::data::trigger_record>();
-      return;
     }
 
     void
@@ -40,7 +34,6 @@ namespace snfee {
     {
       reset();
       _calo_hit_rec_ = std::make_shared<snfee::data::calo_hit_record>();
-      return;
     }
 
     void
@@ -48,36 +41,38 @@ namespace snfee {
     {
       reset();
       _tracker_hit_rec_ = std::make_shared<snfee::data::tracker_hit_record>();
-      return;
     }
 
     bool
     rhd_record::is_calo_hit() const
     {
-      return _calo_hit_rec_.get() != nullptr;
+      return _calo_hit_rec_ != nullptr;
     }
 
     bool
     rhd_record::is_tracker_hit() const
     {
-      return _tracker_hit_rec_.get() != nullptr;
+      return _tracker_hit_rec_ != nullptr;
     }
 
     bool
     rhd_record::is_trig() const
     {
-      return _trig_rec_.get() != nullptr;
+      return _trig_rec_ != nullptr;
     }
 
     bool
     rhd_record::empty() const
     {
-      if (_calo_hit_rec_)
+      if (_calo_hit_rec_) {
         return false;
-      if (_tracker_hit_rec_)
+      }
+      if (_tracker_hit_rec_) {
         return false;
-      if (_trig_rec_)
+      }
+      if (_trig_rec_) {
         return false;
+      }
       return true;
     }
 
@@ -87,7 +82,6 @@ namespace snfee {
       _calo_hit_rec_.reset();
       _tracker_hit_rec_.reset();
       _trig_rec_.reset();
-      return;
     }
 
     int32_t
@@ -149,7 +143,6 @@ namespace snfee {
       out << std::endl;
       out << std::endl;
       out_ << out.str();
-      return;
     }
 
     // friend
@@ -175,10 +168,7 @@ namespace snfee {
     rhd_record_less::operator()(const rhd_record& rec1_,
                                 const rhd_record& rec2_)
     {
-      if (rec1_.get_trigger_id() < rec2_.get_trigger_id()) {
-        return true;
-      }
-      return false;
+      return (rec1_.get_trigger_id() < rec2_.get_trigger_id());
     }
 
   } // namespace io

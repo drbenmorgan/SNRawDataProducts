@@ -22,22 +22,18 @@ namespace snfee {
     // static
     const std::size_t raw_hit_reader::HEADER_NBLINES;
 
-    raw_hit_reader::raw_hit_reader() { return; }
-
     bool
     raw_hit_reader::has_next_hit() const
     {
       DT_THROW_IF(
         !_initialized_, std::logic_error, "Reader is not initialized!");
-      if (!*_fin_ || _fin_->eof())
-        return false;
-      return true;
+      return  !(!*_fin_ || _fin_->eof());
     }
 
     bool
     raw_hit_reader::has_run_header() const
     {
-      return _header_.get() != nullptr && _header_->is_complete();
+      return _header_ && _header_->is_complete();
     }
 
     void
@@ -45,8 +41,7 @@ namespace snfee {
     {
       DT_THROW_IF(
         !_initialized_, std::logic_error, "Reader is not initialized!");
-      header_ = *_header_.get();
-      return;
+      header_ = *_header_;
     }
 
     raw_record_parser::record_type
@@ -76,7 +71,6 @@ namespace snfee {
     raw_hit_reader::set_logging(datatools::logger::priority logging_)
     {
       _logging_ = logging_;
-      return;
     }
 
     const raw_hit_reader::config_type&
@@ -91,7 +85,6 @@ namespace snfee {
       DT_THROW_IF(
         _initialized_, std::logic_error, "Reader is already initialized!");
       _config_ = cfg_;
-      return;
     }
 
     bool
@@ -110,7 +103,6 @@ namespace snfee {
       _init_parser_();
       *_fin_ >> std::ws;
       _initialized_ = true;
-      return;
     }
 
     void
@@ -122,7 +114,6 @@ namespace snfee {
       _reset_parser_();
       _reset_header_();
       _reset_input_file_();
-      return;
     }
 
     void
@@ -151,7 +142,6 @@ namespace snfee {
            << _config_.with_calo_waveforms << std::endl;
       out_ << "`-- "
            << "Initialized  : " << std::boolalpha << _initialized_ << std::endl;
-      return;
     }
 
     void
@@ -164,7 +154,6 @@ namespace snfee {
       DT_THROW_IF(!*_fin_,
                   std::runtime_error,
                   "Cannot open input file '" << _config_.input_filename << "'");
-      return;
     }
 
     void
@@ -174,7 +163,6 @@ namespace snfee {
         _fin_->close();
         _fin_.reset();
       }
-      return;
     }
 
     void
@@ -187,7 +175,6 @@ namespace snfee {
         DT_LOG_DEBUG(_logging_, "Header[#" << ih << "] : " << hlines);
         _decode_header_(hlines, ih);
       }
-      return;
     }
 
     void
@@ -196,7 +183,6 @@ namespace snfee {
       if (_header_) {
         _header_.reset();
       }
-      return;
     }
 
     void
@@ -212,8 +198,6 @@ namespace snfee {
       parser_config.with_tracker = _config_.with_tracker;
       parser_config.with_calo_waveforms = _config_.with_calo_waveforms;
       _record_parser_.reset(new raw_record_parser(parser_config, _logging_));
-
-      return;
     }
 
     void
@@ -222,7 +206,6 @@ namespace snfee {
       if (_record_parser_) {
         _record_parser_.reset();
       }
-      return;
     }
 
     void
@@ -288,7 +271,6 @@ namespace snfee {
       }
 
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
   } // namespace io

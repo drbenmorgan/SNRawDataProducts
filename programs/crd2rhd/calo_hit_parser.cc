@@ -56,7 +56,6 @@ namespace snfee {
       out_ << indent_ << "falling_cell    = " << falling_cell << std::endl;
       out_ << indent_ << "falling_offset  = " << falling_offset << std::endl;
       out_ << indent_ << "falling_ns      = " << falling_ns << std::endl;
-      return;
     }
 
     void
@@ -72,7 +71,6 @@ namespace snfee {
       out_ << indent_ << "|   `-- With waveforms : " << std::boolalpha
            << _config_.with_waveforms << std::endl;
       out_ << indent_ << "`-- Format         : " << _format_ << std::endl;
-      return;
     }
 
     calo_hit_parser::calo_hit_parser(const config_type& cfg_,
@@ -80,7 +78,6 @@ namespace snfee {
     {
       set_logging(logging_);
       set_config(cfg_);
-      return;
     }
 
     datatools::logger::priority
@@ -93,7 +90,6 @@ namespace snfee {
     calo_hit_parser::set_logging(const datatools::logger::priority l_)
     {
       _logging_ = l_;
-      return;
     }
 
     const calo_hit_parser::config_type&
@@ -115,7 +111,6 @@ namespace snfee {
       } else {
         _format_ = FORMAT_BEFORE_2_3;
       }
-      return;
     }
 
     bool
@@ -132,7 +127,7 @@ namespace snfee {
         hit_.invalidate();
         hit_.set_hit_num(hit_num);
         hit_.set_trigger_id(trigger_id);
-        header_type headers[2];
+        std::array<header_type, 2> headers{};
         // Loop on both channels:
         for (int ichannel = 0;
              ichannel < snfee::model::feb_constants::SAMLONG_NUMBER_OF_CHANNELS;
@@ -150,7 +145,7 @@ namespace snfee {
           }
           if (_config_.with_waveforms) {
             // Waveforms:
-            snfee::data::calo_hit_record::waveforms_record& waveforms =
+            auto& waveforms =
               const_cast<snfee::data::calo_hit_record::waveforms_record&>(
                 hit_.get_waveforms());
             std::string raw_waveform_data_line;
@@ -323,11 +318,11 @@ namespace snfee {
         for (int ichannel = 0;
              ichannel < snfee::model::feb_constants::SAMLONG_NUMBER_OF_CHANNELS;
              ichannel++) {
-          bool lto = headers[ichannel].lto_flag;
-          bool ht = headers[ichannel].ht_flag;
+          bool lto = (headers[ichannel].lto_flag != 0U);
+          bool ht = (headers[ichannel].ht_flag != 0U);
           bool lt = (ht || lto);
           bool underflow = false;
-          bool overflow = headers[ichannel].charge_overflow;
+          bool overflow = (headers[ichannel].charge_overflow != 0);
           int16_t baseline = headers[ichannel].raw_baseline;
           int16_t peak = headers[ichannel].raw_peak;
           int16_t peak_cell = headers[ichannel].peak_cell;
@@ -399,7 +394,6 @@ namespace snfee {
         _parse_header_legacy_(header_line_, index_, header_);
       }
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
     void
@@ -497,7 +491,6 @@ namespace snfee {
       }
 
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
     /// Header parsing
@@ -593,7 +586,6 @@ namespace snfee {
       }
 
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
     /// Header parsing
@@ -681,7 +673,6 @@ namespace snfee {
                       << index_ << "; failed at '" << *str_iter << "'!");
       }
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
     void
@@ -722,7 +713,7 @@ namespace snfee {
       }
 
       // Populate the waveform for this channel:
-      if (waveforms_.get_samples().size() == 0) {
+      if (waveforms_.get_samples().empty()) {
         waveforms_.reset(channel_waveform_data.size());
       } else {
         DT_THROW_IF(waveforms_.get_samples().size() !=
@@ -736,7 +727,6 @@ namespace snfee {
         waveforms_.set_adc(icell, channel_index_, channel_waveform_data[icell]);
       }
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
   } // namespace io

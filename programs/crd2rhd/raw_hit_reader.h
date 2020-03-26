@@ -38,9 +38,6 @@ namespace snfee {
         bool with_calo_waveforms = true;
       };
 
-      //! Default constructor
-      raw_hit_reader();
-
       //! Return the logging level
       datatools::logger::priority get_logging() const;
 

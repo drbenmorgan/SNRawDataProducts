@@ -21,24 +21,28 @@ namespace snfee {
     raw_run_header::raw_run_header()
     {
       _reset_();
-      return;
     }
 
-    raw_run_header::~raw_run_header() { return; }
+    raw_run_header::~raw_run_header() = default;
 
     bool
     raw_run_header::is_complete() const
     {
-      if (software_version.empty())
+      if (software_version.empty()) {
         return false;
-      if (!datatools::is_valid(unix_time))
+      }
+      if (!datatools::is_valid(unix_time)) {
         return false;
-      if (date.empty())
+      }
+      if (date.empty()) {
         return false;
-      if (time.empty())
+      }
+      if (time.empty()) {
         return false;
-      if (data_type.empty())
+      }
+      if (data_type.empty()) {
         return false;
+      }
       return true;
     }
 
@@ -62,7 +66,6 @@ namespace snfee {
       software_major_version = ver_id.get_major();
       software_minor_version = ver_id.get_minor();
       software_version = sw_version_;
-      return;
     }
 
     void
@@ -77,21 +80,17 @@ namespace snfee {
       date = date_;
       time = time_;
       data_type = data_type_;
-      return;
     }
 
     void
     raw_run_header::reset()
     {
       _reset_();
-      return;
     }
 
     void
     raw_run_header::_reset_()
-    {
-      return;
-    }
+    {}
 
     // virtual
     void
@@ -102,7 +101,7 @@ namespace snfee {
       base_print_options popts;
       popts.configure_from(options_);
 
-      if (popts.title.length()) {
+      if (popts.title.length() != 0U) {
         out_ << popts.indent << popts.title << std::endl;
       }
 
@@ -130,8 +129,6 @@ namespace snfee {
       out_ << popts.indent << inherit_tag(popts.inherit)
            << "Completeness           : " << std::boolalpha << is_complete()
            << std::endl;
-
-      return;
     }
 
   } // namespace io

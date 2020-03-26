@@ -4,20 +4,18 @@
 namespace snfee {
   namespace redb {
 
-    red_buffer::red_buffer() { return; }
+    red_buffer::red_buffer() = default;
 
     red_buffer::~red_buffer()
     {
       _front_event_id_ = snfee::data::INVALID_EVENT_ID;
       _red_recs_.clear();
-      return;
     }
 
     void
     red_buffer::terminate()
     {
       _terminated_ = true;
-      return;
     }
 
     bool
@@ -39,7 +37,6 @@ namespace snfee {
       int32_t new_event_id = rec_.get_event_id();
       _front_event_id_ = new_event_id;
       _red_recs_.push_back(rec_);
-      return;
     }
 
     snfee::io::red_record
@@ -48,7 +45,7 @@ namespace snfee {
       snfee::io::red_record rec = _red_recs_.front();
       _red_recs_.pop_front();
       _front_event_id_ = snfee::data::INVALID_EVENT_ID;
-      if (_red_recs_.size()) {
+      if (!_red_recs_.empty()) {
         // Update the current event ID with the ones from the next record in the
         // FIFO:
         const snfee::io::red_record& next_rec = _red_recs_.front();
@@ -80,7 +77,6 @@ namespace snfee {
           << std::endl;
       out << std::endl;
       out_ << out.str();
-      return;
     }
 
   } // namespace redb

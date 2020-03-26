@@ -14,9 +14,7 @@ namespace snfee {
       , _board_num_(cfg_.board_num)
       , _chip_num_(cfg_.chip_num)
       , _reverse_(cfg_.reverse)
-    {
-      return;
-    }
+    {}
 
     calo_selection::calo_selection(const int16_t crate_num_,
                                    const int16_t board_num_,
@@ -26,23 +24,20 @@ namespace snfee {
       , _board_num_(board_num_)
       , _chip_num_(chip_num_)
       , _reverse_(reverse_)
-    {
-      return;
-    }
+    {}
 
     bool
     calo_selection::is_activated() const
     {
-      if (_crate_num_ == -1 and _board_num_ == -1 and _chip_num_ == -1)
-        return false;
-      return true;
+      return !(_crate_num_ == -1 and _board_num_ == -1 and _chip_num_ == -1);
     }
 
     bool
     calo_selection::operator()(const snfee::data::raw_trigger_data& rtd_) const
     {
-      if (!is_activated())
+      if (!is_activated()) {
         return true;
+      }
       uint32_t nb_matching_hits = 0;
       for (const auto& pchit : rtd_.get_calo_hits()) {
         const calo_hit_record& chit = *pchit;

@@ -3,9 +3,6 @@
 
 namespace snfee {
   namespace io {
-
-    red_record::red_record() { return; }
-
     void
     red_record::make_record(const int32_t run_id_,
                             const int32_t event_id_,
@@ -15,20 +12,18 @@ namespace snfee {
       _red_->set_run_id(run_id_);
       _red_->set_event_id(event_id_);
       _red_->set_reference_time(reference_time_);
-      return;
     }
 
     void
     red_record::reset()
     {
       _red_.reset();
-      return;
     }
 
     bool
     red_record::has_record() const
     {
-      return _red_.get() != nullptr;
+      return static_cast<bool>(_red_);
     }
 
     int32_t
@@ -42,14 +37,14 @@ namespace snfee {
     red_record::grab_red()
     {
       DT_THROW_IF(!has_record(), std::logic_error, "No RED record!");
-      return *_red_.get();
+      return *_red_;
     }
 
     const snfee::data::raw_event_data&
     red_record::get_red() const
     {
       DT_THROW_IF(!has_record(), std::logic_error, "No RED record!");
-      return *_red_.get();
+      return *_red_;
     }
 
     const std::shared_ptr<snfee::data::raw_event_data>&
@@ -65,7 +60,6 @@ namespace snfee {
     {
       DT_THROW_IF(!has_record(), std::logic_error, "No RED record!");
       _red_->add_rtd(timeshift_, rtd_ptr_);
-      return;
     }
 
     void
@@ -82,7 +76,6 @@ namespace snfee {
       }
       obuffer << std::endl;
       out_ << obuffer.str();
-      return;
     }
 
     // friend

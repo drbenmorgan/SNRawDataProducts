@@ -20,15 +20,14 @@ namespace snfee {
       return "";
     }
 
-    builder_config::builder_config() { return; }
+    builder_config::builder_config() = default;
 
-    builder_config::~builder_config() { return; }
+    builder_config::~builder_config() = default;
 
     void
     builder_config::set_run_id(const int32_t rid_)
     {
       run_id = rid_;
-      return;
     }
 
     int32_t
@@ -47,7 +46,6 @@ namespace snfee {
     builder_config::set_force_complete_rtd(bool f_)
     {
       force_complete_rtd = f_;
-      return;
     }
 
     bool
@@ -60,13 +58,12 @@ namespace snfee {
     builder_config::set_use_mock_trig(bool umt_)
     {
       use_mock_trig = umt_;
-      return;
     }
 
     bool
     builder_config::has_output_config() const
     {
-      return !output_config.filenames.size();
+      return output_config.filenames.empty();
     }
 
     void
@@ -84,7 +81,6 @@ namespace snfee {
       oc.filenames = filepaths_;
       oc.format = format_;
       output_config = oc;
-      return;
     }
 
     const builder_config::output_config_type&
@@ -108,7 +104,6 @@ namespace snfee {
       ic.filenames = filepaths_;
       ic.format = format_;
       input_configs.push_back(ic);
-      return;
     }
 
     void
@@ -126,7 +121,6 @@ namespace snfee {
       ic.listname = listpath_;
       ic.format = format_;
       input_configs.push_back(ic);
-      return;
     }
 
     const std::vector<builder_config::input_config_type>&
@@ -145,7 +139,7 @@ namespace snfee {
       popts.configure_from(options_);
 
       std::ostringstream outs;
-      if (popts.title.length()) {
+      if (popts.title.length() != 0U) {
         outs << popts.indent << popts.title << std::endl;
       }
 
@@ -253,7 +247,6 @@ namespace snfee {
            << std::endl;
 
       out_ << outs.str();
-      return;
     }
 
     void
@@ -267,7 +260,6 @@ namespace snfee {
       }
       force_complete_rtd = false;
       use_mock_trig = false;
-      return;
     }
 
     void
@@ -276,7 +268,7 @@ namespace snfee {
       DT_THROW_IF(cfg_.run_id == snfee::data::INVALID_RUN_ID,
                   std::logic_error,
                   "Missing run ID!");
-      DT_THROW_IF(cfg_.input_configs.size() == 0,
+      DT_THROW_IF(cfg_.input_configs.empty(),
                   std::logic_error,
                   "Missing RHD input configurationss!");
       int icount = 0;
@@ -287,16 +279,15 @@ namespace snfee {
         DT_THROW_IF(iconf.crate_id == -1,
                     std::logic_error,
                     "Missing RHD input #" << icount << " crate ID!");
-        DT_THROW_IF(iconf.filenames.size() == 0 and iconf.listname.empty(),
+        DT_THROW_IF(iconf.filenames.empty() and iconf.listname.empty(),
                     std::logic_error,
                     "Missing RHD input #" << icount
                                           << " filenames or listname!");
         icount++;
       }
-      DT_THROW_IF(cfg_.output_config.filenames.size() == 0,
+      DT_THROW_IF(cfg_.output_config.filenames.empty(),
                   std::logic_error,
                   "Missing RTD output files!");
-      return;
     }
 
     void
@@ -421,8 +412,6 @@ namespace snfee {
         cfg_.tracker_rhd_buffer_capacity =
           rtdb_config.fetch_positive_integer("tracker_rhd_buffer_capacity");
       }
-
-      return;
     }
 
     /// Print skeleton configuration
@@ -464,8 +453,9 @@ namespace snfee {
       }
       for (int icrate = 0; icrate < (int)nbcrates_; icrate++) {
         out_ << "      \"" << crate_labels[icrate] << "\"";
-        if (icrate + 1 != nbcrates_)
+        if (icrate + 1 != nbcrates_) {
           out_ << " \\";
+        }
         out_ << "\n";
       }
       out_ << "\n";
@@ -589,7 +579,6 @@ namespace snfee {
               "       \n";
       out_ << "# end.";
       ;
-      return;
     }
 
     /// Print documentation
@@ -730,7 +719,6 @@ namespace snfee {
               "          \n"
               "                                                                "
               "          \n";
-      return;
     }
 
   } // namespace rtdb

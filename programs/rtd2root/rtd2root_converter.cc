@@ -34,20 +34,17 @@ namespace snfee {
     rtd2root_converter::rtd2root_converter()
     {
       _pimpl_.reset(new pimpl_type);
-      return;
     }
 
     rtd2root_converter::~rtd2root_converter()
     {
       _pimpl_.reset();
-      return;
     }
 
     void
     rtd2root_converter::set_logging(const datatools::logger::priority l_)
     {
       _logging_ = l_;
-      return;
     }
 
     void
@@ -57,7 +54,6 @@ namespace snfee {
                   std::logic_error,
                   "Converter is already initialized!");
       _config_ = cfg_;
-      return;
     }
 
     bool
@@ -98,9 +94,9 @@ namespace snfee {
         }
       }
       // Add any explicit RTD input filenames:
-      for (int ifile = 0; ifile < (int)_config_.input_rtd_filenames.size();
-           ifile++) {
-        reader_cfg.filenames.push_back(_config_.input_rtd_filenames[ifile]);
+      for (const auto& input_rtd_filename : _config_.input_rtd_filenames) {
+
+        reader_cfg.filenames.push_back(input_rtd_filename);
       }
       _pimpl_->reader.reset(new multifile_data_reader(reader_cfg));
 
@@ -279,7 +275,6 @@ namespace snfee {
                    "tracker_timestamp[nb_tracker_hits]/l");
 
       _initialized_ = true;
-      return;
     }
 
     void
@@ -334,7 +329,6 @@ namespace snfee {
       if (datatools::logger::is_debug(_logging_)) {
         _pimpl_->rtree->Print();
       }
-      return;
     }
 
     void
@@ -346,7 +340,6 @@ namespace snfee {
       _pimpl_->rfile->Write();
       _pimpl_->rfile->Close();
       _pimpl_->reader.reset();
-      return;
     }
 
   } // namespace io

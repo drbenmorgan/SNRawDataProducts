@@ -16,7 +16,6 @@ namespace snfee {
       has_trig = false;
       nb_calo_hits = 0;
       nb_tracker_hits = 0;
-      return;
     }
 
     // static
@@ -127,7 +126,6 @@ namespace snfee {
         tracker_count++;
       }
 
-      return;
     }
 
   } // namespace data

@@ -4,7 +4,7 @@
 namespace snfee {
   namespace io {
 
-    rtd_record::rtd_record() { return; }
+    rtd_record::rtd_record() = default;
 
     void
     rtd_record::make_record(const int32_t run_id_, const int32_t trigger_id_)
@@ -13,7 +13,6 @@ namespace snfee {
       _rtd_ = std::make_shared<snfee::data::raw_trigger_data>();
       _rtd_->set_run_id(run_id_);
       _rtd_->set_trigger_id(_trigger_id_);
-      return;
     }
 
     void
@@ -21,21 +20,18 @@ namespace snfee {
     {
       _trigger_id_ = snfee::data::INVALID_TRIGGER_ID;
       _rtd_.reset();
-      return;
     }
 
     bool
     rtd_record::has_record() const
     {
-      return _rtd_.get() != nullptr;
+      return static_cast<bool>(_rtd_);
     }
 
     bool
     rtd_record::empty() const
     {
-      if (_rtd_)
-        return false;
-      return true;
+      return !_rtd_;
     }
 
     int32_t
@@ -48,14 +44,14 @@ namespace snfee {
     rtd_record::grab_rtd()
     {
       DT_THROW_IF(!has_record(), std::logic_error, "No RTD record!");
-      return *_rtd_.get();
+      return *_rtd_;
     }
 
     const snfee::data::raw_trigger_data&
     rtd_record::get_rtd() const
     {
       DT_THROW_IF(!has_record(), std::logic_error, "No RTD record!");
-      return *_rtd_.get();
+      return *_rtd_;
     }
 
     const std::shared_ptr<snfee::data::raw_trigger_data>&
@@ -69,7 +65,6 @@ namespace snfee {
     {
       reset();
       _rtd_ = std::make_shared<snfee::data::raw_trigger_data>();
-      return;
     }
 
     void
@@ -90,7 +85,6 @@ namespace snfee {
       } else if (rhd_rec_.is_tracker_hit()) {
         _rtd_->append_tracker_hit(rhd_rec_.get_tracker_hit_rec());
       }
-      return;
     }
 
     void
@@ -117,7 +111,6 @@ namespace snfee {
       obuffer << std::endl;
       obuffer << std::endl;
       out_ << obuffer.str();
-      return;
     }
 
     // friend

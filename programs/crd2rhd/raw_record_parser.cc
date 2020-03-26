@@ -29,7 +29,6 @@ namespace snfee {
       _hit_number_ = -1;
       _trigger_id_ = -1;
       _record_type_ = RECORD_UNDEF;
-      return;
     }
 
     datatools::logger::priority
@@ -42,7 +41,6 @@ namespace snfee {
     raw_record_parser::set_logging(const datatools::logger::priority l_)
     {
       _logging_ = l_;
-      return;
     }
 
     const raw_record_parser::config_type&
@@ -79,12 +77,7 @@ namespace snfee {
         trackerCfg.firmware_version = _config_.firmware_version;
         _tracker_hit_parser_.reset(
           new tracker_hit_parser(trackerCfg, _logging_));
-        // if (datatools::logger::is_debug(_logging_)) {
-        //   DT_LOG_DEBUG(_logging_, "Tracker hit parser: ");
-        //   _tracker_hit_parser_->print(std::clog, "[debug] ");
-        // }
       }
-      return;
     }
 
     raw_record_parser::record_type
@@ -217,7 +210,6 @@ namespace snfee {
       }
 
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
   } // namespace io

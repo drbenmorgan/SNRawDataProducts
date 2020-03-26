@@ -159,7 +159,7 @@ main(int argc, char* argv[])
   try {
     po::variables_map vm;
     po::store(po::command_line_parser(argc, argv).options(opts).run(), vm);
-    if (vm.count("help")) {
+    if (vm.count("help") != 0U) {
       std::cout << opts << "\n";
       return 0;
     }

@@ -14,14 +14,12 @@ namespace snfee {
       _logging_ = logging_;
       _algo_ = algo_;
       _run_id_ = run_id_;
-      return;
     }
 
     void
     rtd2red_builder::stop()
     {
       _stop_request_ = true;
-      return;
     }
 
     bool
@@ -122,7 +120,6 @@ namespace snfee {
       }
       DT_LOG_NOTICE(_logging_, "Builder run is stopped.");
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
     void
@@ -257,7 +254,6 @@ namespace snfee {
 
       DT_LOG_NOTICE(_logging_, "Builder one2one algo is done.");
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
     void
@@ -424,7 +420,6 @@ namespace snfee {
 
       DT_LOG_NOTICE(_logging_, "Builder standard algo is done.");
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
   } // namespace redb

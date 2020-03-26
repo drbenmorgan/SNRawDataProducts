@@ -45,7 +45,7 @@ main(int argc, char* argv[])
     po::store(po::command_line_parser(argc, argv)
               .options(opts)
               .run(), vm);
-    if (vm.count("help")) {
+    if (vm.count("help") != 0U) {
       std::cout << opts << "\n";
       return 0;
     }
@@ -80,8 +80,9 @@ main(int argc, char* argv[])
     *workingRTD = snfee::data::rtdOnlineToOffline(rtdRaw);
     rtdTree.Fill();
 
-    if (!(counter % 1000))
+    if ((counter % 1000) == 0U) {
       std::clog << "Processed record: " << counter << "\n";
+    }
     counter++;
   }
 

@@ -17,8 +17,7 @@ namespace snfee {
       writer_config.max_records_per_file = oconfig_.max_records_per_file;
       writer_config.max_total_records = oconfig_.max_total_records;
       writer_config.terminate_on_overrun = oconfig_.terminate_on_overrun;
-      _pwriter_.reset(new snfee::io::multifile_data_writer(writer_config));
-      return;
+      _pwriter_ = std::make_shared<snfee::io::multifile_data_writer>(writer_config);
     }
 
     output_worker::~output_worker()
@@ -26,14 +25,12 @@ namespace snfee {
       if (_pwriter_) {
         _pwriter_.reset();
       }
-      return;
     }
 
     void
     output_worker::stop()
     {
       _stop_request_ = true;
-      return;
     }
 
     bool
@@ -105,7 +102,6 @@ namespace snfee {
       }
       DT_LOG_NOTICE(_logging_, "Output worker run is stopped.");
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
   } // namespace redb

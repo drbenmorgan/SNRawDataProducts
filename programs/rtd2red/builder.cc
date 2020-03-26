@@ -39,9 +39,9 @@
 namespace snfee {
   namespace redb {
 
-    builder::builder() { return; }
+    builder::builder() = default;
 
-    builder::~builder() { return; }
+    builder::~builder() = default;
 
     datatools::logger::priority
     builder::get_logging() const
@@ -53,7 +53,6 @@ namespace snfee {
     builder::set_logging(const datatools::logger::priority l_)
     {
       _logging_ = l_;
-      return;
     }
 
     bool
@@ -69,7 +68,6 @@ namespace snfee {
                   std::logic_error,
                   "RET builder is already initialized!");
       _config_ = cfg_;
-      return;
     }
 
     const builder_config&
@@ -86,7 +84,7 @@ namespace snfee {
                   std::logic_error,
                   "RED builder is already initialized!");
 
-      DT_THROW_IF(_config_.input_config.filenames.size() == 0 and
+      DT_THROW_IF(_config_.input_config.filenames.empty() and
                     _config_.input_config.listname.empty(),
                   std::logic_error,
                   "Missing input config!");
@@ -94,7 +92,6 @@ namespace snfee {
       _at_init_();
       _initialized_ = true;
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
     void
@@ -106,7 +103,6 @@ namespace snfee {
       _initialized_ = false;
       _at_terminate_();
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
     void
@@ -117,7 +113,6 @@ namespace snfee {
         !is_initialized(), std::logic_error, "RED builder is not initialized!");
       _at_run_();
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
     bool
@@ -130,7 +125,6 @@ namespace snfee {
     builder::stop()
     {
       _stop_request_ = true;
-      return;
     }
 
     const std::vector<builder::worker_results_type>&
@@ -149,7 +143,7 @@ namespace snfee {
 
       std::ostringstream outs;
 
-      if (popts.title.length()) {
+      if (popts.title.length() != 0U) {
         outs << popts.indent << popts.title << std::endl;
       }
 
@@ -171,8 +165,6 @@ namespace snfee {
            << std::endl;
 
       out_ << outs.str();
-
-      return;
     }
 
     // ============================ Private ============================= //
@@ -187,7 +179,7 @@ namespace snfee {
       DT_LOG_NOTICE(_logging_, "Instantiating the output worker...");
       pimpl.omtx = std::make_shared<std::mutex>();
       pimpl.oworker = std::make_shared<output_worker>(
-        *pimpl.omtx.get(), pimpl.obuffer, _config_.output_config, _logging_);
+        *(pimpl.omtx), pimpl.obuffer, _config_.output_config, _logging_);
 
       // Builder:
       DT_LOG_NOTICE(_logging_, "Instantiating the builder...");
@@ -215,7 +207,7 @@ namespace snfee {
       {
         DT_LOG_NOTICE(_logging_, "Instantiating the input worker...");
         pimpl.iworker = std::make_shared<input_worker>(0,
-                                                       *pimpl.imtx.get(),
+                                                       *(pimpl.imtx),
                                                        pimpl.ibuffer,
                                                        _config_.input_config,
                                                        _logging_);
@@ -223,8 +215,6 @@ namespace snfee {
           pimpl.iworker->print(std::cerr);
         }
       }
-
-      return;
     }
 
     void
@@ -267,7 +257,6 @@ namespace snfee {
 
         _pimpl_.reset();
       }
-      return;
     }
 
     void
@@ -303,7 +292,6 @@ namespace snfee {
       othread.join();
 
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
   } // namespace redb

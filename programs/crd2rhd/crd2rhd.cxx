@@ -160,7 +160,7 @@ main(int argc_, char** argv_)
     po::notify(vm);
 
     // Use command line arguments :
-    if (vm.count("help")) {
+    if (vm.count("help") != 0U) {
       std::cout << "snfee-crd2rhd : "
                 << "Convert commissioning raw data file (CRD) to official raw "
                    "hit data file (RHD)"
@@ -195,7 +195,7 @@ main(int argc_, char** argv_)
     }
 
     // Use command line arguments :
-    if (vm.count("logging")) {
+    if (vm.count("logging") != 0U) {
       std::string logging_repr = vm["logging"].as<std::string>();
       // DT_LOG_DEBUG(datatools::logger::PRIO_DEBUG, "Logging repr. = '" <<
       // logging_repr << "'");
@@ -205,7 +205,7 @@ main(int argc_, char** argv_)
                   "Invalid logging priority '"
                     << vm["logging"].as<std::string>() << "'!");
     }
-    if (vm.count("reader-logging")) {
+    if (vm.count("reader-logging") != 0U) {
       std::string logging_repr = vm["reader-logging"].as<std::string>();
       // DT_LOG_DEBUG(datatools::logger::PRIO_DEBUG, "Logging repr. = '" <<
       // logging_repr << "'");
@@ -266,7 +266,7 @@ main(int argc_, char** argv_)
       std::string basename;
       // Extract output file:
       {
-        std::size_t basename_pos = app_params.output_filename.find_last_of("/");
+        std::size_t basename_pos = app_params.output_filename.find_last_of('/');
         basename = app_params.output_filename;
         if (basename_pos != std::string::npos) {
           dirpath = app_params.output_filename.substr(0, basename_pos);
@@ -448,23 +448,25 @@ main(int argc_, char** argv_)
           DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION,
                              "Loaded CRD records: " << crd_counter);
         }
-        if (app_params.writer_config.max_total_records and
+        if (app_params.writer_config.max_total_records != 0U and
             crd_counter == app_params.writer_config.max_total_records) {
           DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION,
                              "Max CRD records reached!");
           end_of_input_for_this_file = true;
           end_of_input = true;
         }
-        if (app_params.max_crd_per_input_file and
+        if (app_params.max_crd_per_input_file != 0U and
             crd_counter_for_this_file == app_params.max_crd_per_input_file) {
           DT_LOG_INFORMATION(datatools::logger::PRIO_INFORMATION,
                              "Max CRD records per input file reached!");
           end_of_input_for_this_file = true;
         }
-        if (end_of_input)
+        if (end_of_input) {
           break;
-        if (end_of_input_for_this_file)
+        }
+        if (end_of_input_for_this_file) {
           break;
+        }
         if (pWriter) {
           if (app_params.dynamic_output_files && pWriter->is_last_file()) {
             output_file_part_num++;
@@ -483,8 +485,9 @@ main(int argc_, char** argv_)
         }
       } // end of reader loop:
       reader.reset();
-      if (end_of_input)
+      if (end_of_input) {
         break;
+      }
     } // end of input file loop.
 
     if (app_params.force_fake_trigger_ids) {

@@ -24,7 +24,6 @@ namespace snfee {
     {
       set_logging(p_);
       set_config(cfg_);
-      return;
     }
 
     datatools::logger::priority
@@ -37,7 +36,6 @@ namespace snfee {
     tracker_hit_parser::set_logging(const datatools::logger::priority l_)
     {
       _logging_ = l_;
-      return;
     }
 
     const tracker_hit_parser::config_type&
@@ -56,7 +54,6 @@ namespace snfee {
       } else {
         _format_ = FORMAT_BEFORE_2_4;
       }
-      return;
     }
 
     bool
@@ -235,7 +232,6 @@ namespace snfee {
       DT_LOG_DEBUG(_logging_, "unixtime        = " << hit_data_.unix_time);
 
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
   } // namespace io

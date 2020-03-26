@@ -140,7 +140,7 @@ namespace snfee {
 
       /// Waveform samples parsing for one SAMLONG channel
       void _parse_waveform_(
-        const std::string& samples_line_,
+        const std::string& data_line_,
         const uint16_t channel_index_,
         snfee::data::calo_hit_record::waveforms_record& waveforms_);
 

@@ -22,7 +22,7 @@ namespace snfee {
     class rhd_record {
     public:
       /// Constructor
-      rhd_record();
+      rhd_record() = default;
 
       /// Constructor from a trigger record
       rhd_record(const std::shared_ptr<snfee::data::trigger_record>& trig_rec_);

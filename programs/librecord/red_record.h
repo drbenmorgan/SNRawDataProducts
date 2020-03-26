@@ -11,8 +11,8 @@
 #include <memory>
 
 // This project:
-#include <snfee/data/raw_event_data.h>
 #include "rtd_record.h"
+#include <snfee/data/raw_event_data.h>
 
 namespace snfee {
   namespace io {
@@ -20,8 +20,6 @@ namespace snfee {
     /// \brief RED record wrapper for raw event data object
     class red_record {
     public:
-      red_record();
-
       void make_record(const int32_t run_id_,
                        const int32_t event_id_,
                        const snfee::data::timestamp& reference_time_);

@@ -124,7 +124,7 @@ main(int argc_, char** argv_)
     po::notify(vm);
 
     // Use command line arguments :
-    if (vm.count("help")) {
+    if (vm.count("help") != 0U) {
       std::cout
         << "snfee-rhd2rtd : "
         << "Merge raw hit data file (RHD) into raw trigger data file (RTD)"
@@ -167,20 +167,20 @@ main(int argc_, char** argv_)
     }
 
     // Use command line arguments :
-    if (vm.count("help-config")) {
+    if (vm.count("help-config") != 0U) {
       snfee::rtdb::builder_config::print_documentation(std::cout);
       return (-1);
     }
 
     // Use command line arguments :
-    if (vm.count("skel-config")) {
+    if (vm.count("skel-config") != 0U) {
       snfee::rtdb::builder_config::print_skel_config(
         std::cout, app_params.skel_run_id, app_params.skel_nb_crates);
       return (-1);
     }
 
     // Use command line arguments :
-    if (vm.count("logging")) {
+    if (vm.count("logging") != 0U) {
       std::string logging_repr = vm["logging"].as<std::string>();
       // DT_LOG_DEBUG(datatools::logger::PRIO_DEBUG, "Logging repr. = '" <<
       // logging_repr << "'");

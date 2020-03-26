@@ -8,7 +8,6 @@ namespace snfee {
     input_worker::stop()
     {
       _stop_request_ = true;
-      return;
     }
 
     bool
@@ -25,7 +24,6 @@ namespace snfee {
         _preader_.reset();
       }
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
     input_worker::input_worker(
@@ -68,12 +66,12 @@ namespace snfee {
         }
       }
       // Add any explicit filenames:
-      for (int ifile = 0; ifile < (int)iconfig_.filenames.size(); ifile++) {
-        reader_config.filenames.push_back(iconfig_.filenames[ifile]);
+      for (const auto& filename : iconfig_.filenames) {
+        reader_config.filenames.push_back(filename);
       }
-      _preader_.reset(new snfee::io::multifile_data_reader(reader_config));
+      _preader_ =
+        std::make_shared<snfee::io::multifile_data_reader>(reader_config);
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
     void
@@ -88,7 +86,6 @@ namespace snfee {
       out << "`-- Stop   : " << std::boolalpha << _stop_request_ << std::endl;
       out << std::endl;
       out_ << out.str();
-      return;
     }
 
     std::size_t
@@ -195,7 +192,6 @@ namespace snfee {
       } // end of run loop
       DT_LOG_NOTICE(_logging_, "Input worker [" << _id_ << "] run is stopped.");
       DT_LOG_TRACE_EXITING(_logging_);
-      return;
     }
 
   } // namespace redb

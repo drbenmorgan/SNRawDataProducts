@@ -15,7 +15,6 @@ namespace snfee {
       pos2 = pos2_;
       tid1 = tid1_;
       tid2 = tid2_;
-      return;
     }
 
     int
@@ -32,7 +31,6 @@ namespace snfee {
         set_logging(datatools::logger::PRIO_DEBUG);
       _buffer_size_ = buffer_size_;
       _init_();
-      return;
     }
 
     datatools::logger::priority
@@ -46,7 +44,6 @@ namespace snfee {
       const datatools::logger::priority p_)
     {
       _logging_ = p_;
-      return;
     }
 
     int
@@ -66,7 +63,6 @@ namespace snfee {
     {
       _hdistances_ = snfee::tools::histogram_int(0, 5000, 100);
       _max_inversion_distance_ = -1;
-      return;
     }
 
     const snfee::tools::histogram_int&
@@ -110,7 +106,6 @@ namespace snfee {
           _first_positions_.erase(_first_positions_.begin());
         }
       }
-      return;
     }
 
   } // namespace io

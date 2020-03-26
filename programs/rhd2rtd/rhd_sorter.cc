@@ -60,23 +60,15 @@ namespace snfee {
       std::size_t output_trigger_counter = 0;
       int32_t max_output_trigger_id = -1;
       int32_t current_trigger_id = -1;
-      //std::unique_ptr<raw_record_flow_statistics> stats;
+      // std::unique_ptr<raw_record_flow_statistics> stats;
       std::string report_filename;
 
       void dump_buffer(std::ostream& out_) const;
     };
 
-    rhd_sorter::rhd_sorter()
-    {
-      _pimpl_.reset(new pimpl_type);
-      return;
-    }
+    rhd_sorter::rhd_sorter() { _pimpl_.reset(new pimpl_type); }
 
-    rhd_sorter::~rhd_sorter()
-    {
-      _pimpl_.reset();
-      return;
-    }
+    rhd_sorter::~rhd_sorter() { _pimpl_.reset(); }
 
     datatools::logger::priority
     rhd_sorter::get_logging() const
@@ -88,7 +80,6 @@ namespace snfee {
     rhd_sorter::set_logging(const datatools::logger::priority p_)
     {
       _logging_ = p_;
-      return;
     }
 
     void
@@ -97,7 +88,6 @@ namespace snfee {
       DT_THROW_IF(
         is_initialized(), std::logic_error, "Sorter is already initialized!");
       _config_ = cfg_;
-      return;
     }
 
     bool
@@ -187,9 +177,8 @@ namespace snfee {
         }
       }
       // Add any explicit RHD input filenames:
-      for (int ifile = 0; ifile < (int)_config_.input_rhd_filenames.size();
-           ifile++) {
-        reader_cfg.filenames.push_back(_config_.input_rhd_filenames[ifile]);
+      for (const auto& input_rhd_filename : _config_.input_rhd_filenames) {
+        reader_cfg.filenames.push_back(input_rhd_filename);
       }
       _pimpl_->reader.reset(new multifile_data_reader(reader_cfg));
 
@@ -233,9 +222,8 @@ namespace snfee {
           }
         }
         // Add any explicit RHD output filenames:
-        for (int ifile = 0; ifile < (int)_config_.output_rhd_filenames.size();
-             ifile++) {
-          writer_cfg.filenames.push_back(_config_.output_rhd_filenames[ifile]);
+        for (const auto& output_rhd_filename : _config_.output_rhd_filenames) {
+          writer_cfg.filenames.push_back(output_rhd_filename);
         }
         _pimpl_->writer.reset(new multifile_data_writer(writer_cfg));
       }
@@ -244,7 +232,6 @@ namespace snfee {
       _pimpl_->cbuffer.set_capacity(_config_.sort_buffer_size);
 
       _initialized_ = true;
-      return;
     }
 
     void
@@ -281,7 +268,7 @@ namespace snfee {
           _pimpl_->output_trigger_counter++;
         }
       }
-      if (_config_.log_modulo) {
+      if (_config_.log_modulo != 0U) {
         if ((_pimpl_->output_hit_counter % _config_.log_modulo) == 0) {
           std::clog << "#sorted hits=" << _pimpl_->output_hit_counter << "\n";
           std::clog << "#sorted triggers=" << _pimpl_->output_trigger_counter
@@ -299,25 +286,24 @@ namespace snfee {
         }
         if (typeid(*ph_.get()) == typeid(snfee::data::calo_hit_record)) {
 
-          const snfee::data::calo_hit_record& new_calo_hit =
+          const auto& new_calo_hit =
             dynamic_cast<const snfee::data::calo_hit_record&>(*ph_.get());
           _pimpl_->writer->store(new_calo_hit);
 
         } else if (typeid(*ph_.get()) ==
                    typeid(snfee::data::tracker_hit_record)) {
 
-          const snfee::data::tracker_hit_record& new_tracker_hit =
+          const auto& new_tracker_hit =
             dynamic_cast<const snfee::data::tracker_hit_record&>(*ph_.get());
           _pimpl_->writer->store(new_tracker_hit);
 
         } else if (typeid(*ph_.get()) == typeid(snfee::data::trigger_record)) {
 
-          const snfee::data::trigger_record& new_trigger_rec =
+          auto& new_trigger_rec =
             dynamic_cast<const snfee::data::trigger_record&>(*ph_.get());
           _pimpl_->writer->store(new_trigger_rec);
         }
       }
-      return;
     }
 
     void
@@ -343,14 +329,13 @@ namespace snfee {
                      "Pop record with trigger ID=[" << prec->get_trigger_id()
                                                     << "]");
       }
-      if (_config_.log_modulo) {
+      if (_config_.log_modulo != 0U) {
         if ((_pimpl_->output_hit_counter % _config_.log_modulo) == 0) {
           std::clog << "#sorted hits=" << _pimpl_->output_hit_counter << "\n";
           std::clog << "#sorted triggers=" << _pimpl_->output_trigger_counter
                     << "\n";
         }
       }
-      return;
     }
 
     void
@@ -370,7 +355,7 @@ namespace snfee {
         } else {
           ph_->invalidate();
         }
-        snfee::data::calo_hit_record& new_calo_hit =
+        auto& new_calo_hit =
           dynamic_cast<snfee::data::calo_hit_record&>(*ph_.get());
         _pimpl_->reader->load(new_calo_hit);
       } else if (_pimpl_->reader->record_tag_is(
@@ -381,7 +366,7 @@ namespace snfee {
         } else {
           ph_->invalidate();
         }
-        snfee::data::tracker_hit_record& new_tracker_hit =
+        auto& new_tracker_hit =
           dynamic_cast<snfee::data::tracker_hit_record&>(*ph_.get());
         _pimpl_->reader->load(new_tracker_hit);
       } else if (_pimpl_->reader->record_tag_is(
@@ -392,16 +377,11 @@ namespace snfee {
           ph_->invalidate();
         }
         ph_ = std::make_shared<snfee::data::trigger_record>();
-        snfee::data::trigger_record& new_trigger_rec =
+        auto& new_trigger_rec =
           dynamic_cast<snfee::data::trigger_record&>(*ph_.get());
         _pimpl_->reader->load(new_trigger_rec);
       }
       _pimpl_->input_hit_counter++;
-      //if (_pimpl_->mode == MODE_EVALUATION) {
-      //  _pimpl_->stats->add(_pimpl_->input_hit_counter, ph_->get_trigger_id());
-      //}
-
-      return;
     }
 
     void
@@ -414,14 +394,14 @@ namespace snfee {
            << "Hit num." << ' ' << std::setw(8) << "Trig. ID" << ' '
            << std::endl;
       int cnt = 0;
-      for (auto ph : this->cbuffer) {
+      for (const auto& ph : this->cbuffer) {
         int pos = this->input_hit_counter - (this->cbuffer.size() - cnt);
         out_ << "|   " << std::setw(8) << pos << ' ' << std::setw(8)
              << ph->get_hit_num() << ' ' << std::setw(8) << ph->get_trigger_id()
              << ' ' << std::endl;
         cnt++;
       }
-      if (this->cbuffer.size()) {
+      if (!this->cbuffer.empty()) {
         out_ << "|-- Front : " << this->cbuffer.front()->get_hit_num()
              << std::endl;
         out_ << "|-- Back  : " << this->cbuffer.back()->get_hit_num()
@@ -431,7 +411,6 @@ namespace snfee {
            << std::endl;
       out_ << "`-- Full  : " << std::boolalpha << this->cbuffer.full()
            << std::endl;
-      return;
     }
 
     void
@@ -475,7 +454,6 @@ namespace snfee {
           _pimpl_->dump_buffer(std::cerr);
         }
       }
-      return;
     }
 
     void
@@ -504,9 +482,6 @@ namespace snfee {
                       "Cannot open evaluation report file '" << fn << "'!");
           freport << "#@evaluation_buffer_size="
                   << _config_.evaluation_buffer_size << std::endl;
-          //freport << "#@max_inversion_distance="
-          //        << _pimpl_->stats->get_max_inversion_distance() << std::endl;
-          //_pimpl_->stats->get_histogram_inversions().save(freport);
           freport.close();
         }
       }
@@ -531,7 +506,6 @@ namespace snfee {
           freport.close();
         }
       }
-      return;
     }
 
     void
@@ -546,7 +520,6 @@ namespace snfee {
       if (_pimpl_->reader) {
         _pimpl_->reader.reset();
       }
-      return;
     }
 
   } // namespace io

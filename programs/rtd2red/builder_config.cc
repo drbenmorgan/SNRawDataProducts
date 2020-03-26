@@ -33,15 +33,10 @@ namespace snfee {
       return "";
     }
 
-    builder_config::builder_config() { return; }
-
-    builder_config::~builder_config() { return; }
-
     void
     builder_config::set_run_id(const int32_t rid_)
     {
       run_id = rid_;
-      return;
     }
 
     int32_t
@@ -53,7 +48,7 @@ namespace snfee {
     bool
     builder_config::has_output_config() const
     {
-      return !output_config.filenames.size();
+      return !output_config.filenames.empty();
     }
 
     void
@@ -71,7 +66,6 @@ namespace snfee {
       oc.filenames = filepaths_;
       oc.format = format_;
       output_config = oc;
-      return;
     }
 
     const builder_config::output_config_type&
@@ -83,7 +77,7 @@ namespace snfee {
     bool
     builder_config::has_input_config() const
     {
-      return !input_config.filenames.size();
+      return !input_config.filenames.empty();
     }
 
     const builder_config::input_config_type&
@@ -102,7 +96,6 @@ namespace snfee {
       ic.filenames = filepaths_;
       ic.format = format_;
       input_config = ic;
-      return;
     }
 
     void
@@ -115,7 +108,6 @@ namespace snfee {
       ic.listname = listpath_;
       ic.format = format_;
       input_config = ic;
-      return;
     }
 
     // virtual
@@ -128,7 +120,7 @@ namespace snfee {
       popts.configure_from(options_);
 
       std::ostringstream outs;
-      if (popts.title.length()) {
+      if (popts.title.length() != 0U) {
         outs << popts.indent << popts.title << std::endl;
       }
 
@@ -201,7 +193,6 @@ namespace snfee {
            << "RTD buffer capacity : " << rtd_buffer_capacity << std::endl;
 
       out_ << outs.str();
-      return;
     }
 
     void
@@ -217,7 +208,6 @@ namespace snfee {
         output_config_type empty;
         output_config = empty;
       }
-      return;
     }
 
     void
@@ -226,14 +216,13 @@ namespace snfee {
       DT_THROW_IF(cfg_.run_id == snfee::data::INVALID_RUN_ID,
                   std::logic_error,
                   "Missing run ID!");
-      DT_THROW_IF(cfg_.input_config.filenames.size() == 0 and
+      DT_THROW_IF(cfg_.input_config.filenames.empty() and
                     cfg_.input_config.listname.empty(),
                   std::logic_error,
                   "Missing RTD input files!");
-      DT_THROW_IF(cfg_.input_config.filenames.size() == 0,
+      DT_THROW_IF(cfg_.input_config.filenames.empty(),
                   std::logic_error,
                   "Missing RED output files!");
-      return;
     }
 
     void
@@ -331,8 +320,6 @@ namespace snfee {
         cfg_.rtd_buffer_capacity =
           redb_config.fetch_positive_integer("rtd_buffer_capacity");
       }
-
-      return;
     }
 
     /// Print skeleton configuration
@@ -409,7 +396,6 @@ namespace snfee {
               "       \n";
       out_ << "# end.";
       ;
-      return;
     }
 
     /// Print documentation
@@ -550,7 +536,6 @@ namespace snfee {
               "          \n"
               "                                                                "
               "          \n";
-      return;
     }
 
   } // namespace redb
