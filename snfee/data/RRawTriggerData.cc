@@ -94,7 +94,7 @@ namespace snfee {
       base_print_options popts;
       popts.configure_from(options_);
 
-      if (popts.title.length()) {
+      if (popts.title.length() != 0U) {
         out_ << popts.indent << popts.title << std::endl;
       }
 

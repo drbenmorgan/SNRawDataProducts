@@ -42,12 +42,6 @@ namespace snfee {
     class raw_trigger_data : public datatools::i_tree_dumpable,
                              public datatools::i_serializable {
     public:
-      /// Default constructor
-      raw_trigger_data();
-
-      /// Destructor
-      virtual ~raw_trigger_data();
-
       /// Check if the record is complete
       bool is_complete() const;
 

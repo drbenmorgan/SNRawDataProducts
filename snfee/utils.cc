@@ -10,30 +10,30 @@ namespace snfee {
   none_label()
   {
     static std::unique_ptr<std::string> _label;
-    if (_label.get() == nullptr) {
+    if (_label) {
       _label.reset(new std::string("<none>"));
     }
-    return *_label.get();
+    return *_label;
   }
 
   const std::string&
   invalid_label()
   {
     static std::unique_ptr<std::string> _label;
-    if (_label.get() == nullptr) {
+    if (_label) {
       _label.reset(new std::string("<invalid>"));
     }
-    return *_label.get();
+    return *_label;
   }
 
   const datatools::properties&
   empty_config()
   {
     static std::unique_ptr<datatools::properties> _empty_config;
-    if (_empty_config.get() == nullptr) {
+    if (_empty_config) {
       _empty_config.reset(new datatools::properties);
     }
-    return *_empty_config.get();
+    return *_empty_config;
   }
 
 } // namespace snfee

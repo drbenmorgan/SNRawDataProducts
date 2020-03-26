@@ -28,7 +28,7 @@ namespace snfee {
       };
 
       //! Default constructor
-      multifile_data_reader(const config_type&);
+      multifile_data_reader(config_type conf);
 
       //! Destructor
       virtual ~multifile_data_reader();
@@ -52,7 +52,6 @@ namespace snfee {
       {
         _reader_().load(data_);
         _at_load_();
-        return;
       }
 
       /// Force termination of the reader

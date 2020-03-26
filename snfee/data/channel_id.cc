@@ -11,14 +11,13 @@ namespace snfee {
     // DATATOOLS_SERIALIZATION_SERIAL_TAG_IMPLEMENTATION(channel_id,
     // "snfee::data::channel_id")
 
-    channel_id::channel_id() { return; }
+    channel_id::channel_id() = default;
 
     channel_id::channel_id(const int16_t crate_num_,
                            const int16_t board_num_,
                            const int16_t channel_num_)
     {
       this->set(DEFAULT_MODULE_NUMBER, crate_num_, board_num_, channel_num_);
-      return;
     }
 
     channel_id::channel_id(const int16_t module_num_,
@@ -27,22 +26,25 @@ namespace snfee {
                            const int16_t channel_num_)
     {
       this->set(module_num_, crate_num_, board_num_, channel_num_);
-      return;
     }
 
-    channel_id::~channel_id() { return; }
+    channel_id::~channel_id() = default;
 
     bool
     channel_id::is_complete() const
     {
-      if (_module_number_ == INVALID_NUMBER)
+      if (_module_number_ == INVALID_NUMBER) {
         return false;
-      if (_crate_number_ == INVALID_NUMBER)
+      }
+      if (_crate_number_ == INVALID_NUMBER) {
         return false;
-      if (_board_number_ == INVALID_NUMBER)
+      }
+      if (_board_number_ == INVALID_NUMBER) {
         return false;
-      if (_channel_number_ == INVALID_NUMBER)
+      }
+      if (_channel_number_ == INVALID_NUMBER) {
         return false;
+      }
       return true;
     }
 
@@ -53,7 +55,6 @@ namespace snfee {
       _crate_number_ = INVALID_NUMBER;
       _board_number_ = INVALID_NUMBER;
       _channel_number_ = INVALID_NUMBER;
-      return;
     }
 
     void
@@ -70,7 +71,6 @@ namespace snfee {
         (board_num_ <= INVALID_NUMBER ? INVALID_NUMBER : board_num_);
       _channel_number_ =
         (channel_num_ <= INVALID_NUMBER ? INVALID_NUMBER : channel_num_);
-      return;
     }
 
     int16_t
@@ -105,7 +105,7 @@ namespace snfee {
       base_print_options popts;
       popts.configure_from(options_);
 
-      if (popts.title.length()) {
+      if (popts.title.length() != 0U) {
         out_ << popts.indent << popts.title << std::endl;
       }
 
@@ -123,28 +123,33 @@ namespace snfee {
 
       out_ << popts.indent << inherit_tag(popts.inherit) << "Channel : ["
            << _channel_number_ << "]" << std::endl;
-
-      return;
     }
 
     // friend
     bool
     operator<(const channel_id& id0_, const channel_id& id1_)
     {
-      if (id0_._module_number_ < id1_._module_number_)
+      if (id0_._module_number_ < id1_._module_number_) {
         return true;
-      if (id0_._module_number_ > id1_._module_number_)
+      }
+      if (id0_._module_number_ > id1_._module_number_) {
         return false;
-      if (id0_._crate_number_ < id1_._crate_number_)
+      }
+      if (id0_._crate_number_ < id1_._crate_number_) {
         return true;
-      if (id0_._crate_number_ > id1_._crate_number_)
+      }
+      if (id0_._crate_number_ > id1_._crate_number_) {
         return false;
-      if (id0_._board_number_ < id1_._board_number_)
+      }
+      if (id0_._board_number_ < id1_._board_number_) {
         return true;
-      if (id0_._board_number_ > id1_._board_number_)
+      }
+      if (id0_._board_number_ > id1_._board_number_) {
         return false;
-      if (id0_._channel_number_ < id1_._channel_number_)
+      }
+      if (id0_._channel_number_ < id1_._channel_number_) {
         return true;
+      }
       return false;
     }
 
@@ -152,10 +157,12 @@ namespace snfee {
     bool
     operator>(const channel_id& id0_, const channel_id& id1_)
     {
-      if (id0_ == id1_)
+      if (id0_ == id1_) {
         return false;
-      if (id0_ < id1_)
+      }
+      if (id0_ < id1_) {
         return false;
+      }
       return true;
     }
 
@@ -163,14 +170,18 @@ namespace snfee {
     bool
     operator==(const channel_id& id0_, const channel_id& id1_)
     {
-      if (id0_._module_number_ != id1_._module_number_)
+      if (id0_._module_number_ != id1_._module_number_) {
         return false;
-      if (id0_._crate_number_ != id1_._crate_number_)
+      }
+      if (id0_._crate_number_ != id1_._crate_number_) {
         return false;
-      if (id0_._board_number_ != id1_._board_number_)
+      }
+      if (id0_._board_number_ != id1_._board_number_) {
         return false;
-      if (id0_._channel_number_ != id1_._channel_number_)
+      }
+      if (id0_._channel_number_ != id1_._channel_number_) {
         return false;
+      }
       return true;
     }
 

@@ -14,8 +14,6 @@ namespace snfee {
 
     DATATOOLS_SERIALIZATION_IMPLEMENTATION(run_info, "snfee::data::run_info")
 
-    run_info::run_info() { return; }
-
     bool
     run_info::has_run_id() const
     {
@@ -32,7 +30,6 @@ namespace snfee {
     run_info::set_run_id(const int32_t run_id_)
     {
       _run_id_ = run_id_ < INVALID_RUN_ID ? INVALID_RUN_ID : run_id_;
-      return;
     }
 
     bool
@@ -45,7 +42,6 @@ namespace snfee {
     run_info::set_run_start_time(const boost::posix_time::ptime& t_)
     {
       _run_start_time_ = t_;
-      return;
     }
 
     const boost::posix_time::ptime&
@@ -64,7 +60,6 @@ namespace snfee {
     run_info::set_run_stop_time(const boost::posix_time::ptime& t_)
     {
       _run_stop_time_ = t_;
-      return;
     }
 
     const boost::posix_time::ptime&
@@ -89,7 +84,6 @@ namespace snfee {
     run_info::set_run_category(const std::string& cat_)
     {
       _run_category_ = boost::trim_copy(cat_);
-      return;
     }
 
     bool
@@ -108,7 +102,6 @@ namespace snfee {
     run_info::set_run_subcategory(const std::string& cat_)
     {
       _run_subcategory_ = boost::trim_copy(cat_);
-      return;
     }
 
     bool
@@ -131,7 +124,6 @@ namespace snfee {
       _run_stop_time_ = boost::posix_time::not_a_date_time;
       _run_category_.clear();
       _run_subcategory_.clear();
-      return;
     }
 
     // virtual
@@ -142,7 +134,7 @@ namespace snfee {
       base_print_options popts;
       popts.configure_from(options_);
 
-      if (popts.title.length()) {
+      if (popts.title.length() != 0U) {
         out_ << popts.indent << popts.title << std::endl;
       }
 
@@ -174,8 +166,6 @@ namespace snfee {
       out_ << popts.indent << inherit_tag(popts.inherit)
            << "Complete         : " << std::boolalpha << is_complete()
            << std::endl;
-
-      return;
     }
 
   } // namespace data

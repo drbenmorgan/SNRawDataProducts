@@ -60,12 +60,6 @@ namespace snfee {
       };
       static std::string trigger_mode_label(const trigger_mode_type);
 
-      /// Default constructor
-      trigger_record();
-
-      /// Destructor
-      virtual ~trigger_record();
-
       /// Check if the record is complete
       bool is_complete() const;
 
@@ -80,9 +74,9 @@ namespace snfee {
       /// poptions.put("indent", ">>> ");
       /// myTrigRec.print_tree(std::clog, poptions);
       /// \endcode
-      virtual void print_tree(
-        std::ostream& out_ = std::clog,
-        const boost::property_tree::ptree& options_ = empty_options()) const;
+      virtual void print_tree(std::ostream& out_ = std::clog,
+                              const boost::property_tree::ptree& options_ =
+                                empty_options()) const override;
 
       /// Set the hit ID
       void set_hit_num(const int32_t);

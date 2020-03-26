@@ -15,10 +15,6 @@ namespace snfee {
     DATATOOLS_SERIALIZATION_IMPLEMENTATION(raw_event_data,
                                            "snfee::data::raw_event_data")
 
-    raw_event_data::raw_event_data() { return; }
-
-    raw_event_data::~raw_event_data() { return; }
-
     bool
     raw_event_data::is_complete() const
     {
@@ -31,7 +27,7 @@ namespace snfee {
       if (!has_reference_time()) {
         return false;
       }
-      if (_rtd_pack_.size() == 0) {
+      if (_rtd_pack_.empty()) {
         return false;
       }
       return true;
@@ -44,7 +40,6 @@ namespace snfee {
       _event_id_ = INVALID_EVENT_ID;
       _reference_time_.invalidate();
       _rtd_pack_.clear();
-      return;
     }
 
     bool
@@ -63,7 +58,6 @@ namespace snfee {
     raw_event_data::set_run_id(const int32_t rid_)
     {
       _run_id_ = rid_;
-      return;
     }
 
     bool
@@ -82,7 +76,6 @@ namespace snfee {
     raw_event_data::set_event_id(const int32_t tid_)
     {
       _event_id_ = tid_;
-      return;
     }
 
     bool
@@ -101,7 +94,6 @@ namespace snfee {
     raw_event_data::set_reference_time(const timestamp& ref_time_)
     {
       _reference_time_ = ref_time_;
-      return;
     }
 
     void
@@ -111,7 +103,7 @@ namespace snfee {
       DT_THROW_IF(!time_shift_.is_valid(),
                   std::logic_error,
                   "Invalid time shift " << time_shift_ << " for RTD record!");
-      if (_rtd_pack_.size()) {
+      if (!_rtd_pack_.empty()) {
         if (time_shift_ < _rtd_pack_.back().time_shift) {
           DT_THROW(std::logic_error,
                    "Invalid time ordering (" << time_shift_ << "<"
@@ -123,7 +115,6 @@ namespace snfee {
       _rtd_pack_.push_back(dummy);
       _rtd_pack_.back().time_shift = time_shift_;
       _rtd_pack_.back().rtd = rtd_ptr_;
-      return;
     }
 
     std::size_t
@@ -143,7 +134,6 @@ namespace snfee {
       const auto& found = _rtd_pack_[index_];
       time_shift_ = found.time_shift;
       rtd_ptr_ = found.rtd;
-      return;
     }
 
     // virtual
@@ -155,7 +145,7 @@ namespace snfee {
       base_print_options popts;
       popts.configure_from(options_);
 
-      if (popts.title.length()) {
+      if (popts.title.length() != 0U) {
         out_ << popts.indent << popts.title << std::endl;
 
         out_ << popts.indent << tag << "Run ID : " << _run_id_ << std::endl;
@@ -191,7 +181,6 @@ namespace snfee {
       out_ << popts.indent << inherit_tag(popts.inherit)
            << "Complete : " << std::boolalpha << is_complete() << std::endl;
 
-      return;
     }
 
   } // namespace data

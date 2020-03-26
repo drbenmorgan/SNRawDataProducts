@@ -130,7 +130,8 @@ namespace snfee {
     };
 
     /// Return the label associated to a firmware category
-    std::string firmware_category_label(const firmware_category_type cat_);
+    std::string firmware_category_label(const firmware_category_type category_);
+
 
     /// Return the firmware category associated to a label
     firmware_category_type firmware_category_from(const std::string&);

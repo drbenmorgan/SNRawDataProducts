@@ -37,24 +37,24 @@ namespace snfee {
       return std::string("");
     }
 
-    trigger_record::trigger_record() { return; }
-
-    trigger_record::~trigger_record() { return; }
-
     bool
     trigger_record::is_complete() const
     {
-      if (_hit_num_ == INVALID_NUMBER)
+      if (_hit_num_ == INVALID_NUMBER) {
         return false;
-      if (_trigger_id_ == INVALID_TRIGGER_ID)
+      }
+      if (_trigger_id_ == INVALID_TRIGGER_ID) {
         return false;
-      if (_trigger_mode_ == TRIGGER_MODE_INVALID)
+      }
+      if (_trigger_mode_ == TRIGGER_MODE_INVALID) {
         return false;
+      }
       // if (_l2_clocktick_1600ns_ == 0) return false;
       if (_trigger_mode_ == TRIGGER_MODE_APE or
           _trigger_mode_ == TRIGGER_MODE_DAVE) {
-        if (_progenitor_trigger_id_ <= TRIGGER_MODE_INVALID)
+        if (_progenitor_trigger_id_ <= TRIGGER_MODE_INVALID) {
           return false;
+        }
       }
       return true;
     }
@@ -68,7 +68,7 @@ namespace snfee {
       base_print_options popts;
       popts.configure_from(options_);
 
-      if (popts.title.length()) {
+      if (popts.title.length() != 0U) {
         out_ << popts.indent << popts.title << std::endl;
       }
 
@@ -89,15 +89,12 @@ namespace snfee {
 
       out_ << popts.indent << inherit_tag(popts.inherit)
            << "Complete : " << std::boolalpha << is_complete() << std::endl;
-
-      return;
     }
 
     void
     trigger_record::set_hit_num(const int32_t hit_num_)
     {
       _hit_num_ = hit_num_;
-      return;
     }
 
     int32_t
@@ -117,7 +114,6 @@ namespace snfee {
       } else {
         _trigger_id_ = tid_;
       }
-      return;
     }
 
     int32_t
@@ -143,7 +139,6 @@ namespace snfee {
       } else {
         _progenitor_trigger_id_ = ptid_;
       }
-      return;
     }
 
     bool
@@ -162,7 +157,6 @@ namespace snfee {
     trigger_record::set_l2_clocktick_1600ns(const uint32_t l2_clocktick_1600ns_)
     {
       _l2_clocktick_1600ns_ = l2_clocktick_1600ns_;
-      return;
     }
 
     uint32_t
@@ -200,7 +194,6 @@ namespace snfee {
                   "Invalid trigger ID [" << trigger_id_ << "]!");
       set_trigger_id(trigger_id_);
       _trigger_mode_ = trigger_mode_;
-      return;
     }
 
     void
@@ -211,8 +204,6 @@ namespace snfee {
       _trigger_mode_ = TRIGGER_MODE_INVALID;
       _l2_clocktick_1600ns_ = INVALID_CLOCKTICK;
       _progenitor_trigger_id_ = INVALID_TRIGGER_ID;
-
-      return;
     }
 
   } // namespace data

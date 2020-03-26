@@ -43,12 +43,6 @@ namespace snfee {
                                public datatools::i_serializable,
                                public raw_record_interface {
     public:
-      /// Default constructor
-      tracker_hit_record();
-
-      /// Destructor
-      virtual ~tracker_hit_record();
-
       /// Check if the record is complete
       bool is_complete() const;
 

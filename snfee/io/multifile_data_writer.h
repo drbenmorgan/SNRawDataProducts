@@ -35,7 +35,7 @@ namespace snfee {
       };
 
       //! Default constructor
-      multifile_data_writer(const config_type& config_params_,
+      multifile_data_writer(config_type conf,
                             const datatools::logger::priority logging_ =
                               datatools::logger::PRIO_FATAL);
 
@@ -70,7 +70,6 @@ namespace snfee {
           _writer_().store(data_);
           _post_store_();
         }
-        return;
       }
 
     private:

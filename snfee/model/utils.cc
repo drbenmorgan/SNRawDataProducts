@@ -62,12 +62,15 @@ namespace snfee {
     access_type
     access_from(const std::string& label_)
     {
-      if (label_ == access_label(ACCESS_READ))
+      if (label_ == access_label(ACCESS_READ)) {
         return ACCESS_READ;
-      if (label_ == access_label(ACCESS_WRITE))
+      }
+      if (label_ == access_label(ACCESS_WRITE)) {
         return ACCESS_WRITE;
-      if (label_ == access_label(ACCESS_RW))
+      }
+      if (label_ == access_label(ACCESS_RW)) {
         return ACCESS_RW;
+      }
       return ACCESS_UNDEF;
     }
 
@@ -87,10 +90,12 @@ namespace snfee {
     usage_type
     usage_from(const std::string& label_)
     {
-      if (label_ == usage_label(USAGE_EXPERT))
+      if (label_ == usage_label(USAGE_EXPERT)) {
         return USAGE_EXPERT;
-      if (label_ == usage_label(USAGE_PRODUCTION))
+      }
+      if (label_ == usage_label(USAGE_PRODUCTION)) {
         return USAGE_PRODUCTION;
+      }
       return USAGE_UNDEF;
     }
 
@@ -114,14 +119,18 @@ namespace snfee {
     action_type
     action_from(const std::string& label_)
     {
-      if (label_ == action_label(ACTION_CONFIGURATION))
+      if (label_ == action_label(ACTION_CONFIGURATION)) {
         return ACTION_CONFIGURATION;
-      if (label_ == action_label(ACTION_DYNCONFIG))
+      }
+      if (label_ == action_label(ACTION_DYNCONFIG)) {
         return ACTION_DYNCONFIG;
-      if (label_ == action_label(ACTION_MEASUREMENT))
+      }
+      if (label_ == action_label(ACTION_MEASUREMENT)) {
         return ACTION_MEASUREMENT;
-      if (label_ == action_label(ACTION_DIAGNOSIS))
+      }
+      if (label_ == action_label(ACTION_DIAGNOSIS)) {
         return ACTION_DIAGNOSIS;
+      }
       return ACTION_UNDEF;
     }
 
@@ -143,12 +152,15 @@ namespace snfee {
     crate_model_type
     crate_model_from(const std::string& label_)
     {
-      if (label_ == crate_model_label(CRATE_CALORIMETER))
+      if (label_ == crate_model_label(CRATE_CALORIMETER)) {
         return CRATE_CALORIMETER;
-      if (label_ == crate_model_label(CRATE_TRACKER))
+      }
+      if (label_ == crate_model_label(CRATE_TRACKER)) {
         return CRATE_TRACKER;
-      if (label_ == crate_model_label(CRATE_COMMISSIONING))
+      }
+      if (label_ == crate_model_label(CRATE_COMMISSIONING)) {
         return CRATE_COMMISSIONING;
+      }
       return CRATE_UNDEF;
     }
 
@@ -172,15 +184,15 @@ namespace snfee {
     board_model_type
     board_model_from(const std::string& label_)
     {
-      if (label_ == board_model_label(BOARD_TB))
+      if (label_ == board_model_label(BOARD_TB)) {
         return BOARD_TB;
-      if (label_ == board_model_label(BOARD_CB))
+      }
+      if (label_ == board_model_label(BOARD_CB)) {
         return BOARD_CB;
-      if (label_ == board_model_label(BOARD_CFEB))
+      }
+      if (label_ == board_model_label(BOARD_CFEB)) {
         return BOARD_CFEB;
-      if (label_ == board_model_label(BOARD_TFEB))
-        return BOARD_TFEB;
-      return BOARD_UNDEF;
+      }
     }
 
     std::string
@@ -209,20 +221,27 @@ namespace snfee {
     firmware_category_type
     firmware_category_from(const std::string& label_)
     {
-      if (label_ == firmware_category_label(FWCAT_TB))
+      if (label_ == firmware_category_label(FWCAT_TB)) {
         return FWCAT_TB;
-      if (label_ == firmware_category_label(FWCAT_CB_CTRL))
+      }
+      if (label_ == firmware_category_label(FWCAT_CB_CTRL)) {
         return FWCAT_CB_CTRL;
-      if (label_ == firmware_category_label(FWCAT_CB_FE))
+      }
+      if (label_ == firmware_category_label(FWCAT_CB_FE)) {
         return FWCAT_CB_FE;
-      if (label_ == firmware_category_label(FWCAT_CFEB_CTRL))
+      }
+      if (label_ == firmware_category_label(FWCAT_CFEB_CTRL)) {
         return FWCAT_CFEB_CTRL;
-      if (label_ == firmware_category_label(FWCAT_CFEB_FE))
+      }
+      if (label_ == firmware_category_label(FWCAT_CFEB_FE)) {
         return FWCAT_CFEB_FE;
-      if (label_ == firmware_category_label(FWCAT_TFEB_CTRL))
+      }
+      if (label_ == firmware_category_label(FWCAT_TFEB_CTRL)) {
         return FWCAT_TFEB_CTRL;
-      if (label_ == firmware_category_label(FWCAT_TFEB_FE))
+      }
+      if (label_ == firmware_category_label(FWCAT_TFEB_FE)) {
         return FWCAT_TFEB_FE;
+      }
       return FWCAT_UNDEF;
     }
 
@@ -244,12 +263,15 @@ namespace snfee {
     fpga_model_type
     fpga_model_from(const std::string& label_)
     {
-      if (label_ == fpga_model_label(FPGA_CONTROL))
+      if (label_ == fpga_model_label(FPGA_CONTROL)) {
         return FPGA_CONTROL;
-      if (label_ == fpga_model_label(FPGA_FRONTEND))
+      }
+      if (label_ == fpga_model_label(FPGA_FRONTEND)) {
         return FPGA_FRONTEND;
-      if (label_ == fpga_model_label(FPGA_GENERIC))
+      }
+      if (label_ == fpga_model_label(FPGA_GENERIC)) {
         return FPGA_GENERIC;
+      }
       return FPGA_UNDEF;
     }
 
@@ -259,14 +281,8 @@ namespace snfee {
       DT_THROW_IF(base_ != 0 && base_ != 2 && base_ != 10 && base_ != 16,
                   std::logic_error,
                   "Base '" << base_ << "' is not supported!");
-      bool debug = false;
-      // debug = true;
-      if (debug)
-        std::cerr << "[debug] input word = '" << word_ << "'" << std::endl;
       std::string token = word_;
       boost::trim(token);
-      if (debug)
-        std::cerr << "[debug] token = '" << token << "'" << std::endl;
       if (!token.empty()) {
         if (token[0] == '-') {
           // Reject negative number:
@@ -290,12 +306,6 @@ namespace snfee {
       try {
         std::size_t sz = 0;
         unsigned long ul = std::stoul(token, &sz, base);
-        if (debug) {
-          std::cerr << "[debug]   sz = " << sz << std::endl;
-          std::cerr << "[debug]   ul = " << ul << std::endl;
-          std::cerr << "[debug] remaining = '" << token.substr(sz) << "'"
-                    << std::endl;
-        }
         if (sz != token.size()) {
           // Reject trailing chars:
           return false;
@@ -313,8 +323,9 @@ namespace snfee {
     {
       for (std::size_t i = 0; i < p_.size(); i++) {
         out_ << p_[i];
-        if (i + 1 < p_.size())
+        if (i + 1 < p_.size()) {
           out_ << '/';
+        }
       }
       return out_;
     }
@@ -344,7 +355,6 @@ namespace snfee {
       for (std::size_t i = 0; i < n_; i++) {
         trunc_path_.pop_back();
       }
-      return;
     }
 
     path_type

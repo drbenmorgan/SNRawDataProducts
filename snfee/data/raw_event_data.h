@@ -51,12 +51,6 @@ namespace snfee {
         BOOST_SERIALIZATION_BASIC_DECLARATION()
       };
 
-      /// Default constructor
-      raw_event_data();
-
-      /// Destructor
-      virtual ~raw_event_data();
-
       /// Check if the record is complete
       bool is_complete() const;
 

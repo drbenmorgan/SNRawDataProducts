@@ -14,7 +14,7 @@ namespace snfee {
 
     /// \brief Private implementation
     struct multifile_data_reader::pimpl_type {
-      pimpl_type(multifile_data_reader& master_) : master(master_) { return; }
+      pimpl_type(multifile_data_reader& master_) : master(master_) {}
       multifile_data_reader& master;
       std::unique_ptr<datatools::data_reader> reader;
       int _current_file_index_ = -1;
@@ -23,15 +23,14 @@ namespace snfee {
       void _destroy_reader_();
     };
 
-    multifile_data_reader::multifile_data_reader(const config_type& cfg_)
-      : _config_(cfg_)
+    multifile_data_reader::multifile_data_reader(config_type conf)
+      : _config_(std::move(conf))
     {
       _pimpl_.reset(new pimpl_type(*this));
-      DT_THROW_IF(_config_.filenames.size() == 0,
+      DT_THROW_IF(_config_.filenames.empty(),
                   std::logic_error,
                   "Missing input filenames for the multiple data reader!");
       _pimpl_->_next_reader_();
-      return;
     }
 
     // virtual
@@ -41,7 +40,6 @@ namespace snfee {
         _pimpl_->_destroy_reader_();
         _pimpl_.reset();
       }
-      return;
     }
 
     void
@@ -50,7 +48,6 @@ namespace snfee {
       if (reader) {
         reader.reset();
       }
-      return;
     }
 
     void
@@ -71,14 +68,12 @@ namespace snfee {
                     << in_filename << "'!");
       DT_THROW_IF(
         reader->is_error(), std::logic_error, "Multiple data reader error!");
-      return;
     }
 
     void
     multifile_data_reader::terminate()
     {
       _terminated_ = true;
-      return;
     }
 
     bool
@@ -93,17 +88,15 @@ namespace snfee {
           found_tag = true;
           // record_tag = _pimpl_->reader->get_record_tag();
           break;
-        } else {
-          if ((_pimpl_->_current_file_index_ + 1) ==
-              (int)_config_.filenames.size()) {
-            // No more input file:
-            break;
-          } else {
-            multifile_data_reader* mutable_this =
-              const_cast<multifile_data_reader*>(this);
-            mutable_this->_pimpl_->_next_reader_();
-          }
         }
+        if ((_pimpl_->_current_file_index_ + 1) ==
+            (int)_config_.filenames.size()) {
+          // No more input file:
+          break;
+        }
+
+        auto mutable_this = const_cast<multifile_data_reader*>(this);
+        mutable_this->_pimpl_->_next_reader_();
       }
       return found_tag;
     }
@@ -140,8 +133,9 @@ namespace snfee {
     bool
     multifile_data_reader::is_terminated() const
     {
-      if (_terminated_)
+      if (_terminated_) {
         return true;
+      }
       if ((_pimpl_->_current_file_index_) >= (int)_config_.filenames.size()) {
         return true;
       }
@@ -159,7 +153,6 @@ namespace snfee {
     multifile_data_reader::_at_load_()
     {
       _counter_++;
-      return;
     }
 
   } // namespace io

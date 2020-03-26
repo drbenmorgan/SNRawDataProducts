@@ -81,9 +81,9 @@ namespace snfee {
       /// poptions.put("indent", ">>> ");
       /// myCaloHitRec.print_tree(std::clog, poptions);
       /// \endcode
-      virtual void print_tree(
-        std::ostream& out_ = std::clog,
-        const boost::property_tree::ptree& options_ = empty_options()) const;
+      virtual void print_tree(std::ostream& out_ = std::clog,
+                              const boost::property_tree::ptree& options_ =
+                                empty_options()) const override;
 
       /// \brief Two channel ADC sample record for the SAMLONG ASIC
       struct two_channel_adc_record {

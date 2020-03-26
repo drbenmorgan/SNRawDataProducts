@@ -16,10 +16,6 @@ namespace snfee {
     DATATOOLS_SERIALIZATION_IMPLEMENTATION(raw_trigger_data,
                                            "snfee::data::raw_trigger_data")
 
-    raw_trigger_data::raw_trigger_data() { return; }
-
-    raw_trigger_data::~raw_trigger_data() { return; }
-
     bool
     raw_trigger_data::is_complete() const
     {
@@ -30,22 +26,18 @@ namespace snfee {
         return false;
       }
       if (_trig_ and !_trig_->is_complete()) {
-        // std::cerr << "[devel] trig issue !" << std::endl;
         return false;
       }
       if (_calo_hits_.size() + _tracker_hits_.size() == 0) {
-        // std::cerr << "[devel] hits issue !" << std::endl;
         return false;
       }
       for (const auto& chit : _calo_hits_) {
         if (chit and !chit->is_complete()) {
-          // std::cerr << "[devel] calo hit issue !" << std::endl;
           return false;
         }
       }
       for (const auto& thit : _tracker_hits_) {
         if (thit and !thit->is_complete()) {
-          // std::cerr << "[devel] tracker hit issue !" << std::endl;
           return false;
         }
       }
@@ -60,7 +52,6 @@ namespace snfee {
       _trig_.reset();
       _calo_hits_.clear();
       _tracker_hits_.clear();
-      return;
     }
 
     bool
@@ -79,7 +70,6 @@ namespace snfee {
     raw_trigger_data::set_run_id(const int32_t rid_)
     {
       _run_id_ = rid_;
-      return;
     }
 
     bool
@@ -98,7 +88,6 @@ namespace snfee {
     raw_trigger_data::set_trigger_id(const int32_t tid_)
     {
       _trigger_id_ = tid_;
-      return;
     }
 
     // virtual
@@ -110,7 +99,7 @@ namespace snfee {
       base_print_options popts;
       popts.configure_from(options_);
 
-      if (popts.title.length()) {
+      if (popts.title.length() != 0U ) {
         out_ << popts.indent << popts.title << std::endl;
 
         out_ << popts.indent << tag << "Run ID : " << _run_id_ << std::endl;
@@ -178,8 +167,6 @@ namespace snfee {
 
       out_ << popts.indent << inherit_tag(popts.inherit)
            << "Complete : " << std::boolalpha << is_complete() << std::endl;
-
-      return;
     }
 
     bool
@@ -205,7 +192,6 @@ namespace snfee {
                       << trig_->get_trigger_id() << "]!");
       }
       _trig_ = trig_;
-      return;
     }
 
     const const_trigger_record_ptr&
@@ -228,7 +214,6 @@ namespace snfee {
                   std::logic_error,
                   "Calo hit record is not complete!");
       _calo_hits_.push_back(chrp_);
-      return;
     }
 
     const std::vector<const_calo_hit_record_ptr>&
@@ -245,7 +230,6 @@ namespace snfee {
                   std::logic_error,
                   "Tracker hit record is not complete!");
       _tracker_hits_.push_back(thrp_);
-      return;
     }
 
     const std::vector<const_tracker_hit_record_ptr>&

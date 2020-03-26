@@ -27,9 +27,6 @@ namespace snfee {
     class run_info : public datatools::i_tree_dumpable,
                      public datatools::i_serializable {
     public:
-      /// Constructor
-      run_info();
-
       /// Check if the unique run ID is set
       bool has_run_id() const;
 

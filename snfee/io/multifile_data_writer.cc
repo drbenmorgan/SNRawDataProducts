@@ -14,7 +14,7 @@ namespace snfee {
 
     /// \brief Private implementation
     struct multifile_data_writer::pimpl_type {
-      pimpl_type(multifile_data_writer& master_) : master(master_) { return; }
+      pimpl_type(multifile_data_writer& master_) : master(master_) {}
       multifile_data_writer& master;
       std::unique_ptr<datatools::data_writer> writer;
       int current_file_index = -1;
@@ -33,29 +33,25 @@ namespace snfee {
     bool
     multifile_data_writer::is_last_file() const
     {
-      if ((_pimpl_->current_file_index + 1) == (int)_config_.filenames.size())
-        return true;
-      return false;
+      return ((_pimpl_->current_file_index + 1) == (int)_config_.filenames.size());
     }
 
     void
     multifile_data_writer::add_filename(const std::string& filename_)
     {
       _config_.filenames.push_back(filename_);
-      return;
     }
 
     multifile_data_writer::multifile_data_writer(
-      const config_type& cfg_,
+      config_type conf,
       const datatools::logger::priority logging_)
-      : _logging_(logging_), _config_(cfg_)
+      : _logging_(logging_), _config_(std::move(conf))
     {
       _pimpl_.reset(new pimpl_type(*this));
-      DT_THROW_IF(_config_.filenames.size() == 0,
+      DT_THROW_IF(_config_.filenames.empty(),
                   std::logic_error,
                   "Missing output filenames for the multiple data writer!");
       _pimpl_->_next_writer_();
-      return;
     }
 
     // virtual
@@ -65,7 +61,6 @@ namespace snfee {
         _pimpl_->_destroy_writer_();
         _pimpl_.reset();
       }
-      return;
     }
 
     void
@@ -74,7 +69,6 @@ namespace snfee {
       if (writer) {
         writer.reset();
       }
-      return;
     }
 
     void
@@ -112,14 +106,12 @@ namespace snfee {
                       << out_filename << "'!");
       }
       DT_LOG_TRACE_EXITING(master._logging_);
-      return;
     }
 
     void
     multifile_data_writer::terminate()
     {
       _terminated_ = true;
-      return;
     }
 
     std::size_t
@@ -131,8 +123,9 @@ namespace snfee {
     bool
     multifile_data_writer::is_terminated() const
     {
-      if (_terminated_)
+      if (_terminated_) {
         return true;
+      }
       if (_pimpl_->current_file_index >= (int)_config_.filenames.size()) {
         return true;
       }
@@ -164,7 +157,6 @@ namespace snfee {
         _pimpl_->_next_writer_();
         _pimpl_->_nrecords_in_file_ = 0;
       }
-      return;
     }
 
     void
@@ -177,7 +169,6 @@ namespace snfee {
           terminate();
         }
       }
-      return;
     }
 
   } // namespace io

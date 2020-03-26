@@ -19,10 +19,12 @@ namespace snfee {
     std::string
     tracker_hit_record::channel_category_label(const channel_category_type cc_)
     {
-      if (cc_ == CHANNEL_ANODE)
+      if (cc_ == CHANNEL_ANODE) {
         return std::string("anode");
-      if (cc_ == CHANNEL_CATHODE)
+      }
+      if (cc_ == CHANNEL_CATHODE) {
         return std::string("cathode");
+      }
       return std::string("");
     }
 
@@ -31,49 +33,60 @@ namespace snfee {
     tracker_hit_record::timestamp_category_label(
       const timestamp_category_type tc_)
     {
-      if (tc_ == TIMESTAMP_ANODE_R0)
+      if (tc_ == TIMESTAMP_ANODE_R0) {
         return std::string("R0");
-      if (tc_ == TIMESTAMP_ANODE_R1)
+      }
+      if (tc_ == TIMESTAMP_ANODE_R1) {
         return std::string("R1");
-      if (tc_ == TIMESTAMP_ANODE_R2)
+      }
+      if (tc_ == TIMESTAMP_ANODE_R2) {
         return std::string("R2");
-      if (tc_ == TIMESTAMP_ANODE_R3)
+      }
+      if (tc_ == TIMESTAMP_ANODE_R3) {
         return std::string("R3");
-      if (tc_ == TIMESTAMP_ANODE_R4)
+      }
+      if (tc_ == TIMESTAMP_ANODE_R4) {
         return std::string("R4");
-      if (tc_ == TIMESTAMP_CATHODE_R5)
+      }
+      if (tc_ == TIMESTAMP_CATHODE_R5) {
         return std::string("R5");
-      if (tc_ == TIMESTAMP_CATHODE_R6)
+      }
+      if (tc_ == TIMESTAMP_CATHODE_R6) {
         return std::string("R6");
+      }
       return std::string("");
     }
-
-    tracker_hit_record::tracker_hit_record() { return; }
-
-    tracker_hit_record::~tracker_hit_record() { return; }
 
     bool
     tracker_hit_record::is_complete() const
     {
-      if (_hit_num_ == INVALID_NUMBER)
+      if (_hit_num_ == INVALID_NUMBER) {
         return false;
-      if (_trigger_id_ == INVALID_TRIGGER_ID)
+      }
+      if (_trigger_id_ == INVALID_TRIGGER_ID) {
         return false;
-      // if (_module_num_ == INVALID_NUMBER_16) return false;
-      if (_crate_num_ == INVALID_NUMBER_16)
+      }
+      if (_crate_num_ == INVALID_NUMBER_16) {
         return false;
-      if (_board_num_ == INVALID_NUMBER_16)
+      }
+      if (_board_num_ == INVALID_NUMBER_16) {
         return false;
-      if (_chip_num_ == INVALID_NUMBER_16)
+      }
+      if (_chip_num_ == INVALID_NUMBER_16) {
         return false;
-      if (_channel_num_ == INVALID_NUMBER_16)
+      }
+      if (_channel_num_ == INVALID_NUMBER_16) {
         return false;
-      if (_channel_category_ == CHANNEL_UNDEF)
+      }
+      if (_channel_category_ == CHANNEL_UNDEF) {
         return false;
-      if (_timestamp_category_ == TIMESTAMP_UNDEF)
+      }
+      if (_timestamp_category_ == TIMESTAMP_UNDEF) {
         return false;
-      if (_timestamp_ == INVALID_TIMESTAMP)
+      }
+      if (_timestamp_ == INVALID_TIMESTAMP) {
         return false;
+      }
       return true;
     }
 
@@ -86,7 +99,7 @@ namespace snfee {
       base_print_options popts;
       popts.configure_from(options_);
 
-      if (popts.title.length()) {
+      if (popts.title.length() != 0U) {
         out_ << popts.indent << popts.title << std::endl;
       }
 
@@ -121,15 +134,12 @@ namespace snfee {
 
       out_ << popts.indent << inherit_tag(popts.inherit)
            << "Complete : " << std::boolalpha << is_complete() << std::endl;
-
-      return;
     }
 
     void
     tracker_hit_record::set_hit_num(const int32_t hit_num_)
     {
       _hit_num_ = hit_num_;
-      return;
     }
 
     void
@@ -143,7 +153,6 @@ namespace snfee {
       } else {
         _trigger_id_ = tid_;
       }
-      return;
     }
 
     int32_t
@@ -157,11 +166,6 @@ namespace snfee {
     {
       return _trigger_id_;
     }
-
-    // int16_t tracker_hit_record::get_module_num() const
-    // {
-    //   return _module_num_;
-    // }
 
     int16_t
     tracker_hit_record::get_crate_num() const
@@ -231,7 +235,6 @@ namespace snfee {
       _channel_category_ = CHANNEL_UNDEF;
       _timestamp_category_ = TIMESTAMP_UNDEF;
       _timestamp_ = INVALID_TIMESTAMP;
-      return;
     }
 
     void
@@ -300,7 +303,6 @@ namespace snfee {
       }
       _timestamp_category_ = timestamp_category_;
       _timestamp_ = timestamp_;
-      return;
     }
 
   } // namespace data
