@@ -1,5 +1,8 @@
-cmake_minimum_required(VERSION 3.3)
-project(SNRawDataProducts VERSION 0.1.0)
+cmake_minimum_required(VERSION 3.9)
+project(SNRawDataProducts
+  VERSION 0.1.0
+  DESCRIPTION "SuperNEMO Demonstrator Raw On/Offline Data Model"
+  )
 
 # Settings and Modules
 set(CMAKE_INCLUDE_DIRECTORIES_PROJECT_BEFORE ON)
@@ -111,6 +114,9 @@ add_subdirectory(programs)
 
 # Examples
 add_subdirectory(examples)
+
+# Documentation
+add_subdirectory(documentation)
 
 # Installation
 # - Interface
